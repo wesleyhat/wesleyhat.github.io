@@ -440,8 +440,8 @@ body {
   }
 
   .skill-container {
-    grid-template-rows: 100px 100px 100px 100px;
-    grid-template-columns: 100px 100px 100px;
+    grid-template-rows: 75px 75px 75px 75px;
+    grid-template-columns: 75px 75px 75px;
   }
 
   .skills h2{
