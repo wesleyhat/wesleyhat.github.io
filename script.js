@@ -76,7 +76,6 @@ function go(){
   let ul = document.getElementById("ul");
   let right = document.getElementById("right");
   let menu = document.getElementById("menu");
-  let height = windows.innerHeight;
   let width = window.innerWidth;
   let currentWidth = document.getElementById("ul").clientWidth;
 
@@ -94,9 +93,6 @@ function go(){
     right.style.width = "0%";
     menu.style.display = "initial";
   }
-
-  document.body.style.width = `${width}px`;
-  document.body.style.height = `${height}px`;
   
   return false;
 }
@@ -113,8 +109,6 @@ function getMode(){
   let circle = document.getElementById("circle");
   let p = document.getElementById("p");
   let root = document.querySelector(":root");
-  let height = windows.innerHeight;
-  let width = window.innerWidth;
 
   if(clicked == "true"){
     img.setAttribute('src', "images/toggle1.png");
@@ -147,9 +141,6 @@ function getMode(){
   } else{
     console.log("error");
   }
-
-  document.body.style.width = `${width}px`;
-  document.body.style.height = `${height}px`;
   
   return false;
 }
