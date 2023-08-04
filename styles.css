@@ -461,7 +461,7 @@ body {
   .s-line:after{
     height: 2px;
     width: 100px;
-    right: 33%;
+    right: 35%;
   }
 
   .item p{
@@ -539,8 +539,8 @@ and (min-width: 700px) {
 
   .s-line:after{
     height: 2px;
-    width: 259px;
-    right: 25%;
+    width: 350px;
+    right: 30%;
   }
 
   .item-1{
