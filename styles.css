@@ -589,4 +589,8 @@ and (min-width: 700px) {
     animation-duration: .9s;
   }
 
+  .navbar li a {
+    padding: 8px;
+  }
+
 }
