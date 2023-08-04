@@ -317,14 +317,10 @@ body{
 
   html {
   position: fixed;
-  height: 100vh;
-  width: 100%;
 }
 
 body {
   margin: 0;
-  width: 100vw;
-  height: 100vh;
 }
 
   .circle{
@@ -430,9 +426,6 @@ body {
     border-top: 2px solid var(--main);
 
   }
-
-
-
 }
 
 @media only screen and (max-width: 800px) {
