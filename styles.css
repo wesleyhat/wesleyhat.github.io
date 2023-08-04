@@ -516,6 +516,10 @@ body {
 @media only screen and (max-height: 700px)
 and (min-width: 700px) {
 
+  html{
+    width: 100vw;
+  }
+
   .skill-container {
     grid-template-rows: 100px 100px;
     grid-template-columns: 100px 100px 100px 100px 100px 100px;;
