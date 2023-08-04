@@ -13,9 +13,21 @@
   --menu: #202020;
 }
 
+html {
+position: fixed;
+height: 100vh;
+width: 100vw;
+width: -webkit-fill-available;
+height: -webkit-fill-available;
+}
+
 body{
+  height: 100vh;
+  width: 100vw;
   background-color: var(--back);
   overflow: hidden;
+  width: -webkit-fill-available;
+  height: -webkit-fill-available;
 }
 
 .img-container{
@@ -67,6 +79,8 @@ body{
   height:25px;
   margin: 0;
   top: 27px;
+  left: 27px;
+  color: #1f1f1f;
   border-radius: 25px;
   z-index: 10;
   background-color: #fff;
@@ -313,16 +327,11 @@ body{
 
 @media only screen and (max-width: 1300px) {
 
-  html {
-  position: fixed;
-  height: 100vh;
-  width: 100%;
-}
+
 
 body {
   margin: 0;
-  width: 100vw;
-  height: 100vh;
+
 }
 
   .circle{
@@ -440,8 +449,8 @@ body {
   }
 
   .skill-container {
-    grid-template-rows: 75px 75px 75px 75px;
-    grid-template-columns: 75px 75px 75px;
+    grid-template-rows: 100px 100px 100px 100px;
+    grid-template-columns: 100px 100px 100px;
   }
 
   .skills h2{
@@ -511,8 +520,8 @@ body {
 and (min-width: 700px) {
 
   .skill-container {
-    grid-template-rows: 75px 75px;
-    grid-template-columns: 75px 75px 75px 75px 75px 75px;
+    grid-template-rows: 100px 100px;
+    grid-template-columns: 100px 100px 100px 100px 100px 100px;;
   }
 
   .content, .skills{
