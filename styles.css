@@ -13,19 +13,9 @@
   --menu: #202020;
 }
 
-html{
-    min-height: -webkit-fill-available;
-}
-
 body{
-  height: 100vh;
-  min-height: -webkit-fill-available;
   background-color: var(--back);
   overflow: hidden;
-}
-
-.banner{
-  height: 100%;
 }
 
 .img-container{
@@ -77,10 +67,9 @@ body{
   height:25px;
   margin: 0;
   top: 27px;
-  left: 27px;
   border-radius: 25px;
   z-index: 10;
-  background-color: #1f1f1f;
+  background-color: #fff;
 }
 
 .navbar ul{
@@ -326,10 +315,14 @@ body{
 
   html {
   position: fixed;
+  height: 100vh;
+  width: 100%;
 }
 
 body {
   margin: 0;
+  width: 100vw;
+  height: 100vh;
 }
 
   .circle{
@@ -515,18 +508,14 @@ body {
 }
 
 @media only screen and (max-height: 700px)
-and (min-width: 700px) {
-
-  html{
-    width: 100vw;
-  }
+and (min-width: 800px) {
 
   .skill-container {
     grid-template-rows: 100px 100px;
     grid-template-columns: 100px 100px 100px 100px 100px 100px;;
   }
 
-  .skills{
+  .content, .skills{
     z-index: -1;
   }
 
