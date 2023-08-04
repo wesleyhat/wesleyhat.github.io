@@ -435,7 +435,7 @@ body {
 
 @media only screen and (max-width: 800px) {
 
-  .skills{
+  .content, .skills{
     z-index: -1;
   }
 
