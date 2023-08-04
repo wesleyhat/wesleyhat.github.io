@@ -13,14 +13,18 @@
   --menu: #202020;
 }
 
+html{
+    min-height: -webkit-fill-available;
+}
+
 body{
+  min-height: -webkit-fill-available;
   background-color: var(--back);
   overflow: hidden;
 }
 
 .banner{
-  height: 100vh;
-  min-height: -webkit-fill-available
+  height: 100%;
 }
 
 .img-container{
@@ -320,15 +324,11 @@ body{
 @media only screen and (max-width: 1300px) {
 
   html {
-  height: 100vh;
-  width: 100%;
   position: fixed;
 }
 
 body {
   margin: 0;
-  width: 100vw;
-  height: 100vh;
 }
 
   .circle{
