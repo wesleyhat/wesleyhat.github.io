@@ -18,6 +18,7 @@ html{
 }
 
 body{
+  height: 100vh;
   min-height: -webkit-fill-available;
   background-color: var(--back);
   overflow: hidden;
