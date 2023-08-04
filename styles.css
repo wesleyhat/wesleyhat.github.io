@@ -520,8 +520,8 @@ body {
 and (min-width: 700px) {
 
   .skill-container {
-    grid-template-rows: 100px 100px;
-    grid-template-columns: 100px 100px 100px 100px 100px 100px;;
+    grid-template-rows: 85px 85px;
+    grid-template-columns: 85px 85px 85px 85px 85px 85px;
   }
 
   .content, .skills{
