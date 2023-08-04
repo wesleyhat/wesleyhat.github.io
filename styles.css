@@ -67,6 +67,8 @@ body{
   height:25px;
   margin: 0;
   top: 27px;
+  right: 27px;
+  background-color: #1f1f1f;
   border-radius: 25px;
   z-index: 10;
   background-color: #fff;
