@@ -604,6 +604,7 @@ section {
       .ex{
         width: 300px;
         flex-direction: column;
+        overflow: visible;
       }
 
       .ex-nav{
@@ -615,7 +616,6 @@ section {
         padding: 10px 0;
         flex-direction: row;
         height: auto;
-
       }
 
       .sections{
@@ -624,9 +624,20 @@ section {
       }
  
 
+      .sec-1 ul li p, .sec-2 ul li p, .sec-3 ul li p{
+        list-style: none;
+      }
+
       .ex-nav li a{
         font-size: 15px;
         padding: 0;
+      }
+
+      .sec-1, .sec-2, .sec-3{
+        border: 3px solid var(--accent);
+        border-radius: 10px;
+        height: 500px;
+        padding: 10px;
       }
 
       .sec-1 ul, .sec-2 ul, .sec-3 ul{
