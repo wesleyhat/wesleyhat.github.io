@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open Sans">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto Mono">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Victor Mono">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js"></script>
+    <title>Portfolio</title>
+</head>
+<body id="body" onload="getMode()">
+    
+    <nav class="navbar">
+        <div class="img-container" id="btn "onclick="changeImage();">
+          <div class="circle" id="circle"></div>
+          <img id="image" class="mode" src="images/toggle.png">
+        </div>
+
+        <ul id="ul">
+          <a class="closebtn" onclick="closeMenu();">&times;</a>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="#sec-skill">Skills</a></li>
+            <li><a href="#sec-exp">Experience</a></li>
+            <li><a href="#sec-edu">Education</a></li>
+            <li><a href="#" class="res">Resume</a></li>
+        </ul>
+
+        <a id="menu" class="menu" onclick="changeMenu();">&#9776;</a>
+    </nav>
+
+    <section class="banner">
+
+        <div class="filter" id="filter">
+            <img src="blob.svg" class="blob-a">
+            <img src="blob.svg" class="blob-b">
+    
+            <img src="blob0.svg" class="blob-c">
+            <img src="blob0.svg" class="blob-d">
+        </div>
+
+        <div class="centerB">
+            <h2>Hi, my name is</h2>
+            <h1>WESLEY HATFIELD</h1>
+            <p>Software Developer</p>
+        </div>
+    </section>
+    
+
+    <section class="skills" id="sec-skill">
+
+        <div class="filter">
+            <img src="blob.svg" class="blob-e">
+            <img src="blob.svg" class="blob-f">
+        </div>
+
+        <div class="centerS">
+            <h1 class="lineS">Skills</h1>
+            <div class="skill-container">
+                <div class="item item-1" data-aos="slide-down" data-aos-duration="1100">C++</div>
+                <div class="item item-2" data-aos="slide-down" data-aos-duration="900">C#</div>
+                <div class="item item-3" data-aos="slide-down" data-aos-duration="1200">Java</div>
+                <div class="item item-4" data-aos="slide-down" data-aos-duration="1300">HTML</div>
+                <div class="item item-5" data-aos="slide-down" data-aos-duration="800">CSS</div>
+                <div class="item item-6" data-aos="slide-down" data-aos-duration="1000">Javascript</div>
+                <div class="item item-7" data-aos="slide-down" data-aos-duration="500">PHP</div>
+                <div class="item item-8" data-aos="slide-down" data-aos-duration="600">Kotlin</div>
+                <div class="item item-9" data-aos="slide-down" data-aos-duration="700">SQL</div>
+          </div>
+        </div>
+    </section>
+
+    <section class="experience" id="sec-exp">
+
+        <div class="filter" id="filter">
+            <img src="blob0.svg" class="blob-g">
+            <img src="blob0.svg" class="blob-h">
+        </div>
+        <div class="center" data-aos="fade-right">
+            <h1 class="lineEx">Experience</h1>
+        <div class="ex">
+            <div class="ex-nav">
+                <ul>
+                    <li><a id="system" onclick="getSystem();">System Support Specialist</a></li>
+                    <li><a id="it" onclick="getIt();">IT field Technician</a></li>
+                    <li><a id="shift" onclick="getShift();">Shift Supervisor</a></li>
+                </ul>
+            </div>
+            <div class="sections" id="sec">
+                <div class="sec-1" id="secOne" onclick="getIt()">
+                    <div class="header">
+                        <h1>System Support Specialist</h1>
+                        <h2>Middle Georgia State University, Cochran, Georgia | Oct 2021 -</h2>
+                    </div>
+                    <ul>
+                        <li><p>Provide technology support to faculty and staff, addressing their technical needs</p></li>
+                        <li><p>Handle audio/visual setups for events and ensure smooth operation</p></li>
+                        <li><p>Perform computer maintenance and troubleshooting across the campus</p></li>
+                        <li><p>Utilize scripting to automate tasks and improve efficiency</p></li>
+                    </ul>
+                </div>
+                <div class="sec-2" id ="secTwo" onclick="getShift()">
+                    <div class="header">
+                        <h1>IT Field Technician</h1>
+                    <h2>Brooksource, Macon, Georgia | June 2021 - July 2021</h2>
+                    </div>
+                    <ul>
+                        <li><p>Supported Field Service needs, collaborating with project management and application teams</p></li>
+                        <li><p>Conducted device mapping and script testing for correct application installation</p></li>
+                        <li><p>Troubleshot and provided support to clinical, business, and IT staff</p></li>
+                        <li><p>Delivered exceptional on-site customer service</p></li>
+                    </ul>
+                </div>
+                <div class="sec-3" id="secThree" onclick="getSystem()">
+                    <div class="header">
+                        <h1>Shift Supervisor</h1>
+                    <h2>Middle Georgia State University, Cochran, Georgia | Oct 2021 -</h2>
+                    </div>
+                    <ul>
+                        <li><p>Managed teams and coordinated daily store operations</p></li>
+                        <li><p>Trained and mentored employee</p></li>
+                        <li><p>Oversaw cash handling and deposits up to $10,000</p></li>
+                        <li><p>Streamlined processes for improved store efficiency</p></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        </div>
+    </section>
+
+    <section class="education" id="sec-edu">
+
+        <div class="filter" id="filter">
+            <img src="blob.svg" class="blob-i">
+            <img src="blob.svg" class="blob-j">
+        </div>
+        <div class="center-Ex" >
+            <h1 class="lineEd" data-aos="slide-down">Education</h1>
+        <div class="edu">
+            <div class="edu-sec" data-aos="fade-right">
+                <h2>A.A.S. in Computer Programming</h2>
+                <h3>Central Georgia Technical College</h3>
+                <p>2018-2020</p>
+            </div>
+            <div class="edu-sec2" data-aos="fade-left">
+                <h2>B.S. in Software App Development and HCI</h2>
+                <h3>Mercer University</h3>
+                <p>2021-2023</p>
+            </div>
+        </div>
+        </div>
+    </section>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        AOS.init();
+    </script>
+</body>
+</html>
