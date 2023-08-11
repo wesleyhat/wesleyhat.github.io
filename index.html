@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wesley Hatfield - Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <script src="script.js">
+
+    </script>
+</head>
+<body onload="setHover();">
+
+    <a class="openbtn" onclick="openNav()">&#9776;</a>
+
+      <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="#about">About</a>
+        <a href="#education">Education</a>
+        <a href="#experience">Experience</a>
+        <a href="#contact">Contact</a>
+      </div>
+
+    <!-- Hero Section -->
+    <section id="hero" onclick="closeNav()">
+        
+        
+
+        <div id="hero-text">
+            <h2>Hi, my name is</h2>
+            <h1>Wesley Hatfield</h1>
+            <h3>Software Developer</h3>
+        </div>
+
+        <div class="image-container">
+          <img src="images/comp2.png" class="comp">
+        </div>
+    </section>
+
+    <!-- About Me Section -->
+    <section id="about" onclick="closeNav()">
+    <div class="about-container">
+        <h2>About Me</h2>
+        <p>Hello, I'm Wesley Hatfield – a recent graduate from Mercer University with a B.S. in Software Application Development and Human-Computer Interaction. During my academic journey, I immersed myself in a diverse array of programming languages including C#, C++, Java, Kotlin, Python, HTML, CSS, PHP, JavaScript, and SQL.</p>
+        <p>Passionate about solving complex problems, I find joy in crafting elegant solutions that meet user needs. My ability to adapt and thrive in high-pressure situations makes me well-equipped to excel in dynamic environments.</p>
+        <p>I'm eager to contribute my skills and enthusiasm to innovative projects that push the boundaries of technology. Let's collaborate and bring visionary ideas to life!</p>
+    </div>
+</section>
+
+<!-- Education Section -->
+<section id="education" onclick="closeNav()">
+    <div class="education-container">
+        <h2>Education</h2>
+        <div class="edu-row">
+          <div class="education-item" id="item1">
+                <img src="images/mercer.png" alt="" class="mercer" id="mercerImage">
+              <h3 id="mercerHeading">Mercer University</h3>
+              <div class="mercerText" id="mercerText">
+                <p id="mercerDeg">B.S. in Software Application Development and Human Computer Interactions</p>
+                <p id="mercerYear">Graduated in 2023</p>
+              </div>
+          </div>
+          <div class="education-item" id="item2">
+            <img src="images/cgtc.png" alt="" class="cgtc" id="cgtcImage">
+              <h3 id="cgtcHeading">Central Georgia Technical College</h3>
+              <div class="cgtcText" id="cgtcText">
+                <p id="cgtcDeg">A.A.S. in Computer Programming</p>
+                <p id="cgtcYear">Graduated in 2018</p>
+              </div>
+          </div>
+        </div>
+    </div>
+</section>
+
+<section id="experience" onclick="closeNav()">
+    <div class="experience-container">
+        <h2>Work Experience</h2>
+        <div class="timegrid">
+
+            <div class="timeline">
+              <div class="timeline-scroll" id="scroll">
+                  <div class="timeline-card" onclick="getOne();">
+                      <h3>Software Developer</h3>
+                      <h4>Tech Innovators Inc.</h4>
+                      <p>New York, NY</p>
+                      <p>Jan 2021 - Present</p>
+                      <ul>
+                          <li>Collaborated in cross-functional teams to develop cutting-edge software solutions.</li>
+                          <li>Implemented front-end and back-end features for client-facing applications.</li>
+                          <li>Optimized codebase and improved performance through code refactoring.</li>
+                          <li>Contributed to code reviews and provided technical mentorship to junior developers.</li>
+                      </ul>
+                  </div>
+                  <div class="timeline-card" onclick="getTwo();">
+                      <h3>Web Developer</h3>
+                      <h4>WebSolutions Ltd.</h4>
+                      <p>San Francisco, CA</p>
+                      <p>Jun 2019 - Dec 2020</p>
+                      <ul>
+                          <li>Designed and developed responsive websites using HTML, CSS, and JavaScript.</li>
+                          <li>Collaborated with design and content teams to create engaging user experiences.</li>
+                          <li>Integrated third-party APIs for enhanced functionality and data retrieval.</li>
+                          <li>Performed regular website maintenance and updates to ensure optimal performance.</li>
+                      </ul>
+                  </div>
+                  <div class="timeline-card" onclick="getThree();">
+                      <h3>Junior Software Engineer</h3>
+                      <h4>SoftTech Solutions</h4>
+                      <p>Chicago, IL</p>
+                      <p>Jan 2018 - May 2019</p>
+                      <ul>
+                          <li>Assisted in the development of software modules using Java and C++.</li>
+                          <li>Participated in debugging and troubleshooting to identify and resolve issues.</li>
+                          <li>Collaborated with senior engineers to implement new features and updates.</li>
+                          <li>Contributed to unit testing and quality assurance processes.</li>
+                      </ul>
+                  </div>
+              </div>
+
+          </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- Contact Information Section -->
+<section id="contact" onclick="closeNav()">
+<div class="contact-container">
+    <h2>Contact Me</h2>
+    <p>Feel free to reach out to me if you have any inquiries or opportunities.</p>
+    <form id="contact-form">
+
+        <input type="text" id="name" name="name" placeholder="Name" required>
+
+        <input type="email" id="email" name="email" placeholder="Email" required>
+
+        <textarea id="message" name="message" rows="4" placeholder="Write me a message" required></textarea>
+
+        <button type="submit">Submit</button>
+    </form>
+</div>
+</section>
+
+
+    <!-- Footer Section -->
+    <footer onclick="closeNav()">
+        <!-- Your footer content here -->
+    </footer>
+
+    <script>
+        function openNav() {
+            let width = screen.width;
+
+            if(width > 800) {
+                document.getElementById("mySidenav").style.width = "250px";
+            }
+            else {
+                document.getElementById("mySidenav").style.width = "200px";
+            }
+ 
+        }
+
+        function closeNav() {
+            document.getElementById("mySidenav").style.width = "0";
+        }
+
+    </script>
+
+    <!-- Add this script before the closing </body> tag -->
+
+</body>
+</html>
