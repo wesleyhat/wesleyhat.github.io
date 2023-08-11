@@ -1,3 +1,535 @@
+:root{
+  --white: #fff;
+  --navy: #1b1321;
+  --lav: #5517bb;
+  --green: #28d59c;
+
+}
+
+html{
+    scroll-behavior: smooth;
+}
+
+/* Reset default margin and padding */
+body, h1, h2, h3, p {
+    margin: 0;
+    padding: 0;
+}
+
+/* Set a global font family */
+body {
+    font-family: 'Open Sans', sans-serif;
+}
+
+.openbtn{
+    font-size: 40px;
+    cursor: pointer;
+    padding: 0 5px 0 5px;
+    margin: 10px;
+    background-color: rgba(255,255,255,.25);
+    border-radius: 5px;;
+    position: fixed;
+    right: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 20;
+    top: 0;
+    right: 0;
+    background-color: var(--navy);
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+  }
+  
+  .sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: var(--white);
+    display: block;
+    transition: 0.3s;
+  }
+  
+  .sidenav a:hover {
+    color: var(--green);
+  }
+  
+  .sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+  }
+  
+/* Hero styles */
+#hero {
+    background-color: var(--white); /* Lavender */
+    height: 100vh;
+    display: grid;
+    grid-template-rows: 25% auto auto;
+    grid-template-columns: 25% auto 25%;
+    justify-content: center;
+    color: var(--navy); /* Charcoal Gray */
+}
+
+#hero-text {
+    background-color: var(--white); /* Light Lavender */
+    grid-row: 2/3;
+    grid-column: 2/3;
+    border-radius: 10px;
+}
+
+.image-container{
+  grid-row: 3/4;
+  grid-column: 2/3;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.comp{
+  height: 400px
+}
+
+#hero-text h1 {
+    font-size: 75px; /* Bigger font size for the name */
+    color: var(--navy); /* Coral */
+    margin-bottom: 10px;
+    font-family: 'Montserrat', sans-serif; /* Use Google Font 'Montserrat' */
+}
+
+#hero-text h2 {
+    font-size: 25px;
+    color: var(--navy); /* Charcoal Gray */
+    margin-bottom: 10px;
+}
+
+#hero-text h3 {
+    font-size: 25px;
+    color: var(--navy); /* Coral */
+}
+
+/* Other section styles */
+/* ... (styles for other sections) ... */
+
+/* About Me styles */
+/* About Me styles */
+/* About Me styles */
+/* About Me styles */
+#about {
+    background-color: var(--lav); /* Light Gray */
+    color: var(--white); /* Charcoal Gray */
+    padding: 100px 0;
+    text-align: center; /* Left align the text */
+}
+
+#about .about-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+#about h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: var(--white); /* Coral - Accent color */
+}
+
+#about p {
+    font-size: 20px;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+#about p:last-child {
+    margin-bottom: 0; /* Remove margin from the last paragraph */
+}
+
+/* Add hover effect for paragraphs */
+#about p:hover {
+    color: var(--white); /* Coral - Accent color */
+    transition: color 0.3s ease;
+}
+
+/* Education Section */
+#education {
+    background-color: var(--white); /* Light Gray */
+    color: var(--navy); /* Charcoal Gray */
+    padding: 100px 0;
+    text-align: center;
+}
+
+.mercer{
+    width: 80%;
+}
+
+.cgtc{
+    width: 80%;
+}
+
+.mercerText, .cgtcText{
+    display: none;
+}
+
+.education-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.edu-row{
+  display: flex;
+  flex-direction: row;
+  grid-gap: 60px;
+  align-items: center;
+}
+
+.education-item {
+    background-color: var(--white);
+    padding: 15px; /* Adjust padding */
+    height: 350px;
+    border: 2px solid var(--navy);
+    border-radius: 10px;
+    width: 50%; /* Adjust width */
+    transition: 0.5s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    user-select: none;
+}
+
+.education-container h2 {
+  color: var(--navy);
+}
+
+.education-item h3 {
+    font-size: 30px;
+    margin-bottom: 10px;
+    color: var(--navy); /* Coral - Accent color */
+}
+
+.education-item p {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+#experience {
+    background-color: var(--lav); /* Lavender */
+    color: var(--navy); /* Charcoal Gray */
+    padding: 100px 0;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60vh; /* Take around 60% of the viewport height */
+}
+
 .experience-container {
+    max-width: 800px;
+}
+
+h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: var(--white); /* Coral - Accent color */
+}
+
+.timegrid{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.timegrid svg{
+  height: 30px;
+  padding: 10px 25px 10px 25px;
+  margin: 20px;
+  cursor: pointer;
+  fill: var(--white);
+  border-radius: 50px;
+  transition: .5s ease;
+}
+
+.timegrid svg:hover{
+  background-color: rgba(0,0,0,.25);
+}
+
+.timeline {
+    overflow-X: hidden; /* Hide horizontal overflow */
+    display: flex;
+    justify-content: center;
+
+}
+
+.timeline-scroll {
+    display: flex;
+    gap: 20px; /* Horizontal spacing between timeline cards */
+    animation: slide 60s linear infinite; /* Animation to create sliding effect */
+    transform: translateX(33.5%);
+    cursor: pointer;
+    transition: .5s ease;
+}
+
+.timeline-scroll:hover{
+  animation-play-state: paused;
+}
+
+.timeline-card {
+    position: relative;
+    width: 450px; /* Set card width */
+    background-color: var(--white);
+    border-radius: 10px;
+    border: 2px solid var(--navy);
+    padding: 20px;
+    user-select: none;
+}
+
+.timeline-card:hover{
+    border: 2px solid var(--green); /* Coral - Accent color */
+}
+
+/*@keyframes slide {
+    0% {
+        transform: translateX(25.4%);
+    }
+    99.99999999999% {
+        transform: translateX(-25.5%);
+    }
+    100% {
+      transform: translateX(25.4%);
+    }
+}*/
+
+.timeline-card h3 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.timeline-card h4 {
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.timeline-card p {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.timeline-card ul {
+    list-style-type: disc;
+    padding-left: 20px;
+    margin: 10px 0; /* Space between list items */
+}
+
+
+/* Contact Information styles */
+#contact {
+    background-color: var(--white); /* Lavender */
+    color: var(--navy); /* Charcoal Gray */
+    padding: 100px 0;
+    text-align: center;
+}
+
+.contact-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.contact-container h2{
+  color: var(--navy);
+  padding: 15px;
+}
+
+.contact-container p{
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+#contact-form {
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    height: 450px;
+}
+
+#contact-form label {
+    font-size: 17px;
+    display: block;
+    margin-bottom: 10px;
+    color: var(--white); /* Coral - Accent color */
+}
+
+#contact-form input,
+#contact-form textarea {
+    width: 90%;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(0,0,0,.25);
+    border-radius: 5px;
+    font-size: 16px;
+    transition: .5s ease;
+}
+
+#contact-form textarea {
+  height: 150px;
+    resize: vertical;
+}
+
+#contact-form input:hover,
+#contact-form textarea:hover {
+  transform: scale(1.01);
+}
+
+#contact-form button {
+    background-color: var(--white); /* Coral - Accent color */
+    color: var(--lav);
+    padding: 15px 40px;
+    border: 2px solid var(--lav);
+    border-radius: 30px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+#contact-form button:hover {
+  background-color: var(--lav); /* Coral - Accent color */
+  color: var(--white);
+}
+
+/* Footer styles */
+footer {
+    background-color: var(--lav); /* Dark Gray */
+    color: #fff;
+    text-align: center;
+    padding: 50px 0;
+}
+
+@media only screen 
+and (max-width: 805px) {
+
+    
+    .sidenav a {font-size: 18px;}
+
+  #hero {
+      display: grid;
+      grid-template-rows: 25% auto auto;
+      grid-template-columns: auto;
+      height: 90vh;
+  }
+
+  #hero-text {
+      grid-row: 2/3;
+      grid-column: 1/2;
+      text-align: center;
+  }
+
+  #hero-text h1 {font-size: 45px;}
+
+  #hero-text h2, #hero-text h3 {font-size: 23px;}
+
+  .image-container{
+    grid-row: 3/4;
+    grid-column: 1/2;
+  }
+
+  .comp{
+    height: 250px
+  }
+
+  .experience-container {
       max-width: 100%;
   }
+
+  .timeline-card{
+    width: 250px;
+  }
+
+  .edu-row{
+    flex-direction: column;
+  }
+
+  .education-item{
+    width: 60%;
+    height: 250px;
+  }
+
+  .arrow-back1, .arrow-back2{
+    display: none;
+  }
+}
+
+@media only screen 
+and (max-height: 500px) {
+
+
+    .sidenav a {font-size: 18px;}
+
+    #hero {
+        display: grid;
+        grid-gap: 20px;
+        grid-template-rows: auto;
+        grid-template-columns: auto auto;
+        height: 90vh;
+        
+    }
+  
+    #hero-text {
+        grid-row: 1/2;
+        grid-column: 1/2;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+    }
+  
+    #hero-text h1 {font-size: 45px;}
+  
+    #hero-text h2, #hero-text h3 {font-size: 23px;}
+  
+    .image-container{
+      grid-row: 1/2;
+      grid-column: 3/4;
+    }
+  
+    .comp{
+      height: 250px
+    }
+
+    .education-item{
+        width: 40%;
+        height: 250px;
+        justify-content: center;
+    }
+
+    .mercer{
+        width: 60%;
+    }
+
+    .cgtc{
+        width: 60%;
+    }
+
+    #experience{
+        height: auto;
+    }
+
+    .experience-container {
+        max-width: 80%;
+    }
+}
