@@ -10,6 +10,24 @@ html{
     scroll-behavior: smooth;
 }
 
+/* width */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: var(--white);
+  border: 1px solid rgba(0,0,0,.1)
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--navy);
+  height: 200px;
+  transition: .5s ease;
+}
+
 /* Reset default margin and padding */
 body, h1, h2, h3, p {
     margin: 0;
