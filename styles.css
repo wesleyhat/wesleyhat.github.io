@@ -459,6 +459,7 @@ and (max-width: 805px) {
 
   .education-item{
     width: 60%;
+    height: 250px;
   }
 
   .arrow-back1, .arrow-back2{
