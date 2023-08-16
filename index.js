@@ -87,6 +87,10 @@ function revealWord(guess) {
     const box = document.getElementById(`box${row}${i}`);
     const letter = box.textContent;
 
+    console.log(letter);
+
+    let key = document.getElementById(letter);
+
     setTimeout(() => {
       if(letter === state.secret[i]){
         box.classList.add('right');
@@ -99,7 +103,19 @@ function revealWord(guess) {
 
     box.classList.add('animated');
     box.style.animationDelay = `${(i * animation_duration) / 2}ms`;
+
+    setTimeout(() => {
+      if(letter === state.secret[i]){
+        key.style.backgroundColor = "#538d4e";
+      } else if(state.secret.includes(letter)){
+        key.style.backgroundColor = "#b59f3b";
+      } else {
+        key.style.backgroundColor = "#3a3a3c";
+      }
+    }, 3 * animation_duration);
   }
+
+
 
   const isWinner = state.secret === guess;
   const isGameOver = state.currentRow === 5;
