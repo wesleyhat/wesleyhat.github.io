@@ -45,6 +45,8 @@ function drawGrid(container){
 }
 
 function registerKeyboardEvents(){
+
+
   document.body.onkeydown = (e) => {
     const key = e.key;
     if(key === 'Enter'){
@@ -55,7 +57,20 @@ function registerKeyboardEvents(){
             state.currentRow++;
             state.currentCol = 0;
           } else{
-            alert('Not a valid word.')
+
+            const row = state.currentRow
+            const animation_duration = 500;
+            for(let i = 0; i < 5; i++){
+            const box = document.getElementById(`box${row}${i}`);
+              
+            box.classList.add('jiggle');
+
+            setTimeout(() => {
+
+              box.classList.remove('jiggle');
+            }, 3 * animation_duration);
+
+            }
           }
         }
     }
@@ -87,17 +102,18 @@ function revealWord(guess) {
     const box = document.getElementById(`box${row}${i}`);
     const letter = box.textContent;
 
-    console.log(letter);
-
     let key = document.getElementById(letter);
 
     setTimeout(() => {
       if(letter === state.secret[i]){
         box.classList.add('right');
+        box.style.border = "2px solid #538d4e";
       } else if(state.secret.includes(letter)){
         box.classList.add('wrong');
+        box.style.border = "2px solid #b59f3b";
       } else {
         box.classList.add('empty');
+        box.style.border = "2px solid #3a3a3c";
       }
     }, ((i + 1) * animation_duration) / 2);
 
@@ -105,6 +121,8 @@ function revealWord(guess) {
     box.style.animationDelay = `${(i * animation_duration) / 2}ms`;
 
     setTimeout(() => {
+
+      key.style.color = "#fff";
       if(letter === state.secret[i]){
         key.style.backgroundColor = "#538d4e";
       } else if(state.secret.includes(letter)){
@@ -135,9 +153,24 @@ function isLetter(key){
 }
 
 function addLetter(letter){
+
   if (state.currentCol === 5) return;
   state.grid[state.currentRow][state.currentCol] = letter;
   state.currentCol++;
+
+  const row = state.currentRow;
+  const col = state.currentCol - 1;
+  const animation_duration = 500;
+  
+  const box = document.getElementById(`box${row}${col}`);
+
+  box.classList.add('grow');
+
+  setTimeout(() => {
+
+    box.classList.remove('grow');
+  }, 1.5 * animation_duration);
+  
 }
 
 function removeLetter(){
@@ -218,7 +251,20 @@ function getKeys(){
         state.currentRow++;
         state.currentCol = 0;
       } else{
-        alert('Not a valid word.')
+
+        const row = state.currentRow
+        const animation_duration = 500;
+        for(let i = 0; i < 5; i++){
+        const box = document.getElementById(`box${row}${i}`);
+          
+        box.classList.add('jiggle');
+
+        setTimeout(() => {
+
+          box.classList.remove('jiggle');
+        }, 3 * animation_duration);
+
+        }
       }
     }
 
