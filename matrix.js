@@ -54,8 +54,7 @@ document.body.onkeyup = function(e) {
     }
   }
 
- canvas.addEventListener("mousedown", (event) => {
-
+addEventListener("touchstart", function(event){  
     const draw = () => {
             context.fillStyle = 'rgba(0, 0, 0, 0.05)';
             context.fillRect(0, 0, canvas.width, canvas.height);
@@ -76,4 +75,4 @@ document.body.onkeyup = function(e) {
         };
         
         setInterval(draw, 30);
-  })
+}, true);
