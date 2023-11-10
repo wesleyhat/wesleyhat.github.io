@@ -12,7 +12,7 @@ const nums = '0123456789';
 
 const alphabet = katakana + latin + nums;
 
-const fontSize = 16;
+var fontSize = 16;
 
 if(canvas.width < 1000){
     fontSize = 10;
