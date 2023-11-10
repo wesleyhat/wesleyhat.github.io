@@ -54,7 +54,7 @@ document.body.onkeyup = function(e) {
     }
   }
 
- canvas.addEventListener("mouseover", (event) => {
+ canvas.addEventListener("mousedown", (event) => {
 
     const draw = () => {
             context.fillStyle = 'rgba(0, 0, 0, 0.05)';
