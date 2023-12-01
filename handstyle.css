@@ -1,0 +1,22 @@
+body{
+    background: #0d1117;
+    overflow: hidden;
+}
+
+.hand{
+    width: 40%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    animation-name: move;
+    animation-duration: 5s;
+}
+
+@keyframes move {
+    0%{
+        transform: translateY(-100%);
+    }
+    100%{
+        transform: translateY(0%);
+    }
+}
