@@ -36,3 +36,24 @@ button {
 button:hover {
     background-color: #3a3a3a; /* Darker background color on hover */
 }
+
+@media only screen and (max-width: 600px) {
+    
+    
+    h1 {
+        font-size: 105px;
+        
+    }
+    
+    p {
+        font-size: 90px;
+        
+    }
+    
+    button {
+
+        font-size: 75px;
+
+    }
+
+  }
