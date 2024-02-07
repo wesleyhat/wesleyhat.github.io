@@ -1,59 +1,65 @@
 body {
-    background-color: #121212; /* Dark background color */
-    color: #ffffff; /* Text color */
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Optional: Choose a suitable font */
+    background-color: #1a1a1a;
+    color: #ffffff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh; /* Full viewport height */
+    height: 100vh;
+}
+
+.container {
+    text-align: center;
+    width: 70%; /* Takes up 70% of the screen width */
+    max-width: 800px; /* Set a maximum width for larger screens */
+    margin: 0 auto;
 }
 
 h1 {
-    font-size: 55px;
+    font-size: 3em; /* Larger font size */
+    margin-bottom: 50px;
+    letter-spacing: 1px;
+    color:#ffffff; /* White text color with 70% opacity */
+}
+
+.actors {
     margin-bottom: 30px;
-    color: #d6b4fc;
 }
 
-p {
-    font-size: 30px;
-    padding-bottom: 15px;
+.actor {
+    font-size: 1.8em; /* Larger font size */
+    margin: 30px 0; /* Increased margin between lines */
+    color: #ffffff; /* White text color */
 }
 
-button {
-    background-color: rgba(0,0,0,0.4); /* Dark button background color */
-    color: #ffffff; /* Button text color */
-    font-size: 55px;
-    padding: 15px 20px;
-    margin-top: 25px;
-    cursor: pointer;
+.refresh-btn {
+    background-color: #9370db;
+    color: #ffffff;
+    font-size: 1.5em; /* Larger font size */
+    padding: 15px 30px; /* Slightly larger padding */
     border: none;
     border-radius: 5px;
+    cursor: pointer;
     transition: background-color 0.3s ease;
+    margin-top: 50px;
 }
 
-button:hover {
-    background-color: #3a3a3a; /* Darker background color on hover */
+.refresh-btn:hover {
+    background-color: #7b5ea3;
 }
 
-@media only screen and (max-width: 600px) {
-    
-    
-    h1 {
-        font-size: 105px;
-        
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
     }
-    
-    p {
-        font-size: 90px;
-        
+    to {
+        opacity: 1;
     }
-    
-    button {
+}
 
-        font-size: 75px;
-
-    }
-
-  }
+.actor {
+    animation: fadeIn 0.8s ease-in-out;
+}
