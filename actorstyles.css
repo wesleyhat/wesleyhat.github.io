@@ -1,0 +1,38 @@
+body {
+    background-color: #121212; /* Dark background color */
+    color: #ffffff; /* Text color */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Optional: Choose a suitable font */
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Full viewport height */
+}
+
+h1 {
+    font-size: 55px;
+    margin-bottom: 30px;
+    color: #d6b4fc;
+}
+
+p {
+    font-size: 30px;
+    padding-bottom: 15px;
+}
+
+button {
+    background-color: rgba(0,0,0,0.4); /* Dark button background color */
+    color: #ffffff; /* Button text color */
+    font-size: 55px;
+    padding: 15px 20px;
+    margin-top: 25px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #3a3a3a; /* Darker background color on hover */
+}
