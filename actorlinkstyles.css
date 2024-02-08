@@ -10,6 +10,34 @@ body {
     color: #fff; /* Light text color */
     overflow-x: hidden;
   }
+
+  .names {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .name {
+    color: #fff;
+    background-color: #8D86C9;
+    border-radius: 5px;
+    padding: 20px;
+    margin: 10px;
+    align-items: center;
+    text-align: center;
+  }
+
+  .connecting-line {
+    height: 2px;
+    width: 150px; /* Adjust the length of the line as needed */
+    background-color: #8D86C9;
+    margin: 0 10px; /* Adjust the margin to create space between names and line */
+  }
+
+  h3{
+    font-weight: lighter;
+  }
+
   
   .box {
     max-width: 900px;
