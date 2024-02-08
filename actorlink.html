@@ -10,6 +10,13 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   </head>
   <body>
+
+    
+    <div class="names">
+        <h3 id="name_one" class="name"></h3>
+        <div class="connecting-line"></div>
+        <h3 id="name_two" class="name"></h3>
+    </div>
     <div class="box">
       <div class="containerOne" id="one">
         <h1 id="first_name" class="actor"></h1>
@@ -29,13 +36,240 @@
         document.addEventListener("DOMContentLoaded", function () {
         
     
-            const celebs = ["Leonardo DiCaprio", "Meryl Streep", "Brad Pitt", "Scarlett Johansson", "Denzel Washington", "Cate Blanchett", "Robert Downey Jr.", "Nicole Kidman", "Tom Hanks", "Charlize Theron", "Johnny Depp", "Angelina Jolie", "Joaquin Phoenix", "Julia Roberts", "George Clooney", "Natalie Portman", "Will Smith", "Jennifer Lawrence", "Morgan Freeman", "Kate Winslet", "Keanu Reeves", "Sandra Bullock", "Matt Damon", "Emma Stone", "Chris Hemsworth", "Viola Davis", "Ryan Gosling", "Anne Hathaway", "Hugh Jackman", "Jennifer Aniston", "Dwayne Johnson", "Helen Mirren", "Chris Evans", "Jessica Chastain", "Jake Gyllenhaal", "Amy Adams", "Mahershala Ali", "Gal Gadot", "Bradley Cooper", "Emma Watson", "Ryan Reynolds", "Saoirse Ronan", "Jamie Foxx", "Daniel Day-Lewis", "Halle Berry", "Ben Affleck", "Jodie Foster", "Eddie Redmayne", "Matthew McConaughey", "Liam Neeson", "Natalie Dormer", "Mark Wahlberg", "Rachel McAdams", "Idris Elba", "Emily Watson", "Jim Carrey", "Tilda Swinton", "James McAvoy", "Julianne Moore", "Forest Whitaker", "Marion Cotillard", "Seth Rogen", "John Malkovich", "Shirley Temple", "Casey Affleck", "Ellen DeGeneres", "Ewan McGregor", "Greta Gerwig", "Ralph Fiennes", "Taron Egerton", "Diane Lane", "Sean Penn", "Meg Ryan", "Viggo Mortensen", "Rosamund Pike", "James Franco", "Catherine Zeta-Jones", "Michael Fassbender", "Uma Thurman", "Bryan Cranston", "Michael Caine", "J.K. Simmons", "Kristen Stewart", "Michael B. Jordan", "Mila Kunis", "Tom Hardy", "Emily Blunt", "Anthony Hopkins", "Eddie Murphy", "Sally Field", "Russell Crowe", "Joseph Gordon-Levitt", "Ellen Burstyn", "Josh Gad", "Maggie Smith", "John C. Reilly", "Annette Bening", "Chris Pratt", "Rachel Weisz", "Jon Hamm", "Helen Hunt", "Donald Glover", "Jude Law", "Ellen Page", "Jeff Goldblum", "Robin Williams", "Demi Moore", "Matthew Perry", "Kathy Bates", "Patrick Swayze", "Renee Zellweger", "Clint Eastwood", "Salma Hayek", "Jamie Dornan", "Joseph Fiennes", "Dakota Johnson", "Bill Nighy", "Alicia Silverstone", "Josh Brolin", "Carey Mulligan", "Michael Keaton", "Jodie Comer", "Rosario Dawson", "Timothy Olyphant", "Anna Kendrick", "Robert De Niro", "Tessa Thompson", "Kevin Costner", "Zoe Saldana", "Hugh Grant", "Mary J. Blige", "Jeremy Renner", "Gina Rodriguez", "David Tennant", "Aishwarya Rai Bachchan", "Mark Ruffalo", "Kerry Washington", "Alicia Vikander", "Jonathan Pryce", "Sarah Paulson", "Richard Gere", "Evan Rachel Wood", "Chris Cooper", "Olivia Colman", "Iain Glen", "Hailee Steinfeld", "James Marsden", "Lily James", "Ryan Phillippe", "Patricia Clarkson", "Jeremy Irons", "Constance Wu", "Brendan Fraser", "Elle Fanning", "Rose Leslie", "Michael Shannon", "Tom Holland", "Robert Pattinson", "Reese Witherspoon", "Zac Efron", "Amanda Seyfried", "Zendaya", "Oscar Isaac", "Lupita Nyong'o", "Jesse Eisenberg", "Gemma Chan", "Charlie Hunnam", "Emma Roberts", "Zoe Kravitz", "Kit Harington", "Lily Collins", "Chadwick Boseman", "Naomi Watts", "Dev Patel", "John Boyega", "Aubrey Plaza", "Daisy Ridley", "Brie Larson", "Henry Cavill", "John Krasinski", "Emilia Clarke", "Javier Bardem", "Margot Robbie", "Andrew Garfield", "Emily Ratajkowski", "Armie Hammer", "Dakota Fanning", "Lena Headey", "Shia LaBeouf", "Paul Rudd", "Michael Cera", "Mindy Kaling", "Cillian Murphy", "Zazie Beetz", "Tom Cruise", "Bradley Whitford", "Julia Louis-Dreyfus", "Daniel Craig", "Jason Momoa", "Jessica Biel", "Owen Wilson", "Chris Pine", "Penelope Cruz", "John Legend", "Michelle Williams", "John Travolta", "Jennifer Garner", "Colin Farrell", "Samuel L. Jackson", "Judy Greer", "Elizabeth Olsen", "Benedict Cumberbatch", "Olivia Wilde", "Laura Dern", "Eva Green", "Rooney Mara", "Liam Hemsworth", "Naomi Scott", "Will Ferrell", "Chris Rock", "Bill Hader", "Kate Beckinsale"];
-          let actorOne;
+            const celebs = [
+            "Leonardo DiCaprio",
+            "Meryl Streep",
+            "Brad Pitt",
+            "Scarlett Johansson",
+            "Denzel Washington",
+            "Cate Blanchett",
+            "Robert Downey Jr.",
+            "Nicole Kidman",
+            "Tom Hanks",
+            "Charlize Theron",
+            "Johnny Depp",
+            "Angelina Jolie",
+            "Joaquin Phoenix",
+            "Julia Roberts",
+            "George Clooney",
+            "Natalie Portman",
+            "Will Smith",
+            "Jennifer Lawrence",
+            "Morgan Freeman",
+            "Kate Winslet",
+            "Keanu Reeves",
+            "Sandra Bullock",
+            "Matt Damon",
+            "Emma Stone",
+            "Chris Hemsworth",
+            "Viola Davis",
+            "Ryan Gosling",
+            "Anne Hathaway",
+            "Hugh Jackman",
+            "Jennifer Aniston",
+            "Dwayne Johnson",
+            "Helen Mirren",
+            "Chris Evans",
+            "Jessica Chastain",
+            "Jake Gyllenhaal",
+            "Amy Adams",
+            "Mahershala Ali",
+            "Gal Gadot",
+            "Bradley Cooper",
+            "Emma Watson",
+            "Ryan Reynolds",
+            "Saoirse Ronan",
+            "Jamie Foxx",
+            "Daniel Day-Lewis",
+            "Halle Berry",
+            "Ben Affleck",
+            "Jodie Foster",
+            "Eddie Redmayne",
+            "Matthew McConaughey",
+            "Liam Neeson",
+            "Natalie Dormer",
+            "Mark Wahlberg",
+            "Rachel McAdams",
+            "Idris Elba",
+            "Emily Watson",
+            "Jim Carrey",
+            "Tilda Swinton",
+            "James McAvoy",
+            "Julianne Moore",
+            "Forest Whitaker",
+            "Marion Cotillard",
+            "Seth Rogen",
+            "John Malkovich",
+            "Shirley Temple",
+            "Casey Affleck",
+            "Ellen DeGeneres",
+            "Ewan McGregor",
+            "Greta Gerwig",
+            "Ralph Fiennes",
+            "Taron Egerton",
+            "Diane Lane",
+            "Sean Penn",
+            "Meg Ryan",
+            "Viggo Mortensen",
+            "Rosamund Pike",
+            "James Franco",
+            "Catherine Zeta-Jones",
+            "Michael Fassbender",
+            "Uma Thurman",
+            "Bryan Cranston",
+            "Michael Caine",
+            "J.K. Simmons",
+            "Kristen Stewart",
+            "Michael B. Jordan",
+            "Mila Kunis",
+            "Tom Hardy",
+            "Emily Blunt",
+            "Anthony Hopkins",
+            "Eddie Murphy",
+            "Sally Field",
+            "Russell Crowe",
+            "Joseph Gordon-Levitt",
+            "Ellen Burstyn",
+            "Josh Gad",
+            "Maggie Smith",
+            "John C. Reilly",
+            "Annette Bening",
+            "Chris Pratt",
+            "Rachel Weisz",
+            "Jon Hamm",
+            "Helen Hunt",
+            "Donald Glover",
+            "Jude Law",
+            "Ellen Page",
+            "Jeff Goldblum",
+            "Robin Williams",
+            "Demi Moore",
+            "Matthew Perry",
+            "Kathy Bates",
+            "Patrick Swayze",
+            "Renee Zellweger",
+            "Clint Eastwood",
+            "Salma Hayek",
+            "Jamie Dornan",
+            "Joseph Fiennes",
+            "Dakota Johnson",
+            "Bill Nighy",
+            "Alicia Silverstone",
+            "Josh Brolin",
+            "Carey Mulligan",
+            "Michael Keaton",
+            "Jodie Comer",
+            "Rosario Dawson",
+            "Timothy Olyphant",
+            "Anna Kendrick",
+            "Robert De Niro",
+            "Tessa Thompson",
+            "Kevin Costner",
+            "Zoe Saldana",
+            "Hugh Grant",
+            "Mary J. Blige",
+            "Jeremy Renner",
+            "Gina Rodriguez",
+            "David Tennant",
+            "Aishwarya Rai Bachchan",
+            "Mark Ruffalo",
+            "Kerry Washington",
+            "Alicia Vikander",
+            "Jonathan Pryce",
+            "Sarah Paulson",
+            "Richard Gere",
+            "Evan Rachel Wood",
+            "Chris Cooper",
+            "Olivia Colman",
+            "Iain Glen",
+            "Hailee Steinfeld",
+            "James Marsden",
+            "Lily James",
+            "Ryan Phillippe",
+            "Patricia Clarkson",
+            "Jeremy Irons",
+            "Constance Wu",
+            "Brendan Fraser",
+            "Elle Fanning",
+            "Rose Leslie",
+            "Michael Shannon",
+            "Tom Holland",
+            "Robert Pattinson",
+            "Reese Witherspoon",
+            "Zac Efron",
+            "Amanda Seyfried",
+            "Zendaya",
+            "Oscar Isaac",
+            "Lupita Nyong'o",
+            "Jesse Eisenberg",
+            "Gemma Chan",
+            "Charlie Hunnam",
+            "Emma Roberts",
+            "Zoe Kravitz",
+            "Kit Harington",
+            "Lily Collins",
+            "Chadwick Boseman",
+            "Naomi Watts",
+            "Dev Patel",
+            "John Boyega",
+            "Aubrey Plaza",
+            "Daisy Ridley",
+            "Brie Larson",
+            "Henry Cavill",
+            "John Krasinski",
+            "Emilia Clarke",
+            "Javier Bardem",
+            "Margot Robbie",
+            "Andrew Garfield",
+            "Emily Ratajkowski",
+            "Armie Hammer",
+            "Dakota Fanning",
+            "Lena Headey",
+            "Shia LaBeouf",
+            "Paul Rudd",
+            "Michael Cera",
+            "Mindy Kaling",
+            "Cillian Murphy",
+            "Zazie Beetz",
+            "Tom Cruise",
+            "Bradley Whitford",
+            "Julia Louis-Dreyfus",
+            "Daniel Craig",
+            "Jason Momoa",
+            "Jessica Biel",
+            "Owen Wilson",
+            "Chris Pine",
+            "Penelope Cruz",
+            "John Legend",
+            "Michelle Williams",
+            "John Travolta",
+            "Jennifer Garner",
+            "Colin Farrell",
+            "Samuel L. Jackson",
+            "Judy Greer",
+            "Elizabeth Olsen",
+            "Benedict Cumberbatch",
+            "Olivia Wilde",
+            "Laura Dern",
+            "Eva Green",
+            "Rooney Mara",
+            "Liam Hemsworth",
+            "Naomi Scott",
+            "Will Ferrell",
+            "Chris Rock",
+            "Bill Hader",
+            "Kate Beckinsale"
+            ];
+        
+        let actorOne;
           let actorTwo;
     
           actorOne = celebs[Math.floor(Math.random() * celebs.length)];
           actorTwo = celebs[Math.floor(Math.random() * celebs.length)];
-    
+
+
+          $('#name_one').html(actorOne);
+          $('#name_two').html(actorTwo);
     
           // Set up autocomplete for input fields
           $(".autocomplete").autocomplete({
@@ -87,6 +321,22 @@
     
             // Function to handle actor click
             function handleActorClick(actorName) {
+
+                if(actorName == actorTwo){
+
+                    const endTime = new Date().getTime();
+                    const elapsedTimeInSeconds = (endTime - startTime) / 1000;
+
+                    const minutes = Math.floor(elapsedTimeInSeconds / 60);
+                    const seconds = Math.floor(elapsedTimeInSeconds % 60);
+
+                    const formattedTime = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+
+                    alert("Congratulations, you win! Time: " + formattedTime)
+                    location.reload();
+                }
+
                 // Clear the page
                 clearPage();
     
@@ -288,9 +538,19 @@
                         .catch(err => console.error(err));
             }
     
-    
-            getMovies(actorOne);
-    
+
+            let check = confirm("Your actors are " + actorOne + " to " + actorTwo + ". Press Ok to begin, or Cancel to Refresh.")
+
+            if(check){
+
+                startTime = new Date().getTime();
+
+                getMovies(actorOne);
+
+            } else {
+                location.reload();
+            }
+
         });
     
     </script>
