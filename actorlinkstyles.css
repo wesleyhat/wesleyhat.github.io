@@ -1,9 +1,14 @@
+* {
+    box-sizing: border-box;
+  }
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
     background-color: #121212; /* Darker background color */
     color: #fff; /* Light text color */
+    overflow-x: hidden;
   }
   
   .box {
@@ -46,6 +51,7 @@ body {
     /* Adjust styles for screens with a maximum width of 600px */
     .containerThree {
       grid-template-columns: repeat(2, 1fr); /* Change the number of columns to 2 on smaller screens */
+      gap: 10px;
     }
   }
 
@@ -60,7 +66,8 @@ body {
     padding: 10px;
     background-color: rgba(30, 30, 30, 0.9); /* Adjusted to a slightly lighter color */
     transition: transform 0.2s, background-color 0.3s; /* Added transition for background-color */
-  }
+    overflow: hidden; /* Ensure the overflow is hidden */
+    }
   
   .cont:hover {
     transform: scale(1.05);
@@ -68,15 +75,16 @@ body {
   }
   
   .poster {
-    width: 150px; /* Hard-coded poster size */
-    height: 225px; /* Adjusted based on a common aspect ratio */
+    width: 125px; /* Hard-coded poster size */
+    height: 200px; /* Adjusted based on a common aspect ratio */
     border-radius: 4px;
     margin-bottom: 10px;
     object-fit: cover; /* Ensure uniform poster sizes */
+    transition: .5s;
   }
   
   .main-poster {
-    width: 300px; /* Hard-coded poster size */
+    width: 250px; /* Hard-coded poster size */
     border-radius: 4px;
     margin-bottom: 10px;
     object-fit: cover; /* Ensure uniform poster sizes */
@@ -84,6 +92,7 @@ body {
   
   h2 {
     margin: 10px 0;
+    font-size: 20px;
   }
   
   p {
