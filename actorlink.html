@@ -539,17 +539,9 @@
             }
     
 
-            let check = confirm(actorOne + " to " + actorTwo + ". Press Ok to begin, or Cancel to Refresh.")
-
-            if(check){
-
-                startTime = new Date().getTime();
+            startTime = new Date().getTime();
 
                 getMovies(actorOne);
-
-            } else {
-                location.reload();
-            }
 
         });
     
