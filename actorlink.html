@@ -10,11 +10,15 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   </head>
   <body>
+    <div class="watchDiv">
+      <div id="stopwatch" class="stopwatch"><p>00:00</p></div>
+    </div>
     <div class="names">
       <h3 id="name_one" class="name"></h3>
-      <div class="connecting-line"></div>
+      <img id="swap" src="swap.png" class="swapImg">
       <h3 id="name_two" class="name"></h3>
     </div>
+    
     <div class="box">
       <div class="containerOne" id="one">
         <h1 id="first_name" class="actor"></h1>
@@ -29,7 +33,7 @@
     
     </div>
     <div class="containerHide">
-        <button id="show" class="btn">Show/Hide</button>
+        <p id="show" class="show">Show</p>
     </div>
       <div class="containerThree" id="two"></div>
     </div>
@@ -43,6 +47,26 @@
             Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhNjBiNWNhZmM3YjZiMmZiYzA2MjZkZjA1NWFlMmQ2MiIsInN1YiI6IjY1YzM4Y2IyM2ZlNzk3MDE4M2ZlZjkyNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.VBXEhhJA_kJuU1uRe2OOZ7NzIyJwWzOwgz2ZcerG9zM'
           }
         };
+
+        let stopwatchInterval;
+        let elapsedTime = 0;
+
+        function formatTime(seconds) {
+          const minutes = Math.floor(seconds / 60);
+          const remainingSeconds = seconds % 60;
+          return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+        }
+
+        function startStopwatch() {
+          stopwatchInterval = setInterval(() => {
+            elapsedTime++;
+            document.getElementById('stopwatch').innerText = formatTime(elapsedTime);
+          }, 1000);
+        }
+
+        function stopStopwatch() {
+          clearInterval(stopwatchInterval);
+        }
 
         function clickHandledMovie(array) {
             let queryOne = $('#queryOne').val();
@@ -124,12 +148,33 @@
           let movieClickListenerAdded = false;
           let isShowing = false;
 
+          let swap = document.getElementById("swap")
+
+          function swapNames(){
+            let temp = actorTwo;
+
+            actorTwo = actorOne;
+
+            actorOne = temp;
+
+            $('#name_one').html(actorOne);
+           $('#name_two').html(actorTwo); 
+
+           clearPage();
+
+            getMovies(actorOne)
+          }
+
+          swap.onclick = function() {swapNames()};
+
           function hideList(){
             if(!isShowing){
                 listContent.style.display = "grid";
+                btnShow.innerHTML = "Hide"
                 isShowing = true;
             } else{
                 listContent.style.display = "none";
+                btnShow.innerHTML = "Show"
                 isShowing = false;
             }
           }
@@ -145,12 +190,11 @@
           // Function to handle actor click
           function handleActorClick(actorName) {
             if (actorName == actorTwo) {
-              const endTime = new Date().getTime();
-              const elapsedTimeInSeconds = (endTime - startTime) / 1000;
-              const minutes = Math.floor(elapsedTimeInSeconds / 60);
-              const seconds = Math.floor(elapsedTimeInSeconds % 60);
-              const formattedTime = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-              alert("Congratulations, you win! Time: " + formattedTime)
+              stopStopwatch()
+
+              const minutes = Math.floor(elapsedTime / 60);
+              const remainingSeconds = elapsedTime % 60;
+              alert("Congratulations, you win! Time: " + minutes + ":" + remainingSeconds)
               location.reload();
             }
             // Clear the page
@@ -328,7 +372,7 @@
 
             }).catch(err => console.error(err));
           }
-          startTime = new Date().getTime();
+          startStopwatch();
           getMovies(actorOne);
         }
         exampleUsage();
