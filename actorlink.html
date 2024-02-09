@@ -22,6 +22,15 @@
         <h1 id="movie_title" class="actor"></h1>
         <hr>
       </div>
+      <div class="containerTwo">
+    
+        <input type="text" id="queryOne" class="autocomplete" placeholder="Enter actor's name or movie"/>
+        <button id="searchBtn" class="btn">Search</button><br><br>
+    
+    </div>
+    <div class="containerHide">
+        <button id="show" class="btn">Show/Hide</button>
+    </div>
       <div class="containerThree" id="two"></div>
     </div>
     <script>
@@ -34,6 +43,35 @@
             Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhNjBiNWNhZmM3YjZiMmZiYzA2MjZkZjA1NWFlMmQ2MiIsInN1YiI6IjY1YzM4Y2IyM2ZlNzk3MDE4M2ZlZjkyNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.VBXEhhJA_kJuU1uRe2OOZ7NzIyJwWzOwgz2ZcerG9zM'
           }
         };
+
+        function clickHandledMovie(array) {
+            let queryOne = $('#queryOne').val();
+
+            // Search for the movie in filmArray that matches the queryOne
+            let foundMovie = array.find(movie => movie[0] === queryOne);
+
+            $('#queryOne').val("");
+
+            if (foundMovie) {
+                // If a match is found, handle the click with the corresponding ID
+                handleMovieClick(foundMovie[2]);
+            } else {
+                // Handle the case when no match is found
+                alert('Movie not found');
+            }
+        }
+
+        function clickHandledActor() {
+            let queryOne = $('#queryOne').val();
+
+            $('#queryOne').val("");
+
+            handleActorClick(queryOne);
+        }
+
+        let btn = document.getElementById("searchBtn")
+
+
         async function getActors() {
           pageCount = 1;
           let actorArray = [];
@@ -79,9 +117,26 @@
           var arrayProfile = [];
           let currentMovie;
           let currentActor;
+          let btn = document.getElementById("searchBtn");
+          let btnShow = document.getElementById("show");
+          let listContent = document.getElementById("two");
           currentActor = actorOne;
+          let movieClickListenerAdded = false;
+          let isShowing = false;
+
+          function hideList(){
+            if(!isShowing){
+                listContent.style.display = "grid";
+                isShowing = true;
+            } else{
+                listContent.style.display = "none";
+                isShowing = false;
+            }
+          }
+
           // Function to handle movie click
           function handleMovieClick(movieID) {
+
             // Clear the page
             clearPage();
             // Run getCast function with the selected movieID
@@ -105,6 +160,7 @@
           }
           // Clear the content of the page
           function clearPage() {
+
             let name = document.getElementById("first_name");
             let poster = document.getElementById("first_poster");
             let title = document.getElementById("movie_title");
@@ -116,6 +172,9 @@
           }
 
           function getMovies(actor) {
+
+            btnShow.onclick = function() {hideList()};
+ 
             arrayID = [];
             arrayTitle = [];
             arrayPoster = [];
@@ -154,6 +213,8 @@
                   const p = document.createElement("p");
                   const year = document.createTextNode(filmArray[i][1]);
                   p.appendChild(year);
+
+                  
                   // Make the movie clickable using a closure
                   newDiv.addEventListener("click", (function(index) {
                     return function() {
@@ -164,7 +225,37 @@
                   newDiv.appendChild(h2);
                   newDiv.appendChild(p);
                   divTwo.appendChild(newDiv);
+
+                  // Set up autocomplete for input fields
+                    $(".autocomplete").autocomplete({
+                        source: arrayTitle,
+                        minLength: 2, // Minimum characters before suggestions are shown
+                        delay: 300,   // Delay in milliseconds before making the request
+                    });
                 }
+
+
+                function clickHandledMovie(){
+                    let queryOne = $('#queryOne').val();
+
+                    // Search for the movie in filmArray that matches the queryOne
+                    let foundMovie = filmArray.find(movie => movie[0] === queryOne);
+
+                    $('#queryOne').val("");
+
+                    if (foundMovie) {
+                        // If a match is found, handle the click with the corresponding ID
+                        handleMovieClick(foundMovie[2]);
+                    } else {
+                        // Handle the case when no match is found
+                        alert('Movie not found');
+                    }
+              
+                }
+
+                btn.onclick = function() {clickHandledMovie()};
+
+                
               }).catch(err => console.error(err));
             }).catch(err => {
               console.error(err)
@@ -213,7 +304,28 @@
                 newDiv.appendChild(img);
                 newDiv.appendChild(h2);
                 divTwo.appendChild(newDiv);
+
+                
+
+                // Set up autocomplete for input fields
+                $(".autocomplete").autocomplete({
+                    source: arrayName,
+                    minLength: 2, // Minimum characters before suggestions are shown
+                    delay: 300,   // Delay in milliseconds before making the request
+                });
               }
+
+              function clickHandledActor(){
+                let queryOne=$('#queryOne').val();
+
+                $('#queryOne').val("");
+
+                handleActorClick(queryOne);
+                }
+
+                btn.onclick = function() {clickHandledActor()};
+
+
             }).catch(err => console.error(err));
           }
           startTime = new Date().getTime();
