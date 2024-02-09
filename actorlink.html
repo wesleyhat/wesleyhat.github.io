@@ -213,11 +213,17 @@
             title.innerHTML = "";
             poster.setAttribute("src", "");
             content.innerHTML = "";
+
+            listContent.style.display = "none";
+            btnShow.innerHTML = "Show"
+            isShowing = false;
+
           }
 
           function getMovies(actor) {
 
             btnShow.onclick = function() {hideList()};
+
  
             arrayID = [];
             arrayTitle = [];
@@ -308,6 +314,8 @@
           }
 
           function getCast(movie) {
+
+
             arrayActorID = [];
             arrayName = [];
             arrayProfile = [];
