@@ -57,20 +57,60 @@ body {
     color: #fff;
   }
   
-  .containerTwo {
-    display: flex;
-    flex-wrap: wrap; /* Allow items to wrap to the next line on smaller screens */
-    justify-content: space-between;
-    margin-bottom: 20px;
+  /* Adjust the width of the search input */
+.autocomplete {
+    flex-grow: 2; /* Adjust the flex-grow value to control the width */
+    max-width: 400px; /* Set a maximum width for the input */
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #333; /* Adjust the background color */
+    color: #fff;
+    margin-right: 10px;
+    font-size: 17px;
   }
   
-  .autocomplete {
-    flex-grow: 1;
-    margin-right: 10px;
+  /* Align the search bar and button horizontally within .containerTwo */
+  .containerTwo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap; /* Allow items to wrap to the next line on smaller screens */
+    margin: 40px;
+  }
+
+  .containerHide{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+  }
+  
+  /* Styling for the search button */
+  .btn {
+    background-color: #8D86C9;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 17px;
+  }
+  
+  .btn:hover {
+    background-color: #635d99; /* Darker color on hover */
+  }
+  
+  /* Add a bit of spacing between the input and button */
+  .autocomplete,
+  .btn {
+    margin-bottom: 10px; /* Adjust the spacing between input and button */
+    margin-right: 10px; /* Add some spacing between the input and button */
   }
   
   .containerThree {
-    display: grid;
+    display: none;
     grid-template-columns: repeat(4, 1fr);
     gap: 20px;
   }
