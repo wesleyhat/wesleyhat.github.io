@@ -1,169 +1,228 @@
 * {
-    box-sizing: border-box;
-  }
+  box-sizing: border-box;
+}
 
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #121212; /* Darker background color */
-    color: #fff; /* Light text color */
-    overflow-x: hidden;
-  }
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #121212; /* Darker background color */
+  color: #fff; /* Light text color */
+  overflow-x: hidden;
+}
 
-  .names {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
 
-  .name {
-    color: #fff;
-    background-color: #8D86C9;
-    border-radius: 5px;
-    padding: 20px;
-    margin: 10px;
-    align-items: center;
-    text-align: center;
-  }
+.stopwatch {
+  position: fixed;
+  top: 20px;
+  right: 150px;
+  background-color: #333;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 45px;
+  opacity: 50%;
+  cursor: pointer;
+  display: inline-block; /* Set to inline-block to only take the width of the content */
+}
 
-  .connecting-line {
-    height: 2px;
-    width: 150px; /* Adjust the length of the line as needed */
-    background-color: #8D86C9;
-    margin: 0 10px; /* Adjust the margin to create space between names and line */
-  }
+.stopwatch:hover{
+  opacity: 100%;
+}
 
-  h3{
-    font-weight: lighter;
-  }
+.names {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-  
-  .box {
-    max-width: 900px;
-    margin: 20px auto;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    padding: 20px;
-    border-radius: 8px;
-    background-color: rgba(30, 30, 30, 0.9); /* Adjusted to a slightly lighter color */
-  }
-  
-  .containerOne {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  .actor {
-    color: #fff;
-  }
-  
-  /* Adjust the width of the search input */
+.name {
+  color: #fff;
+  background-color: #8D86C9;
+  border-radius: 5px;
+  padding: 20px;
+  margin: 10px;
+  align-items: center;
+  text-align: center;
+}
+
+.connecting-line {
+  height: 2px;
+  width: 150px; /* Adjust the length of the line as needed */
+  background-color: #8D86C9;
+  margin: 0 10px; /* Adjust the margin to create space between names and line */
+}
+
+h3{
+  font-weight: lighter;
+}
+
+.swapImg{
+  width: 75px;
+  margin-left: 50px;
+  margin-right: 50px;
+  cursor: pointer;
+}
+
+.box {
+  max-width: 900px;
+  margin: 20px auto;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  border-radius: 8px;
+  background-color: rgba(30, 30, 30, 0.9); /* Adjusted to a slightly lighter color */
+}
+
+.containerOne {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.actor {
+  color: #fff;
+}
+
+/* Adjust the width of the search input */
 .autocomplete {
-    flex-grow: 2; /* Adjust the flex-grow value to control the width */
-    max-width: 400px; /* Set a maximum width for the input */
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    background-color: #333; /* Adjust the background color */
-    color: #fff;
-    margin-right: 10px;
-    font-size: 17px;
-  }
-  
-  /* Align the search bar and button horizontally within .containerTwo */
-  .containerTwo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap; /* Allow items to wrap to the next line on smaller screens */
-    margin: 40px;
-  }
+  flex-grow: 2; /* Adjust the flex-grow value to control the width */
+  max-width: 400px; /* Set a maximum width for the input */
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #333; /* Adjust the background color */
+  color: #fff;
+  margin-right: 10px;
+  font-size: 17px;
+}
 
-  .containerHide{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 15px;
-  }
-  
-  /* Styling for the search button */
-  .btn {
-    background-color: #8D86C9;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    font-size: 17px;
-  }
-  
-  .btn:hover {
-    background-color: #635d99; /* Darker color on hover */
-  }
-  
-  /* Add a bit of spacing between the input and button */
-  .autocomplete,
-  .btn {
-    margin-bottom: 10px; /* Adjust the spacing between input and button */
-    margin-right: 10px; /* Add some spacing between the input and button */
-  }
-  
+/* Align the search bar and button horizontally within .containerTwo */
+.containerTwo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap; /* Allow items to wrap to the next line on smaller screens */
+  margin: 40px;
+}
+
+.containerHide{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+/* Styling for the search button */
+.btn {
+  background-color: #8D86C9;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-size: 17px;
+}
+
+.btn:hover {
+  background-color: #635d99; /* Darker color on hover */
+}
+
+/* Add a bit of spacing between the input and button */
+.autocomplete,
+.btn {
+  margin-bottom: 10px; /* Adjust the spacing between input and button */
+  margin-right: 10px; /* Add some spacing between the input and button */
+}
+
+.containerThree {
+  display: none;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.show{
+  cursor: pointer;
+}
+.show:hover{
+  transform: scale(1.05);
+}
+
+@media screen and (max-width: 600px) {
+  /* Adjust styles for screens with a maximum width of 600px */
   .containerThree {
-    display: none;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-  }
-  
-  @media screen and (max-width: 600px) {
-    /* Adjust styles for screens with a maximum width of 600px */
-    .containerThree {
-      grid-template-columns: repeat(2, 1fr); /* Change the number of columns to 2 on smaller screens */
-      gap: 10px;
-    }
+    grid-template-columns: repeat(2, 1fr); /* Change the number of columns to 2 on smaller screens */
+    gap: 10px;
   }
 
-  .box{
-    width: 100%;
-  }
-  
-  .cont {
-    text-align: center;
-    border: none;
-    border-radius: 8px;
-    padding: 10px;
-    background-color: rgba(30, 30, 30, 0.9); /* Adjusted to a slightly lighter color */
-    transition: transform 0.2s, background-color 0.3s; /* Added transition for background-color */
-    overflow: hidden; /* Ensure the overflow is hidden */
-    }
-  
-  .cont:hover {
-    transform: scale(1.05);
-    background-color: rgba(255, 255, 255, 0.1); /* Faint, see-through white on hover */
-  }
-  
-  .poster {
-    width: 125px; /* Hard-coded poster size */
-    height: 200px; /* Adjusted based on a common aspect ratio */
-    border-radius: 4px;
-    margin-bottom: 10px;
-    object-fit: cover; /* Ensure uniform poster sizes */
+
+  .stopwatch{
+    top: 98.5%;
+    right: 10px;
     transition: .5s;
+    background-color: #8D86C9;
+    opacity: 100%;
   }
-  
-  .main-poster {
-    width: 250px; /* Hard-coded poster size */
-    border-radius: 4px;
-    margin-bottom: 10px;
-    object-fit: cover; /* Ensure uniform poster sizes */
+
+  .stopwatch:hover{
+    top: 92%;
+    background-color: #333;
+    border: 2px solid #8D86C9;
   }
-  
-  h2 {
-    margin: 10px 0;
-    font-size: 20px;
+
+.box{
+  width: 100%;
+}
+
+.swapImg{
+
+  margin-left: 10px;
+  margin-right: 10px;
+
+}
+
+.autocomplete{
+  margin-bottom: 25px;
+}
+
+}
+
+.cont {
+  text-align: center;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  background-color: rgba(30, 30, 30, 0.9); /* Adjusted to a slightly lighter color */
+  transition: transform 0.2s, background-color 0.3s; /* Added transition for background-color */
+  overflow: hidden; /* Ensure the overflow is hidden */
   }
-  
-  p {
-    margin: 0;
-  }
-  
+
+.cont:hover {
+  transform: scale(1.05);
+  background-color: rgba(255, 255, 255, 0.1); /* Faint, see-through white on hover */
+}
+
+.poster {
+  width: 125px; /* Hard-coded poster size */
+  height: 200px; /* Adjusted based on a common aspect ratio */
+  border-radius: 4px;
+  margin-bottom: 10px;
+  object-fit: cover; /* Ensure uniform poster sizes */
+  transition: .5s;
+}
+
+.main-poster {
+  width: 250px; /* Hard-coded poster size */
+  border-radius: 4px;
+  margin-bottom: 10px;
+  object-fit: cover; /* Ensure uniform poster sizes */
+}
+
+h2 {
+  margin: 10px 0;
+  font-size: 20px;
+}
+
+p {
+  margin: 0;
+}
+
