@@ -10,541 +10,217 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   </head>
   <body>
-
-    
     <div class="names">
-        <h3 id="name_one" class="name"></h3>
-        <div class="connecting-line"></div>
-        <h3 id="name_two" class="name"></h3>
+      <h3 id="name_one" class="name"></h3>
+      <div class="connecting-line"></div>
+      <h3 id="name_two" class="name"></h3>
     </div>
     <div class="box">
       <div class="containerOne" id="one">
         <h1 id="first_name" class="actor"></h1>
         <img src="" id="first_poster" class="main-poster">
         <h1 id="movie_title" class="actor"></h1>
-
         <hr>
       </div>
-      <div class="containerThree" id="two">
-        
-      </div>
+      <div class="containerThree" id="two"></div>
     </div>
-
     <script>
-        // ... Your existing code ...
-    
-        document.addEventListener("DOMContentLoaded", function () {
-        
-    
-            const celebs = [
-            "Leonardo DiCaprio",
-            "Meryl Streep",
-            "Brad Pitt",
-            "Scarlett Johansson",
-            "Denzel Washington",
-            "Cate Blanchett",
-            "Robert Downey Jr.",
-            "Nicole Kidman",
-            "Tom Hanks",
-            "Charlize Theron",
-            "Johnny Depp",
-            "Angelina Jolie",
-            "Joaquin Phoenix",
-            "Julia Roberts",
-            "George Clooney",
-            "Natalie Portman",
-            "Will Smith",
-            "Jennifer Lawrence",
-            "Morgan Freeman",
-            "Kate Winslet",
-            "Keanu Reeves",
-            "Sandra Bullock",
-            "Matt Damon",
-            "Emma Stone",
-            "Chris Hemsworth",
-            "Viola Davis",
-            "Ryan Gosling",
-            "Anne Hathaway",
-            "Hugh Jackman",
-            "Jennifer Aniston",
-            "Dwayne Johnson",
-            "Helen Mirren",
-            "Chris Evans",
-            "Jessica Chastain",
-            "Jake Gyllenhaal",
-            "Amy Adams",
-            "Mahershala Ali",
-            "Gal Gadot",
-            "Bradley Cooper",
-            "Emma Watson",
-            "Ryan Reynolds",
-            "Saoirse Ronan",
-            "Jamie Foxx",
-            "Daniel Day-Lewis",
-            "Halle Berry",
-            "Ben Affleck",
-            "Jodie Foster",
-            "Eddie Redmayne",
-            "Matthew McConaughey",
-            "Liam Neeson",
-            "Natalie Dormer",
-            "Mark Wahlberg",
-            "Rachel McAdams",
-            "Idris Elba",
-            "Emily Watson",
-            "Jim Carrey",
-            "Tilda Swinton",
-            "James McAvoy",
-            "Julianne Moore",
-            "Forest Whitaker",
-            "Marion Cotillard",
-            "Seth Rogen",
-            "John Malkovich",
-            "Shirley Temple",
-            "Casey Affleck",
-            "Ellen DeGeneres",
-            "Ewan McGregor",
-            "Greta Gerwig",
-            "Ralph Fiennes",
-            "Taron Egerton",
-            "Diane Lane",
-            "Sean Penn",
-            "Meg Ryan",
-            "Viggo Mortensen",
-            "Rosamund Pike",
-            "James Franco",
-            "Catherine Zeta-Jones",
-            "Michael Fassbender",
-            "Uma Thurman",
-            "Bryan Cranston",
-            "Michael Caine",
-            "J.K. Simmons",
-            "Kristen Stewart",
-            "Michael B. Jordan",
-            "Mila Kunis",
-            "Tom Hardy",
-            "Emily Blunt",
-            "Anthony Hopkins",
-            "Eddie Murphy",
-            "Sally Field",
-            "Russell Crowe",
-            "Joseph Gordon-Levitt",
-            "Ellen Burstyn",
-            "Josh Gad",
-            "Maggie Smith",
-            "John C. Reilly",
-            "Annette Bening",
-            "Chris Pratt",
-            "Rachel Weisz",
-            "Jon Hamm",
-            "Helen Hunt",
-            "Donald Glover",
-            "Jude Law",
-            "Ellen Page",
-            "Jeff Goldblum",
-            "Robin Williams",
-            "Demi Moore",
-            "Matthew Perry",
-            "Kathy Bates",
-            "Patrick Swayze",
-            "Renée Zellweger",
-            "Clint Eastwood",
-            "Salma Hayek",
-            "Jamie Dornan",
-            "Joseph Fiennes",
-            "Dakota Johnson",
-            "Bill Nighy",
-            "Alicia Silverstone",
-            "Josh Brolin",
-            "Carey Mulligan",
-            "Michael Keaton",
-            "Jodie Comer",
-            "Rosario Dawson",
-            "Timothy Olyphant",
-            "Anna Kendrick",
-            "Robert De Niro",
-            "Tessa Thompson",
-            "Kevin Costner",
-            "Zoe Saldana",
-            "Hugh Grant",
-            "Mary J. Blige",
-            "Jeremy Renner",
-            "Gina Rodriguez",
-            "David Tennant",
-            "Aishwarya Rai Bachchan",
-            "Mark Ruffalo",
-            "Kerry Washington",
-            "Alicia Vikander",
-            "Jonathan Pryce",
-            "Sarah Paulson",
-            "Richard Gere",
-            "Evan Rachel Wood",
-            "Chris Cooper",
-            "Olivia Colman",
-            "Iain Glen",
-            "Hailee Steinfeld",
-            "James Marsden",
-            "Lily James",
-            "Ryan Phillippe",
-            "Patricia Clarkson",
-            "Jeremy Irons",
-            "Constance Wu",
-            "Brendan Fraser",
-            "Elle Fanning",
-            "Rose Leslie",
-            "Michael Shannon",
-            "Tom Holland",
-            "Robert Pattinson",
-            "Reese Witherspoon",
-            "Zac Efron",
-            "Amanda Seyfried",
-            "Zendaya",
-            "Oscar Isaac",
-            "Lupita Nyong'o",
-            "Jesse Eisenberg",
-            "Gemma Chan",
-            "Charlie Hunnam",
-            "Emma Roberts",
-            "Zoe Kravitz",
-            "Kit Harington",
-            "Lily Collins",
-            "Chadwick Boseman",
-            "Naomi Watts",
-            "Dev Patel",
-            "John Boyega",
-            "Aubrey Plaza",
-            "Daisy Ridley",
-            "Brie Larson",
-            "Henry Cavill",
-            "John Krasinski",
-            "Emilia Clarke",
-            "Javier Bardem",
-            "Margot Robbie",
-            "Andrew Garfield",
-            "Emily Ratajkowski",
-            "Armie Hammer",
-            "Dakota Fanning",
-            "Lena Headey",
-            "Shia LaBeouf",
-            "Paul Rudd",
-            "Michael Cera",
-            "Mindy Kaling",
-            "Cillian Murphy",
-            "Zazie Beetz",
-            "Tom Cruise",
-            "Bradley Whitford",
-            "Julia Louis-Dreyfus",
-            "Daniel Craig",
-            "Jason Momoa",
-            "Jessica Biel",
-            "Owen Wilson",
-            "Chris Pine",
-            "Penelope Cruz",
-            "John Legend",
-            "Michelle Williams",
-            "John Travolta",
-            "Jennifer Garner",
-            "Colin Farrell",
-            "Samuel L. Jackson",
-            "Judy Greer",
-            "Elizabeth Olsen",
-            "Benedict Cumberbatch",
-            "Olivia Wilde",
-            "Laura Dern",
-            "Eva Green",
-            "Rooney Mara",
-            "Liam Hemsworth",
-            "Naomi Scott",
-            "Will Ferrell",
-            "Chris Rock",
-            "Bill Hader",
-            "Kate Beckinsale"
-            ];
-        
-        let actorOne;
+      // ... Your existing code ...
+      document.addEventListener("DOMContentLoaded", function() {
+        const options = {
+          method: 'GET',
+          headers: {
+            accept: 'application/json',
+            Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhNjBiNWNhZmM3YjZiMmZiYzA2MjZkZjA1NWFlMmQ2MiIsInN1YiI6IjY1YzM4Y2IyM2ZlNzk3MDE4M2ZlZjkyNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.VBXEhhJA_kJuU1uRe2OOZ7NzIyJwWzOwgz2ZcerG9zM'
+          }
+        };
+        async function getActors() {
+          pageCount = 1;
+          let actorArray = [];
+          for (var i = 0; i < 10; i++) {
+            const response = await fetch('https://api.themoviedb.org/3/person/popular?language=en-US&page=' + pageCount, options);
+            const data = await response.json();
+            actorArray = actorArray.concat(data.results.map(actor => actor.name));
+            pageCount += 1;
+          }
+          return actorArray;
+        }
+        async function exampleUsage() {
+          const celebs = await getActors();
+          console.log(celebs); // Now it should not be undefined
+          let actorOne;
           let actorTwo;
-    
           actorOne = celebs[Math.floor(Math.random() * celebs.length)];
           actorTwo = celebs[Math.floor(Math.random() * celebs.length)];
-
-
           $('#name_one').html(actorOne);
           $('#name_two').html(actorTwo);
-    
           // Set up autocomplete for input fields
           $(".autocomplete").autocomplete({
             source: celebs,
             minLength: 2, // Minimum characters before suggestions are shown
             delay: 300, // Delay in milliseconds before making the request
           });
-    
-    
-            let nameOne = actorOne;
-            let nameTwo = actorTwo;
-            let idOne;
-            let idTwo;
-            let profOne;
-            let oneMovie;
-            let oneCast;
-            let commonMovie;
-            var arrayID = [];
-            var arrayTitle = [];
-            var arrayPoster = [];
-            var arrayYear = [];
-            let twoMovie;
-            var arrayTwo = [];       
-            var arrayActorID = [];
-            var arrayName = [];
-            var arrayProfile = [];
-    
-            let currentMovie;
-            let currentActor;
-    
-            const options = {
-              method: 'GET',
-              headers: {
-                accept: 'application/json',
-                Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhNjBiNWNhZmM3YjZiMmZiYzA2MjZkZjA1NWFlMmQ2MiIsInN1YiI6IjY1YzM4Y2IyM2ZlNzk3MDE4M2ZlZjkyNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.VBXEhhJA_kJuU1uRe2OOZ7NzIyJwWzOwgz2ZcerG9zM'
-              }
-            };
-    
-            currentActor = actorOne;
-    
-            // Function to handle movie click
-            function handleMovieClick(movieID) {
-                // Clear the page
-                clearPage();
-    
-                // Run getCast function with the selected movieID
-                getCast(movieID);
+          let nameOne = actorOne;
+          let nameTwo = actorTwo;
+          let idOne;
+          let idTwo;
+          let profOne;
+          let oneMovie;
+          let oneCast;
+          let commonMovie;
+          var arrayID = [];
+          var arrayTitle = [];
+          var arrayPoster = [];
+          var arrayYear = [];
+          let twoMovie;
+          var arrayTwo = [];
+          var arrayActorID = [];
+          var arrayName = [];
+          var arrayProfile = [];
+          let currentMovie;
+          let currentActor;
+          currentActor = actorOne;
+          // Function to handle movie click
+          function handleMovieClick(movieID) {
+            // Clear the page
+            clearPage();
+            // Run getCast function with the selected movieID
+            getCast(movieID);
+          }
+          // Function to handle actor click
+          function handleActorClick(actorName) {
+            if (actorName == actorTwo) {
+              const endTime = new Date().getTime();
+              const elapsedTimeInSeconds = (endTime - startTime) / 1000;
+              const minutes = Math.floor(elapsedTimeInSeconds / 60);
+              const seconds = Math.floor(elapsedTimeInSeconds % 60);
+              const formattedTime = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+              alert("Congratulations, you win! Time: " + formattedTime)
+              location.reload();
             }
-    
-            // Function to handle actor click
-            function handleActorClick(actorName) {
+            // Clear the page
+            clearPage();
+            // Run getMovies function with the selected actorName
+            getMovies(actorName);
+          }
+          // Clear the content of the page
+          function clearPage() {
+            let name = document.getElementById("first_name");
+            let poster = document.getElementById("first_poster");
+            let title = document.getElementById("movie_title");
+            let content = document.getElementById("two")
+            name.innerHTML = "";
+            title.innerHTML = "";
+            poster.setAttribute("src", "");
+            content.innerHTML = "";
+          }
 
-                if(actorName == actorTwo){
-
-                    const endTime = new Date().getTime();
-                    const elapsedTimeInSeconds = (endTime - startTime) / 1000;
-
-                    const minutes = Math.floor(elapsedTimeInSeconds / 60);
-                    const seconds = Math.floor(elapsedTimeInSeconds % 60);
-
-                    const formattedTime = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-
-
-                    alert("Congratulations, you win! Time: " + formattedTime)
-                    location.reload();
-                }
-
-                // Clear the page
-                clearPage();
-    
-                // Run getMovies function with the selected actorName
-                getMovies(actorName);
-            }
-    
-            // Clear the content of the page
-            function clearPage() {
-
-                let name = document.getElementById("first_name");
-                let poster = document.getElementById("first_poster");
-                let title = document.getElementById("movie_title");
-
-                let content = document.getElementById("two")
-
-                name.innerHTML = "";
-                title.innerHTML = "";
-
-                poster.setAttribute("src", "");
-
-                content.innerHTML = "";
-
-            }
-    
-    
-            function getMovies(actor){
-
-
-                arrayID = [];
-                arrayTitle = [];
-                arrayPoster = [];
-                arrayYear = [];
-
-                selectedActor = actor;
-
-
-                fetch('https://api.themoviedb.org/3/search/person?query=' + selectedActor + '&include_adult=false&language=en-US&page=1', options).then(response => response.json()).then(response => {
+          function getMovies(actor) {
+            arrayID = [];
+            arrayTitle = [];
+            arrayPoster = [];
+            arrayYear = [];
+            selectedActor = actor;
+            fetch('https://api.themoviedb.org/3/search/person?query=' + selectedActor + '&include_adult=false&language=en-US&page=1', options).then(response => response.json()).then(response => {
               idOne = response.results[0].id;
-              profOne = response.results[0].profile_path
-                ? "https://image.tmdb.org/t/p/w500" + response.results[0].profile_path
-                : 'actor.png';  // Replace 'path_to_default_image.jpg' with your default image path
-
+              profOne = response.results[0].profile_path ? "https://image.tmdb.org/t/p/w500" + response.results[0].profile_path : 'actor.png'; // Replace 'path_to_default_image.jpg' with your default image path
               fetch('https://api.themoviedb.org/3/person/' + idOne + '/movie_credits?language=en-US', options).then(response => response.json()).then(response => {
                 oneMovie = response;
                 for (var i = 0; i < oneMovie.cast.length; i++) {
                   arrayID.push(oneMovie.cast[i].id)
                   arrayTitle.push(oneMovie.cast[i].title)
-                  arrayYear.push(parseInt(oneMovie.cast[i].release_date.substr(0,4)))
-
-                  let movImg = oneMovie.cast[i].poster_path
-                  ? "https://image.tmdb.org/t/p/w500" + oneMovie.cast[i].poster_path
-                  : 'movie.png';  // Replace 'path_to_default_image.jpg' with your default image path
-
+                  arrayYear.push(parseInt(oneMovie.cast[i].release_date.substr(0, 4)))
+                  let movImg = oneMovie.cast[i].poster_path ? "https://image.tmdb.org/t/p/w500" + oneMovie.cast[i].poster_path : 'movie.png'; // Replace 'path_to_default_image.jpg' with your default image path
                   arrayPoster.push(movImg)
-                  
                 }
-    
-    
                 $('#first_name').html(actor)
-    
                 const img = document.getElementById("first_poster");
-                        img.setAttribute('src',profOne)
-    
+                img.setAttribute('src', profOne)
                 let filmArray = arrayTitle.map((e, i) => [e, arrayYear[i], arrayID[i], arrayPoster[i]]);
-    
-    
                 filmArray.sort((a, b) => b[1] - a[1]);
-    
-                console.log(filmArray);
-    
-    
                 let count = 0;
-    
                 let divTwo = document.getElementById("two")
-    
                 // Modify the display of movies to make them clickable
                 for (let i = 0; i < filmArray.length; i++) {
-                const newDiv = document.createElement("div");
-                newDiv.setAttribute("class", "cont");
-
-                const img = document.createElement("img");
-                img.setAttribute("src", filmArray[i][3]);
-                img.setAttribute("id", "poster");
-                img.setAttribute("class", "poster");
-
-                const h2 = document.createElement("h2");
-                const title = document.createTextNode(filmArray[i][0]);
-                h2.appendChild(title);
-
-                const p = document.createElement("p");
-                const year = document.createTextNode(filmArray[i][1]);
-                p.appendChild(year);
-
-                // Make the movie clickable using a closure
-                newDiv.addEventListener("click", (function (index) {
-                    return function () {
-                        handleMovieClick(filmArray[index][2]);
+                  const newDiv = document.createElement("div");
+                  newDiv.setAttribute("class", "cont");
+                  const img = document.createElement("img");
+                  img.setAttribute("src", filmArray[i][3]);
+                  img.setAttribute("id", "poster");
+                  img.setAttribute("class", "poster");
+                  const h2 = document.createElement("h2");
+                  const title = document.createTextNode(filmArray[i][0]);
+                  h2.appendChild(title);
+                  const p = document.createElement("p");
+                  const year = document.createTextNode(filmArray[i][1]);
+                  p.appendChild(year);
+                  // Make the movie clickable using a closure
+                  newDiv.addEventListener("click", (function(index) {
+                    return function() {
+                      handleMovieClick(filmArray[index][2]);
                     };
-                })(i));
-
-                newDiv.appendChild(img);
-                newDiv.appendChild(h2);
-                newDiv.appendChild(p);
-
-                divTwo.appendChild(newDiv);
-}
-    
-                
+                  })(i));
+                  newDiv.appendChild(img);
+                  newDiv.appendChild(h2);
+                  newDiv.appendChild(p);
+                  divTwo.appendChild(newDiv);
+                }
               }).catch(err => console.error(err));
             }).catch(err => {
               console.error(err)
               $('#queryOne').val("")
             });
+          }
 
-            }
-    
-            function getCast(movie){
-
-
-                arrayActorID = [];
-                arrayName = [];
-                arrayProfile = [];
-
-                let movieID = movie;
-    
-                fetch('https://api.themoviedb.org/3/movie/'+movieID+'/credits?language=en-US', options)
-                        .then(response => response.json())
-                        .then(response => {
-                            oneCast = response;
-    
-                            console.log(oneCast)
-    
-                            for (var i = 0; i < oneCast.cast.length; i++) {
-                  arrayActorID.push(oneCast.cast[i].id)
-                  arrayName.push(oneCast.cast[i].name)
-
-                  let profImg = oneCast.cast[i].profile_path
-                ? "https://image.tmdb.org/t/p/w500" + oneCast.cast[i].profile_path
-                : 'actor.png';  // Replace 'path_to_default_image.jpg' with your default image path
-
-                  arrayProfile.push(profImg)
-                  
-                }
-    
-    
-                fetch('https://api.themoviedb.org/3/movie/'+movieID+'?language=en-US', options)
-                    .then(response => response.json())
-                    .then(response => {
-                        let movieTitle = response.title;
-                        let imgPath = response.poster_path
-                        ? "https://image.tmdb.org/t/p/w500" + response.poster_path
-                        : 'movie.png';  // Replace 'path_to_default_image.jpg' with your default image path
-
-    
-                        $('#movie_title').html(movieTitle)
-    
-                        const img = document.getElementById("first_poster");
-                        img.setAttribute('src',imgPath)
-    
-                        console.log(response)
-                    })
-                    .catch(err => console.error(err));
-    
-                let castArray = arrayName.map((e, i) => [e, arrayActorID[i], arrayProfile[i]]);
-    
-                console.log(castArray);
-    
-                let divTwo = document.getElementById("two")
-    
-                for (let i = 0; i < castArray.length; i++) {
+          function getCast(movie) {
+            arrayActorID = [];
+            arrayName = [];
+            arrayProfile = [];
+            let movieID = movie;
+            fetch('https://api.themoviedb.org/3/movie/' + movieID + '/credits?language=en-US', options).then(response => response.json()).then(response => {
+              oneCast = response;
+              for (var i = 0; i < oneCast.cast.length; i++) {
+                arrayActorID.push(oneCast.cast[i].id)
+                arrayName.push(oneCast.cast[i].name)
+                let profImg = oneCast.cast[i].profile_path ? "https://image.tmdb.org/t/p/w500" + oneCast.cast[i].profile_path : 'actor.png'; // Replace 'path_to_default_image.jpg' with your default image path
+                arrayProfile.push(profImg)
+              }
+              fetch('https://api.themoviedb.org/3/movie/' + movieID + '?language=en-US', options).then(response => response.json()).then(response => {
+                let movieTitle = response.title;
+                let imgPath = response.poster_path ? "https://image.tmdb.org/t/p/w500" + response.poster_path : 'movie.png'; // Replace 'path_to_default_image.jpg' with your default image path
+                $('#movie_title').html(movieTitle)
+                const img = document.getElementById("first_poster");
+                img.setAttribute('src', imgPath)
+              }).catch(err => console.error(err));
+              let castArray = arrayName.map((e, i) => [e, arrayActorID[i], arrayProfile[i]]);
+              let divTwo = document.getElementById("two")
+              for (let i = 0; i < castArray.length; i++) {
                 const newDiv = document.createElement("div");
                 newDiv.setAttribute("class", "cont");
-
                 const img = document.createElement("img");
                 img.setAttribute("src", castArray[i][2]);
                 img.setAttribute("id", "poster");
                 img.setAttribute("class", "poster");
-
                 const h2 = document.createElement("h2");
                 const title = document.createTextNode(castArray[i][0]);
                 h2.appendChild(title);
-
                 // Make the actor clickable using a closure
-                newDiv.addEventListener("click", (function (index) {
-                    return function () {
-                        handleActorClick(castArray[index][0]);
-                    };
+                newDiv.addEventListener("click", (function(index) {
+                  return function() {
+                    handleActorClick(castArray[index][0]);
+                  };
                 })(i));
-
                 newDiv.appendChild(img);
                 newDiv.appendChild(h2);
-
                 divTwo.appendChild(newDiv);
-    }
-    
-    
-                        })
-                        .catch(err => console.error(err));
-            }
-    
-
-            startTime = new Date().getTime();
-
-                getMovies(actorOne);
-
-        });
-    
+              }
+            }).catch(err => console.error(err));
+          }
+          startTime = new Date().getTime();
+          getMovies(actorOne);
+        }
+        exampleUsage();
+      });
     </script>
   </body>
 </html>
