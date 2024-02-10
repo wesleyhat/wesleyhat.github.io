@@ -195,6 +195,13 @@
             if (actorName == actorTwo) {
               stopStopwatch()
 
+              function hideKeyboard(){
+              	document.activeElement.blur();
+              	$("input").blur();
+              };
+
+              hideKeyboard();
+
               const minutes = Math.floor(elapsedTime / 60);
               const remainingSeconds = elapsedTime % 60;
               alert("Congratulations, you win! Time: " + minutes + ":" + remainingSeconds + "s. Play Again?")
