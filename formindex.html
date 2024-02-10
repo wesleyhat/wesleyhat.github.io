@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Webpage Title</title>
+    <link rel="stylesheet" href="formstyles.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="actors.js"></script>
+</head>
+
+<body>
+    <div class="box">
+        <div class="containerOne">
+            <h1>Input Names:</h1>
+            <form id="actorForm">
+                <input type="text" id="actor1" class="autocomplete" placeholder="Actor one" required>
+                <input type="text" id="actor2" class="autocomplete" placeholder="Actor two" required>
+
+                <p>Or, let us pick for you:</p>
+
+                <div class="toggle-switch-container">
+                    <input type="checkbox" id="autoPick" class="toggle-checkbox">
+                    <label for="autoPick" class="toggle-label">
+                        <div class="toggle-slider"></div>
+                    </label>
+                </div>
+
+                <div class="btn-container">
+                    <button type="button" onclick="submitForm()" class="btn">SUBMIT</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+
+
+
+
+    const celebs = actorDatabase;
+
+    $(".autocomplete").autocomplete({
+                source: celebs,
+                minLength: 2, // Minimum characters before suggestions are shown
+                delay: 300,   // Delay in milliseconds before making the request
+            });
+
+    document.getElementById('autoPick').addEventListener('change', function () {
+    var slider = document.querySelector('.toggle-slider');
+    slider.style.left = this.checked ? 'calc(100% - 16px)' : '16px';
+    });
+
+    function submitForm() {
+    var actor1Value = document.getElementById('actor1').value.trim();
+    var actor2Value = document.getElementById('actor2').value.trim();
+    var autoPickChecked = document.getElementById('autoPick').checked;
+
+    if(!autoPickChecked){
+        // Check if input fields are not empty before redirecting
+    if (actor1Value === '' || actor2Value === '') {
+    alert('Please fill in both actor names.');
+    return; // Stop the function if validation fails
+    }
+    }
+
+    // Redirect to the new page with the selected actors and toggle state as query parameters
+    window.location.href = 'actorlink.html?actor1=' + encodeURIComponent(actor1Value) +
+    '&actor2=' + encodeURIComponent(actor2Value) +
+    '&autoPick=' + autoPickChecked;       
+}
+    </script>
+</body>
+
+</html>
