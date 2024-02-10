@@ -8,6 +8,7 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="actors.js"></script>
   </head>
   <body>
     <div class="watchDiv">
@@ -28,7 +29,7 @@
       </div>
       <div class="containerTwo">
     
-        <input type="text" id="queryOne" class="autocomplete" placeholder="Enter actor's name or movie"/>
+        <input type="text" id="queryOne" class="autocomplete" placeholder="Enter actor's name or movie" required/>
         <button id="searchBtn" class="btn">Search</button><br><br>
     
     </div>
@@ -96,24 +97,26 @@
         let btn = document.getElementById("searchBtn")
 
 
-        async function getActors() {
-          pageCount = 1;
-          let actorArray = [];
-          for (var i = 0; i < 10; i++) {
-            const response = await fetch('https://api.themoviedb.org/3/person/popular?language=en-US&page=' + pageCount, options);
-            const data = await response.json();
-            actorArray = actorArray.concat(data.results.map(actor => actor.name));
-            pageCount += 1;
-          }
-          return actorArray;
-        }
         async function exampleUsage() {
-          const celebs = await getActors();
+          const celebs = actorDatabase;
           console.log(celebs); // Now it should not be undefined
+
+          var urlParams = new URLSearchParams(window.location.search);
+          var formActorOne = urlParams.get('actor1');
+          var formActorTwo = urlParams.get('actor2');
+          var autoPick = urlParams.get('autoPick') === 'true'; // Convert the string to boolean
+
           let actorOne;
           let actorTwo;
-          actorOne = celebs[Math.floor(Math.random() * celebs.length)];
-          actorTwo = celebs[Math.floor(Math.random() * celebs.length)];
+
+          if(autoPick){
+            actorOne = celebs[Math.floor(Math.random() * celebs.length)];
+            actorTwo = celebs[Math.floor(Math.random() * celebs.length)];
+          } else{
+            actorOne = formActorOne;
+            actorTwo = formActorTwo;
+          }
+          
           $('#name_one').html(actorOne);
           $('#name_two').html(actorTwo);
           // Set up autocomplete for input fields
@@ -194,8 +197,8 @@
 
               const minutes = Math.floor(elapsedTime / 60);
               const remainingSeconds = elapsedTime % 60;
-              alert("Congratulations, you win! Time: " + minutes + ":" + remainingSeconds)
-              location.reload();
+              alert("Congratulations, you win! Time: " + minutes + ":" + remainingSeconds + "s. Play Again?")
+              window.location.href = "formindex.html";
             }
             // Clear the page
             clearPage();
