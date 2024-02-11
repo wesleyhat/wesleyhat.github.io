@@ -359,6 +359,7 @@
           function getMovies(actor) {
 
             btnShow.onclick = function() {hideList()};
+            $('#queryOne').val("");
 
  
             arrayID = [];
@@ -450,6 +451,8 @@
           }
 
           function getCast(movie) {
+
+            $('#queryOne').val("");
 
 
             arrayActorID = [];
