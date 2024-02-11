@@ -27,7 +27,7 @@
         <h1 id="movie_title" class="actor"></h1>
         <hr>
       </div>
-      <div class="containerTwo">
+      <div class="containerTwo" id="search">
     
         <input type="text" id="queryOne" class="autocomplete" placeholder="Enter actor's name or movie" required/>
         <button id="searchBtn" class="btn">Search</button><br><br>
@@ -37,6 +37,7 @@
         <p id="show" class="show">Show</p>
     </div>
       <div class="containerThree" id="two"></div>
+      <div class="containerFour" id="final"></div>
     </div>
     <script>
       // ... Your existing code ...
@@ -48,6 +49,9 @@
             Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhNjBiNWNhZmM3YjZiMmZiYzA2MjZkZjA1NWFlMmQ2MiIsInN1YiI6IjY1YzM4Y2IyM2ZlNzk3MDE4M2ZlZjkyNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.VBXEhhJA_kJuU1uRe2OOZ7NzIyJwWzOwgz2ZcerG9zM'
           }
         };
+
+        let finalActors = [];
+        let finalMovies = [];
 
         let stopwatchInterval;
         let elapsedTime = 0;
@@ -78,6 +82,8 @@
             $('#queryOne').val("");
 
             if (foundMovie) {
+
+                finalMovies.push(foundMovie[2]);
                 // If a match is found, handle the click with the corresponding ID
                 handleMovieClick(foundMovie[2]);
             } else {
@@ -91,6 +97,8 @@
 
             $('#queryOne').val("");
 
+            finalActors.push(queryOne);
+
             handleActorClick(queryOne);
         }
 
@@ -99,7 +107,6 @@
 
         async function exampleUsage() {
           const celebs = actorDatabase;
-          console.log(celebs); // Now it should not be undefined
 
           var urlParams = new URLSearchParams(window.location.search);
           var formActorOne = urlParams.get('actor1');
@@ -112,9 +119,13 @@
           if(autoPick){
             actorOne = celebs[Math.floor(Math.random() * celebs.length)];
             actorTwo = celebs[Math.floor(Math.random() * celebs.length)];
+
+            finalActors.push(actorOne);
           } else{
             actorOne = formActorOne;
             actorTwo = formActorTwo;
+
+            finalActors.push(actorOne);
           }
           
           $('#name_one').html(actorOne);
@@ -146,7 +157,10 @@
           let currentActor;
           let btn = document.getElementById("searchBtn");
           let btnShow = document.getElementById("show");
+          let one = document.getElementById("one");
           let listContent = document.getElementById("two");
+          let watch = document.getElementById("stopwatch");
+          let search = document.getElementById("search");
           currentActor = actorOne;
           let movieClickListenerAdded = false;
           let isShowing = false;
@@ -164,6 +178,11 @@
            $('#name_two').html(actorTwo); 
 
            clearPage();
+
+           finalActors = [];
+            finalMovies = [];
+
+            finalActors.push(actorOne);
 
             getMovies(actorOne)
           }
@@ -187,6 +206,7 @@
 
             // Clear the page
             clearPage();
+            finalMovies.push(movieID)
             // Run getCast function with the selected movieID
             getCast(movieID);
           }
@@ -204,11 +224,117 @@
 
               const minutes = Math.floor(elapsedTime / 60);
               const remainingSeconds = elapsedTime % 60;
-              alert("Congratulations, you win! Time: " + minutes + ":" + remainingSeconds + "s. Play Again?")
-              window.location.href = "formindex.html";
+
+              const fetchPromises = [];
+
+              for (let i = 0; i < finalMovies.length; i++) {
+                  const fetchPromise = fetch('https://api.themoviedb.org/3/movie/' + finalMovies[i] + '?language=en-US', options)
+                      .then(response => response.json())
+                      .then(response => {
+                          let poster = response;
+                          let posterPath = "https://image.tmdb.org/t/p/w500" + poster.poster_path;
+                          finalMovies[i] = posterPath;
+                      })
+                      .catch(err => console.error(err));
+
+                  fetchPromises.push(fetchPromise);
+              }
+
+                
+
+              // Wait for all fetch requests to complete
+              Promise.all(fetchPromises)
+                  .then(() => {
+                      // Determine the maximum length of the two arrays
+                      const maxLength = Math.max(finalActors.length, finalMovies.length);
+
+                      btnShow.innerHTML = "";
+                      let watchTime = watch.innerHTML;
+
+                      watch.style.display = "none";
+                      one.style.display = "none";
+                      search.style.display = "none";
+
+                      final = document.getElementById("final");
+                      final.style.display = "initial";
+
+                            const finalDiv = document.createElement("div");
+                            finalDiv.setAttribute("class", "final-cont");
+                            const congrats = document.createElement("h1");
+                            const congratsTxt = document.createTextNode("Congrats, You Win!");
+                            congrats.appendChild(congratsTxt);
+                            const h1Time = document.createElement("h1");
+                            const timeDisplay = document.createTextNode("Total Time: " + watchTime + "s");
+                            var hr1 = document.createElement('hr');
+                            h1Time.appendChild(timeDisplay);
+                            finalDiv.appendChild(congrats);
+                            finalDiv.appendChild(hr1);
+                            finalDiv.appendChild(h1Time);
+                            final.appendChild(finalDiv);
+
+                      // Iterate through the arrays and display elements alternatively
+                      for (let i = 0; i < maxLength - 1; i++) {
+                          if (i < finalActors.length) {
+
+                            const newDiv = document.createElement("div");
+                            newDiv.setAttribute("class", "final-cont");
+                            const h2 = document.createElement("h2");
+                            const name = document.createTextNode(finalActors[i]);
+                            h2.appendChild(name);
+                            newDiv.appendChild(h2);
+                            final.appendChild(newDiv);
+
+                              console.log(finalActors[i]);
+                          }
+                          if (i < finalMovies.length) {
+
+                            const newDiv = document.createElement("div");
+                            newDiv.setAttribute("class", "final-cont");
+                            const img = document.createElement("img");
+                            img.setAttribute("src", finalMovies[i]);
+                            img.setAttribute("id", "poster");
+                            img.setAttribute("class", "poster");
+                            newDiv.appendChild(img);
+                            final.appendChild(newDiv);
+
+                          console.log(finalMovies[i]);
+                          }
+                      }
+
+                      const newDiv = document.createElement("div");
+                            newDiv.setAttribute("class", "final-cont");
+                            const h2 = document.createElement("h2");
+                            const name = document.createTextNode(finalActors[finalActors.length - 1]);
+                            h2.appendChild(name);
+                            newDiv.appendChild(h2);
+                            final.appendChild(newDiv);
+
+                      const linkDiv = document.createElement('div');
+                      linkDiv.setAttribute("class", "final-cont");
+                      
+                      const newButton = document.createElement('button');
+                      newButton.textContent = 'Play Again'; // Replace with the desired button text
+                      newButton.classList.add('btn');
+
+                      // Add a click event listener to the button
+                      newButton.addEventListener('click', function() {
+                          // Redirect to a different page when the button is clicked
+                          window.location.href = 'formindex.html'; // Replace with the desired link URL
+                      });
+
+                      linkDiv.appendChild(newButton);
+                      final.appendChild(linkDiv);
+
+                  })
+                  .catch(err => console.error(err));
+
+              /*alert("Congratulations, you win! Time: " + minutes + ":" + remainingSeconds + "s. Play Again?")
+              window.location.href = "formindex.html";*/
             }
             // Clear the page
             clearPage();
+
+            finalActors.push(actorName)
             // Run getMovies function with the selected actorName
             getMovies(actorName);
           }
