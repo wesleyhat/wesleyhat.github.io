@@ -4,6 +4,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" type="text/css" href="actorlinkstyles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
     <title>Actor Link</title>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -13,6 +19,9 @@
   <body>
     <div class="watchDiv">
       <div id="stopwatch" class="stopwatch"><p>00:00</p></div>
+    </div>
+    <div id="clock" class="clock">
+      <img src="timer.png" alt="" class="timer"/>
     </div>
     <div class="names">
       <h3 id="name_one" class="name"></h3>
@@ -160,12 +169,27 @@
           let one = document.getElementById("one");
           let listContent = document.getElementById("two");
           let watch = document.getElementById("stopwatch");
+          let clock = document.getElementById("clock");
           let search = document.getElementById("search");
           currentActor = actorOne;
           let movieClickListenerAdded = false;
           let isShowing = false;
 
           let swap = document.getElementById("swap")
+
+          watch.onclick = function() {showClock()};
+
+          clock.onclick = function() {showWatch()};
+
+          function showClock(){
+            watch.style.right = "-40%"
+            clock.style.display = "initial"
+          }
+
+          function showWatch(){
+            watch.style.right = "0"
+            clock.style.display = "none"
+          }
 
           function swapNames(){
             let temp = actorTwo;
@@ -293,7 +317,7 @@
                             const img = document.createElement("img");
                             img.setAttribute("src", finalMovies[i]);
                             img.setAttribute("id", "poster");
-                            img.setAttribute("class", "poster");
+                            img.setAttribute("class", "poster-final");
                             newDiv.appendChild(img);
                             final.appendChild(newDiv);
 
@@ -324,6 +348,7 @@
 
                       linkDiv.appendChild(newButton);
                       final.appendChild(linkDiv);
+
 
                   })
                   .catch(err => console.error(err));
