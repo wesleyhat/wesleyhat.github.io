@@ -3,74 +3,78 @@
 }
 
 body {
-  font-family: Arial, sans-serif;
+  font-family: "Open Sans", sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #121212; /* Darker background color */
+  background-color: #0d1117; /* Darker background color */
   color: #fff; /* Light text color */
   overflow-x: hidden;
+  
+}
+
+.timer{
+  width: 40px;
+  position: fixed;
+  top: 93%;
+  right: 20px;
+  opacity: 60%;
 }
 
 
 .stopwatch {
   position: fixed;
-  top: 20px;
-  right: 150px;
-  background-color: #333;
+  right: 70px;
   color: #fff;
   padding: 5px 10px;
+  margin: 10px;
+  border: 1px solid #733fc7;
   border-radius: 5px;
-  font-size: 45px;
-  opacity: 50%;
+  font-size: 40px;
   cursor: pointer;
   display: inline-block; /* Set to inline-block to only take the width of the content */
 }
 
-.stopwatch:hover{
-  opacity: 100%;
-}
 
 .names {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-top: 50px;
 }
 
 .name {
   color: #fff;
-  background-color: #8D86C9;
+  background: rgb(120,62,198);
+  background: linear-gradient(4deg, rgba(120,62,198,0.9640231092436975) 91%, rgba(139,92,227,0.9472163865546218) 100%);
   border-radius: 5px;
-  padding: 20px;
+  padding: 15px;
   margin: 10px;
   align-items: center;
   text-align: center;
+  font-weight: 500;
 }
 
-.connecting-line {
-  height: 2px;
-  width: 150px; /* Adjust the length of the line as needed */
-  background-color: #8D86C9;
-  margin: 0 10px; /* Adjust the margin to create space between names and line */
+h1{
+  font-size: 30px;
 }
 
-h3{
-  font-weight: lighter;
-}
 
 .swapImg{
-  width: 75px;
+  width: 50px;
   margin-left: 50px;
   margin-right: 50px;
   cursor: pointer;
 }
 
 .box {
-  max-width: 900px;
+  width: 45%;
   margin: 20px auto;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  padding: 20px;
+  padding: 50px;
   border-radius: 8px;
-  background-color: rgba(30, 30, 30, 0.9); /* Adjusted to a slightly lighter color */
+  border-left: solid 4px;
+  border-image: linear-gradient(180deg, rgba(13,17,23,1) 0%, rgba(115,63,199,1) 46%, rgba(53,174,79,1) 100%);
+  border-image-slice: 1;
+ 
 }
 
 .containerOne {
@@ -84,15 +88,12 @@ h3{
 
 /* Adjust the width of the search input */
 .autocomplete {
-  flex-grow: 2; /* Adjust the flex-grow value to control the width */
-  max-width: 400px; /* Set a maximum width for the input */
   padding: 10px;
-  border: none;
-  border-radius: 5px;
-  background-color: #333; /* Adjust the background color */
-  color: #fff;
-  margin-right: 10px;
-  font-size: 17px;
+    font-size: 17px;
+    border: none;
+    border-radius: 4px;
+    width: 70%;
+    margin-bottom: 30px;
 }
 
 /* Align the search bar and button horizontally within .containerTwo */
@@ -113,18 +114,19 @@ h3{
 
 /* Styling for the search button */
 .btn {
-  background-color: #8D86C9;
+  font-weight: bolder;
+    background-color: #733fc7;
   color: #fff;
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition-duration: .5s;
   font-size: 17px;
 }
 
 .btn:hover {
-  background-color: #635d99; /* Darker color on hover */
+  transform: scale(1.05);
 }
 
 /* Add a bit of spacing between the input and button */
@@ -153,57 +155,16 @@ h3{
   transform: scale(1.05);
 }
 
-@media screen and (max-width: 600px) {
-  .box{
-    border-radius: 0;
-  }
-  /* Adjust styles for screens with a maximum width of 600px */
-  .containerThree {
-    grid-template-columns: repeat(2, 1fr); /* Change the number of columns to 2 on smaller screens */
-    gap: 10px;
-  }
-
-
-  .stopwatch{
-    top: 98%;
-    right: 10px;
-    transition: .5s;
-    background-color: #8D86C9;
-    opacity: 100%;
-  }
-
-  .stopwatch:hover{
-    top: 89%;
-    background-color: #333;
-    border: 2px solid #8D86C9;
-  }
-
-.box{
-  width: 100%;
-}
-
-.swapImg{
-  width: 55px;
-  margin-left: 10px;
-  margin-right: 10px;
-
-}
-
-.autocomplete{
-  margin-bottom: 25px;
-}
-
-}
-
 .cont {
   text-align: center;
   border: none;
   border-radius: 8px;
   padding: 10px;
-  background-color: rgba(30, 30, 30, 0.9); /* Adjusted to a slightly lighter color */
+  background-color: rgba(255,255,255,.05); /* Adjusted to a slightly lighter color */
   transition: transform 0.2s, background-color 0.3s; /* Added transition for background-color */
   overflow: hidden; /* Ensure the overflow is hidden */
   }
+
 
 .final-cont {
   text-align: center;
@@ -221,9 +182,13 @@ h3{
     border-radius: 15px;
     padding: 10px;
     margin: 50px;
-    background-color: rgba(0, 0, 0, 0.25); /* Adjusted to a slightly lighter color */
+    background-color: rgba(255,255,255,.05); /* Adjusted to a slightly lighter color */
     transition: transform 0.2s, background-color 0.3s; /* Added transition for background-color */
     overflow: hidden; /* Ensure the overflow is hidden */
+    }
+
+    .final-cont-txt p {
+      font-size: 20px;
     }
 
 .cont:hover {
@@ -232,8 +197,16 @@ h3{
 }
 
 .poster {
-  width: 125px; /* Hard-coded poster size */
-  height: 200px; /* Adjusted based on a common aspect ratio */
+  width: 100px; /* Hard-coded poster size */
+  height: 150px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  object-fit: cover; /* Ensure uniform poster sizes */
+  transition: .5s;
+}
+
+.poster-final {
+  width: 150px; /* Hard-coded poster size */
   border-radius: 4px;
   margin-bottom: 10px;
   object-fit: cover; /* Ensure uniform poster sizes */
@@ -241,7 +214,7 @@ h3{
 }
 
 .main-poster {
-  width: 250px; /* Hard-coded poster size */
+  width: 225px; /* Hard-coded poster size */
   border-radius: 4px;
   margin-bottom: 10px;
   object-fit: cover; /* Ensure uniform poster sizes */
@@ -249,9 +222,60 @@ h3{
 
 h2 {
   margin: 10px 0;
-  font-size: 20px;
+  font-size: 18px;
 }
 
 p {
+  font-size: 15;
   margin: 0;
+}
+
+@media screen and (max-width: 1000px) {
+  .box{
+    border-radius: 0;
+    border: none;
+  }
+  /* Adjust styles for screens with a maximum width of 600px */
+  .containerThree {
+    grid-template-columns: repeat(2, 1fr); /* Change the number of columns to 2 on smaller screens */
+    gap: 10px;
+  }
+
+  h3 {
+    font-size: 17px;
+  }
+
+  .btn:hover{
+    transform: none;
+}
+
+  .stopwatch{
+    top: 90%;
+    right: -40%;
+    transition: .5s;
+    background-color: #0d1117;
+    border: 2px solid #733fc7;
+    opacity: 100%;
+  }
+
+
+
+.box{
+  width: 100%;
+}
+
+.swapImg{
+  width: 35px;
+  margin-left: 10px;
+  margin-right: 10px;
+
+}
+
+.autocomplete{
+  width: 100%;
+  margin-bottom: 25px;
+  font-size: 15px;
+}
+
+
 }
