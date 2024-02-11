@@ -140,6 +140,12 @@ h3{
   gap: 20px;
 }
 
+.containerFour {
+  display: none;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
 .show{
   cursor: pointer;
 }
@@ -148,6 +154,9 @@ h3{
 }
 
 @media screen and (max-width: 600px) {
+  .box{
+    border-radius: 0;
+  }
   /* Adjust styles for screens with a maximum width of 600px */
   .containerThree {
     grid-template-columns: repeat(2, 1fr); /* Change the number of columns to 2 on smaller screens */
@@ -195,6 +204,18 @@ h3{
   transition: transform 0.2s, background-color 0.3s; /* Added transition for background-color */
   overflow: hidden; /* Ensure the overflow is hidden */
   }
+
+
+  .final-cont {
+    text-align: center;
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    margin: 50px;
+    background-color: rgba(30, 30, 30, 0.9); /* Adjusted to a slightly lighter color */
+    transition: transform 0.2s, background-color 0.3s; /* Added transition for background-color */
+    overflow: hidden; /* Ensure the overflow is hidden */
+    }
 
 .cont:hover {
   transform: scale(1.05);
