@@ -15,9 +15,10 @@ body {
 .timer{
   width: 40px;
   position: fixed;
-  top: 93%;
-  right: 20px;
+  top: 90%;
+  right: 30px;
   opacity: 60%;
+  display: none;
 }
 
 
@@ -249,8 +250,12 @@ p {
     transform: none;
 }
 
+  .timer{
+    display: initial;
+  }
+
   .stopwatch{
-    top: 90%;
+    top: 85%;
     right: -40%;
     transition: .5s;
     background-color: #0d1117;
