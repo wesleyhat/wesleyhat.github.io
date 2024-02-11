@@ -205,14 +205,23 @@ h3{
   overflow: hidden; /* Ensure the overflow is hidden */
   }
 
+.final-cont {
+  text-align: center;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  transition: transform 0.2s, background-color 0.3s; /* Added transition for background-color */
+  overflow: hidden; /* Ensure the overflow is hidden */
+  }
 
-  .final-cont {
+
+  .final-cont-txt {
     text-align: center;
     border: none;
     border-radius: 15px;
     padding: 10px;
     margin: 50px;
-    background-color: rgba(30, 30, 30, 2); /* Adjusted to a slightly lighter color */
+    background-color: rgba(0, 0, 0, 5); /* Adjusted to a slightly lighter color */
     transition: transform 0.2s, background-color 0.3s; /* Added transition for background-color */
     overflow: hidden; /* Ensure the overflow is hidden */
     }
