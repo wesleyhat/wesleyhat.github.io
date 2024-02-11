@@ -171,6 +171,7 @@
           let watch = document.getElementById("stopwatch");
           let clock = document.getElementById("clock");
           let search = document.getElementById("search");
+          let box = document.getElementById("box");
           currentActor = actorOne;
           let movieClickListenerAdded = false;
           let isShowing = false;
@@ -353,6 +354,10 @@
 
                   })
                   .catch(err => console.error(err));
+
+              box.style.borderRight = "solid 5px";
+                  box.style.borderImage = "linear-gradient(180deg, rgba(13,17,23,1) 0%, rgba(115,63,199,1) 46%, rgba(53,174,79,1) 100%)";
+                  box.style.borderImageSlice = "1";
 
               /*alert("Congratulations, you win! Time: " + minutes + ":" + remainingSeconds + "s. Play Again?")
               window.location.href = "formindex.html";*/
