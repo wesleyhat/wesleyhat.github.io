@@ -1,6 +1,7 @@
 /* CSS for the new webpage */
 body {
-    background-color: #121212;
+    font-family: "Open Sans", sans-serif;
+    background-color: #0d1117;
     color: #fff;
     margin: 0;
     display: flex;
@@ -10,42 +11,52 @@ body {
 }
 
 .box {
-    width: 20%;
-    border-radius: 8px;
-    padding: 20px;
+    width: 40%;
+    padding: 50px;
     margin: 20px;
+    border-left: solid 4px;
+    border-image: linear-gradient(180deg, rgba(13,17,23,1) 0%, rgba(115,63,199,1) 46%, rgba(53,174,79,1) 100%);
+    border-image-slice: 1;
 }
 
 .containerOne {
     text-align: left;
+
 }
 
+
+
 h1 {
-    font-size: 25px;
+    font-family: "Roboto", sans-serif;
+    font-size: 45px;
     margin: 10px 0;
     padding-bottom: 30px;
     border-radius: 8px;
 }
 
-.autocomplete {
-    padding: 10px;
-    font-size: 17px;
-    border: 1px solid #333;
-    border-radius: 4px;
-    width: calc(100% - 18px);
-    margin-bottom: 30px;
-    background-color: transparent;
-    color: #fff;
-}
-
-.autocomplete:valid,
-.autocomplete:focus,
-.autocomplete:active {
-    background-color: transparent !important; /* Use !important to override any conflicting styles */
+h2 {
+    font-size: 20px;
+    font-weight: lighter;
+    color: #8b949e;
 }
 
 p{
-    font-size: 20px;
+    color: #8b949e;
+}
+
+.autocomplete {
+    padding: 10px;
+    font-size: 17px;
+    border: none;
+    border-radius: 4px;
+    width: calc(100% - 18px);
+    margin-bottom: 30px;
+
+}
+
+
+p{
+    font-size: 17px;
 }
 
 .toggle-switch-container {
@@ -62,7 +73,8 @@ p{
     display: block;
     width: 60px;
     height: 30px;
-    background-color: #8D86C9;
+    background-color: transparent;
+    border: 1px solid #733fc7;
     border-radius: 25px;
     cursor: pointer;
 }
@@ -83,22 +95,39 @@ p{
 .btn-container {
     display: flex;
     justify-content: center;
+    
 }
 
 .btn {
-    padding: 10px 20px;
-    font-size: 17px;
-    background-color: rgba(255, 255, 255, 0.1);
+    padding: 10px 40px;
+    font-size: 20px;
+    font-weight: bolder;
+    background-color: #733fc7;
     color: #fff;
     border: none;
-    border-radius: 10px;
+    border-radius: 8px;
     cursor: pointer;
-    margin-right: 10px;
+    margin: 25px;
+    transition-duration: .5s;
+}
+
+.btn:hover{
+    transform: scale(1.05);
 }
 
 /* Media query for responsiveness */
 @media (max-width: 600px) {
+    h1{
+        font-size: 35px;
+    }
+    h2{
+        font-size: 20px;
+    }
     .box {
-        width: 90%;
+        width: 95%;
+    }
+
+    .btn:hover{
+        transform: none;
     }
 }
