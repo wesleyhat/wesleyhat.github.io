@@ -12,7 +12,8 @@ body {
 
 .box {
     width: 25%;
-    padding: 50px;
+    padding-left: 50px;
+    padding-right: 50px;
     margin: 20px;
     border-left: solid 4px;
     border-image: linear-gradient(180deg, rgba(13,17,23,1) 0%, rgba(115,63,199,1) 33%, rgba(53,174,79,1) 66%, rgba(13,17,23,1) 100%);
