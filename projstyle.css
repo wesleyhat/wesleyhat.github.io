@@ -54,7 +54,12 @@ body {
 }
 
 @media screen and (max-width: 1000px) {
+
+    .content{
+        width: 90%;
+    }
     .projs{
+        width: 90%;
         grid-template-columns: auto;
     }
     
