@@ -56,17 +56,22 @@ body {
 
 @media screen and (max-width: 1000px) {
 
+    .h1{
+        font-size: 40px;
+    }
+
     .content{
         width: 90%;
     }
     .projs{
         width: 90%;
-        grid-template-columns: auto;
+        display: flex;
+        flex-direction: column;
     }
 
     .projOne, .projTwo, .projThree, .projFour{
-        width: 250px;
-        height: 100px;
+        width: 275px;
+        height: 150px;
     }
     
 }
