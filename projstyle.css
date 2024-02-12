@@ -52,3 +52,7 @@ body {
 .projOne:hover, .projTwo:hover, .projThree:hover, .projFour:hover{
     transform: scale(1.05);
 }
+
+@media screen and (max-width: 1000px) {
+    flex-direction: column;
+}
