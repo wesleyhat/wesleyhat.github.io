@@ -1,0 +1,101 @@
+body {
+    font-family: "Open Sans", sans-serif;
+    text-align: center;
+    margin-top: 50px;
+    color: #fff;
+    background-color: #0d1117;
+  }
+.container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+h1{
+    font-family: "Roboto", sans-serif;
+    font-size: 60px;
+    font-weight: 200;
+}
+
+
+.one{
+    border: 4px solid #fff;
+    border-radius: 10px;
+    width: 40%;
+    margin: 30px;
+}
+
+.two{
+    width: 35%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 30px;
+}
+
+  #word-display {
+    font-size: 60px;
+    margin-bottom: 20px;
+    font-weight: lighter;
+  }
+
+  
+
+  #letters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+  }
+
+  .letter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 45px;
+    font-weight: lighter;
+    width: 50px;
+    height: 80px;
+    cursor: pointer;
+    background-color:  #733fc7;
+    border-radius: 5px;
+  }
+
+  .letter:hover {
+    background-color: #46267a;
+  }
+
+  .letter::after {
+    background-color: red;
+  }
+
+  #hangman-container img {
+    height: auto;
+    width: 100%;
+  }
+
+  @media screen and (max-width: 1000px) {
+    .container{
+        flex-direction: column;
+    }
+    
+    .one{
+        width: 95%;
+        height: 70%;
+    }
+
+    .two{
+        width: 90%;
+        height: 30%;
+    }
+    .letter{
+        width: 40px;
+        height: 50px;
+        font-size: 25px;
+    }
+
+    #word-display{
+        font-size: 30px;
+    }
+
+  }
