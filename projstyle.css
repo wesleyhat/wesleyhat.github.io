@@ -22,7 +22,7 @@ body {
     width: 60%;
 }
 
-.games{
+.projs{
     font-family: "Open Sans", sans-serif;
     display: grid;
     grid-template-columns: auto auto auto auto;
@@ -30,11 +30,11 @@ body {
     width: 60%;
 }
 
-.games h1{
+.projs h1{
     font-weight: lighter;
 }
 
-.gameOne, .gameTwo, .gameThree{
+.projOne, .projTwo, .projThree{
     display: flex;
     align-items: center;
     justify-content: center;
@@ -45,6 +45,6 @@ body {
     cursor: pointer;
 }
 
-.gameOne:hover, .gameTwo:hover, .gameThree:hover{
+.projOne:hover, .projTwo:hover, .projThree:hover{
     transform: scale(1.05);
 }
