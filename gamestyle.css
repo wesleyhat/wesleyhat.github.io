@@ -1,0 +1,50 @@
+body {
+    font-family: "Roboto", sans-serif;
+    background-color: #0d1117;
+    color: #fff;
+    margin: 0;
+}
+
+.head{
+    text-align: center;
+    margin: 50px;
+    font-size: 35px;
+}
+
+.line{
+    width: 80%;
+}
+
+.content{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60%;
+}
+
+.games{
+    font-family: "Open Sans", sans-serif;
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    gap: 40px;
+    width: 60%;
+}
+
+.games h1{
+    font-weight: lighter;
+}
+
+.gameOne, .gameTwo{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 350px;
+    height: 200px;;
+    border: 2px solid #733fc7;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.gameOne:hover, .gameTwo:hover{
+    transform: scale(1.05);
+}
