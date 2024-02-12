@@ -11,6 +11,10 @@ body {
     font-size: 35px;
 }
 
+.head h1{
+    font-weight: 300;
+}
+
 .line{
     width: 80%;
 }
@@ -20,10 +24,6 @@ body {
     align-items: center;
     justify-content: center;
     width: 60%;
-}
-
-.content h1{
-    font-weight: 300;
 }
 
 .projs{
