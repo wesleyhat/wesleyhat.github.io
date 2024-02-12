@@ -15,10 +15,11 @@
   .timer{
     width: 40px;
     position: fixed;
-    top: 90%;
+    top: 88%;
     right: 30px;
     opacity: 60%;
     display: none;
+    transition-duration: .5s;
   }
   
   
@@ -33,6 +34,11 @@
     font-size: 40px;
     cursor: pointer;
     display: inline-block; /* Set to inline-block to only take the width of the content */
+    -webkit-user-select: none; /* Safari */        
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
+    transition-duration: .5s
   }
   
   
@@ -305,11 +311,11 @@
   
     .stopwatch{
       top: 85%;
-      right: -40%;
+      right: 0;
       transition: .5s;
       background-color: #0d1117;
       border: 2px solid #733fc7;
-      opacity: 100%;
+      display: none; 
     }
   
   
