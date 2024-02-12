@@ -119,6 +119,15 @@
 
 
         async function exampleUsage() {
+
+          window.onresize = function() {
+         
+            if (window.screen.width >= 1000) {
+              
+              showWatch();
+            }
+          };
+          
           const celebs = actorDatabase;
 
           var urlParams = new URLSearchParams(window.location.search);
@@ -187,12 +196,19 @@
           clock.onclick = function() {showWatch()};
 
           function showClock(){
-            watch.style.right = "-40%"
+
+            if (window.screen.width >= 1000) {
+
+              return;
+            } else{
+              watch.style.display = "none"
             clock.style.display = "initial"
+            }
+            
           }
 
           function showWatch(){
-            watch.style.right = "0"
+            watch.style.display = "initial"
             clock.style.display = "none"
           }
 
