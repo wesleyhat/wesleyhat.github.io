@@ -62,5 +62,10 @@ body {
         width: 90%;
         grid-template-columns: auto;
     }
+
+    .projOne, .projTwo, .projThree, .projFour{
+        width: 250px;
+        height: 100px;
+    }
     
 }
