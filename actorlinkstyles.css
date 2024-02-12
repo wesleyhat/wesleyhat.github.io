@@ -1,286 +1,333 @@
 * {
-  box-sizing: border-box;
-}
-
-body {
-  font-family: "Open Sans", sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #0d1117; /* Darker background color */
-  color: #fff; /* Light text color */
-  overflow-x: hidden;
+    box-sizing: border-box;
+  }
   
-}
-
-.timer{
-  width: 40px;
-  position: fixed;
-  top: 90%;
-  right: 30px;
-  opacity: 60%;
-  display: none;
-}
-
-
-.stopwatch {
-  position: fixed;
-  right: 70px;
-  color: #fff;
-  padding: 5px 10px;
-  margin: 10px;
-  border: 1px solid #733fc7;
-  border-radius: 5px;
-  font-size: 40px;
-  cursor: pointer;
-  display: inline-block; /* Set to inline-block to only take the width of the content */
-}
-
-
-.names {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 50px;
-}
-
-.name {
-  color: #fff;
-  background: rgb(120,62,198);
-  background: linear-gradient(4deg, rgba(120,62,198,0.9640231092436975) 91%, rgba(139,92,227,0.9472163865546218) 100%);
-  border-radius: 5px;
-  padding: 15px;
-  margin: 10px;
-  align-items: center;
-  text-align: center;
-  font-weight: 500;
-}
-
-h1{
-  font-size: 30px;
-}
-
-
-.swapImg{
-  width: 50px;
-  margin-left: 50px;
-  margin-right: 50px;
-  cursor: pointer;
-}
-
-.box {
-  width: 45%;
-  margin: 20px auto;
-  padding: 50px;
-  border-radius: 8px;
-  border-left: solid 4px;
-  border-image: linear-gradient(180deg, rgba(13,17,23,1) 0%, rgba(115,63,199,1) 46%, rgba(53,174,79,1) 100%);
-  border-image-slice: 1;
- 
-}
-
-.containerOne {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.actor {
-  color: #fff;
-}
-
-/* Adjust the width of the search input */
-.autocomplete {
-  padding: 10px;
-    font-size: 17px;
+  body {
+    font-family: "Open Sans", sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #0d1117; /* Darker background color */
+    color: #fff; /* Light text color */
+    overflow-x: hidden;
+    
+  }
+  
+  .timer{
+    width: 40px;
+    position: fixed;
+    top: 90%;
+    right: 30px;
+    opacity: 60%;
+    display: none;
+  }
+  
+  
+  .stopwatch {
+    position: fixed;
+    right: 70px;
+    color: #fff;
+    padding: 5px 10px;
+    margin: 10px;
+    border: 1px solid #733fc7;
+    border-radius: 5px;
+    font-size: 40px;
+    cursor: pointer;
+    display: inline-block; /* Set to inline-block to only take the width of the content */
+  }
+  
+  
+  .names {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 50px;
+  }
+  
+  .name {
+    color: #fff;
+    background: rgb(120,62,198);
+    background: linear-gradient(4deg, rgba(120,62,198,0.9640231092436975) 91%, rgba(139,92,227,0.9472163865546218) 100%);
+    border-radius: 5px;
+    padding: 15px;
+    margin: 10px;
+    align-items: center;
+    text-align: center;
+    font-weight: 500;
+  }
+  
+  h1{
+    font-size: 30px;
+  }
+  
+  
+  .swapImg{
+    width: 50px;
+    margin-left: 50px;
+    margin-right: 50px;
+    cursor: pointer;
+  }
+  
+  .box {
+    width: 45%;
+    margin: 20px auto;
+    padding: 50px;
+    border-radius: 8px;
+    border-left: solid 4px;
+    border-image: linear-gradient(180deg, rgba(13,17,23,1) 0%, rgba(115,63,199,1) 33%, rgba(53,174,79,1) 66%, rgba(13,17,23,1) 100%);
+    border-image-slice: 1;
+   
+  }
+  
+  .containerOne {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .actor {
+    color: #fff;
+  }
+  
+  /* Adjust the width of the search input */
+  .autocomplete {
+    padding: 10px;
+      font-size: 17px;
+      border: none;
+      border-radius: 4px;
+      width: 70%;
+      margin-bottom: 30px;
+  }
+  
+  /* Align the search bar and button horizontally within .containerTwo */
+  .containerTwo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap; /* Allow items to wrap to the next line on smaller screens */
+    margin: 40px;
+  }
+  
+  .containerHide{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+  }
+  
+  /* Styling for the search button */
+  .btn, .btnFinal {
+    font-weight: bolder;
+      background-color: #733fc7;
+    color: #fff;
+    
     border: none;
-    border-radius: 4px;
-    width: 70%;
-    margin-bottom: 30px;
-}
-
-/* Align the search bar and button horizontally within .containerTwo */
-.containerTwo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap; /* Allow items to wrap to the next line on smaller screens */
-  margin: 40px;
-}
-
-.containerHide{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 15px;
-}
-
-/* Styling for the search button */
-.btn {
-  font-weight: bolder;
-    background-color: #733fc7;
-  color: #fff;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition-duration: .5s;
-  font-size: 17px;
-}
-
-.btn:hover {
-  transform: scale(1.05);
-}
-
-/* Add a bit of spacing between the input and button */
-.autocomplete,
-.btn {
-  margin-bottom: 10px; /* Adjust the spacing between input and button */
-  margin-right: 10px; /* Add some spacing between the input and button */
-}
-
-.containerThree {
-  display: none;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-}
-
-.containerFour {
-  display: none;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-}
-
-.show{
-  cursor: pointer;
-}
-.show:hover{
-  transform: scale(1.05);
-}
-
-.cont {
-  text-align: center;
-  border: none;
-  border-radius: 8px;
-  padding: 10px;
-  background-color: rgba(255,255,255,.05); /* Adjusted to a slightly lighter color */
-  transition: transform 0.2s, background-color 0.3s; /* Added transition for background-color */
-  overflow: hidden; /* Ensure the overflow is hidden */
+    border-radius: 5px;
+    cursor: pointer;
+    transition-duration: .5s;
+    font-size: 17px;
+  }
+  
+  .btn:hover, .btnFinal:hover {
+    transform: scale(1.05);
   }
 
-
-.final-cont {
-  text-align: center;
-  border: none;
-  border-radius: 8px;
-  padding: 10px;
-  transition: transform 0.2s, background-color 0.3s; /* Added transition for background-color */
-  overflow: hidden; /* Ensure the overflow is hidden */
+  .btn{
+    padding: 10px 20px;
   }
 
+  .btnFinal{
+    padding: 15px 30px;
+    margin-top: 30px;
+  }
+  
+  /* Add a bit of spacing between the input and button */
+  .autocomplete,
+  .btn {
+    margin-bottom: 10px; /* Adjust the spacing between input and button */
+    margin-right: 10px; /* Add some spacing between the input and button */
+  }
+  
+  .containerThree {
+    display: none;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  
+  .containerFour {
+    display: none;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
 
-  .final-cont-txt {
+  .containerFive {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .your-div {
+    position: relative;
+    width: 300px;
+    height: 200px;
+    margin: 50px auto; /* Adjust margin as needed */
+    background-color: #0d1117; /* Adjust background color as needed */
+    /* Other styles for your div */
+    display: none;
+
+    /* Add a pseudo-element for the vertical line */
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 4px; /* Adjust line width as needed */
+      background: linear-gradient(180deg, rgba(13,17,23,1) 0%, rgba(115,63,199,1) 33%, rgba(53,174,79,1) 66%, rgba(13,17,23,1) 100%);
+      transform: translateX(-50%);
+      z-index: -1; /* Place the line behind the content */
+    }
+  }
+
+  .containerSix {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+  
+  .show{
+    cursor: pointer;
+  }
+  .show:hover{
+    transform: scale(1.05);
+  }
+  
+  .cont {
     text-align: center;
     border: none;
-    border-radius: 15px;
+    border-radius: 8px;
     padding: 10px;
-    margin: 50px;
     background-color: rgba(255,255,255,.05); /* Adjusted to a slightly lighter color */
     transition: transform 0.2s, background-color 0.3s; /* Added transition for background-color */
     overflow: hidden; /* Ensure the overflow is hidden */
     }
-
-    .final-cont-txt p {
-      font-size: 20px;
-    }
-
-.cont:hover {
-  transform: scale(1.05);
-  background-color: rgba(255, 255, 255, 0.1); /* Faint, see-through white on hover */
-}
-
-.poster {
-  width: 100px; /* Hard-coded poster size */
-  height: 150px;
-  border-radius: 4px;
-  margin-bottom: 10px;
-  object-fit: cover; /* Ensure uniform poster sizes */
-  transition: .5s;
-}
-
-.poster-final {
-  width: 150px; /* Hard-coded poster size */
-  border-radius: 4px;
-  margin-bottom: 10px;
-  object-fit: cover; /* Ensure uniform poster sizes */
-  transition: .5s;
-}
-
-.main-poster {
-  width: 225px; /* Hard-coded poster size */
-  border-radius: 4px;
-  margin-bottom: 10px;
-  object-fit: cover; /* Ensure uniform poster sizes */
-}
-
-h2 {
-  margin: 10px 0;
-  font-size: 18px;
-}
-
-p {
-  font-size: 15;
-  margin: 0;
-}
-
-@media screen and (max-width: 1000px) {
-  .box{
-    border-radius: 0;
+  
+  
+  .final-cont {
+    text-align: center;
     border: none;
+    border-radius: 8px;
+    padding: 10px;
+    transition: transform 0.2s, background-color 0.3s; /* Added transition for background-color */
+    overflow: hidden; /* Ensure the overflow is hidden */
+    }
+  
+  
+    .final-cont-txt {
+      text-align: center;
+      border: none;
+      border-radius: 3px;
+      padding: 10px;
+      margin: 50px;
+      background-color: #322256; /* Adjusted to a slightly lighter color */
+      transition: transform 0.2s, background-color 0.3s; /* Added transition for background-color */
+      overflow: hidden; /* Ensure the overflow is hidden */
+      display: inline-block;
+      }
+  
+      .final-cont-txt p {
+        font-size: 20px;
+      }
+  
+  .cont:hover {
+    transform: scale(1.05);
+    background-color: rgba(255, 255, 255, 0.1); /* Faint, see-through white on hover */
   }
-  /* Adjust styles for screens with a maximum width of 600px */
-  .containerThree {
-    grid-template-columns: repeat(2, 1fr); /* Change the number of columns to 2 on smaller screens */
-    gap: 10px;
-  }
-
-  h3 {
-    font-size: 17px;
-  }
-
-  .btn:hover{
-    transform: none;
-}
-
-  .timer{
-    display: initial;
-  }
-
-  .stopwatch{
-    top: 85%;
-    right: -40%;
+  
+  .poster {
+    width: 100px; /* Hard-coded poster size */
+    height: 150px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    object-fit: cover; /* Ensure uniform poster sizes */
     transition: .5s;
-    background-color: #0d1117;
-    border: 2px solid #733fc7;
-    opacity: 100%;
   }
-
-
-
-.box{
-  width: 100%;
-}
-
-.swapImg{
-  width: 35px;
-  margin-left: 10px;
-  margin-right: 10px;
-
-}
-
-.autocomplete{
-  width: 100%;
-  margin-bottom: 25px;
-  font-size: 15px;
-}
-
-
-}
+  
+  .poster-final {
+    width: 150px; /* Hard-coded poster size */
+    border-radius: 4px;
+    margin-bottom: 10px;
+    object-fit: cover; /* Ensure uniform poster sizes */
+    transition: .5s;
+  }
+  
+  .main-poster {
+    width: 225px; /* Hard-coded poster size */
+    border-radius: 4px;
+    margin-bottom: 10px;
+    object-fit: cover; /* Ensure uniform poster sizes */
+  }
+  
+  h2 {
+    margin: 10px 0;
+    font-size: 18px;
+  }
+  
+  p {
+    font-size: 15;
+    margin: 0;
+  }
+  
+  @media screen and (max-width: 1000px) {
+    .box{
+      border-radius: 0;
+      border: none;
+    }
+    /* Adjust styles for screens with a maximum width of 600px */
+    .containerThree {
+      grid-template-columns: repeat(2, 1fr); /* Change the number of columns to 2 on smaller screens */
+      gap: 10px;
+    }
+  
+    h3 {
+      font-size: 17px;
+    }
+  
+    .btn:hover{
+      transform: none;
+  }
+  
+    .timer{
+      display: initial;
+    }
+  
+    .stopwatch{
+      top: 85%;
+      right: -40%;
+      transition: .5s;
+      background-color: #0d1117;
+      border: 2px solid #733fc7;
+      opacity: 100%;
+    }
+  
+  
+  
+  .box{
+    width: 100%;
+  }
+  
+  .swapImg{
+    width: 35px;
+    margin-left: 10px;
+    margin-right: 10px;
+  
+  }
+  
+  .autocomplete{
+    width: 100%;
+    margin-bottom: 25px;
+    font-size: 15px;
+  }
+  
+  
+  }
