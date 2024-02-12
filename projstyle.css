@@ -49,6 +49,6 @@ body {
     cursor: pointer;
 }
 
-.projOne:hover, .projTwo:hover, .projThree:hover{
+.projOne:hover, .projTwo:hover, .projThree:hover, .projFour:hover{
     transform: scale(1.05);
 }
