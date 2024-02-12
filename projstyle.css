@@ -29,6 +29,7 @@ body {
 .projs{
     font-family: "Open Sans", sans-serif;
     display: grid;
+    place-items: center;
     grid-template-columns: auto auto auto auto;
     gap: 40px;
     width: 60%;
