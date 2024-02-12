@@ -34,7 +34,7 @@ body {
     font-weight: lighter;
 }
 
-.gameOne, .gameTwo{
+.gameOne, .gameTwo, .gameThree{
     display: flex;
     align-items: center;
     justify-content: center;
@@ -45,6 +45,6 @@ body {
     cursor: pointer;
 }
 
-.gameOne:hover, .gameTwo:hover{
+.gameOne:hover, .gameTwo:hover, .gameThree:hover{
     transform: scale(1.05);
 }
