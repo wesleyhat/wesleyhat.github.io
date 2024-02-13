@@ -39,7 +39,7 @@ body {
     font-weight: lighter;
 }
 
-.projOne, .projTwo, .projThree, .projFour{
+.projOne, .projTwo, .projThree, .projFour, .projFive{
     display: flex;
     align-items: center;
     justify-content: center;
@@ -50,7 +50,7 @@ body {
     cursor: pointer;
 }
 
-.projOne:hover, .projTwo:hover, .projThree:hover, .projFour:hover{
+.projOne:hover, .projTwo:hover, .projThree:hover, .projFour:hover, .projFive:hover{
     transform: scale(1.01);
 }
 
