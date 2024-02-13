@@ -1,4 +1,6 @@
-
+/*  *{
+     border: 1px solid red; 
+}  */
 
 body {
     font-family: 'Open Sans', sans-serif;
@@ -6,7 +8,7 @@ body {
     color: #fff;
     margin: 0;
     padding: 0;
-    height: 100vh;
+
 }
 
 h1{
@@ -17,13 +19,121 @@ h1{
     margin-bottom: 50px;
 }
 
+.hud{
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1000px;
+}
+
+
+
+
+
 .container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    
     text-align: center;
-    width: 50%; /* Set width to 50% of the container */
+    
+    margin-top: 150px;
+
+}
+
+.keyboard-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 150px;
+}
+
+.row{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-weight: lighter;
+    font-size: 20px;
+    padding: 5px;
+    grid-gap: 5px;
+}
+  
+.letter{
+    background-color: #222d3d;
+    border-radius: 5px;
+    width: 32px;
+    height: 45px;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.right{
+    animation: greenChange .3s ease;
+}
+
+@keyframes greenChange {
+    0%{
+        transform: scale(1);
+        background-color: #222d3d;
+        opacity: 100%;
+    }
+    50%{
+        transform: scale(1.08);
+        background-color: #12c056;
+        opacity: 75%;
+    }
+    100%{
+        transform: scale(1);
+        background-color: #222d3d;
+        opacity: 100%;
+    }
+}
+
+.wrong{
+    animation: redChange .5s ease;
+}
+
+@keyframes redChange {
+    0%{
+        transform: scale(1);
+        background-color: #222d3d;
+        opacity: 100%;
+    }
+    50%{
+        transform: scale(.90);
+        background-color: #ef3352;
+        opacity: 75%;
+    }
+    100%{
+        transform: scale(1);
+        background-color: #222d3d;
+        opacity: 100%;
+    }
+}
+  
+.letterButton{
+    background-color: #ea80fc;
+    border-radius: 5px;
+    width: 50px;
+    height: 45px;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-weight: bold;
+  }
+  
+.letterButton p{
+    font-size: 12px;
 }
 
 h1 {
@@ -36,17 +146,22 @@ h1 {
     margin-bottom: 20px;
 }
 
+#letterSquares2 {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
 .letterSquare {
-    width: 65px;
-    height: 65px;
+    width: 60px;
+    height: 60px;
     background-color: #222d3d;
     color: #fff;
-    font-size: 20px;
-    margin: 5px 10px; /* Adjust margin between letter squares */
+    font-size: 25px;
+    margin: 5px 5px; /* Adjust margin between letter squares */
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 3px;
 }
 
 input {
@@ -56,7 +171,7 @@ input {
     color: #fff;
     border: none;
     margin: 20px;
-    width: 40%; /* Set width to 60% of the container */
+    width: 400px; /* Set width to 60% of the container */
     border-radius: 5px;
 }
 
@@ -84,45 +199,72 @@ button {
     display: flex;
     align-items: center; /* Center vertically within the container */
     justify-content: flex-end; /* Right-align the content */
-    width: 80%;
+    
     font-weight: 200;
+}
+
+#score {
+    margin-top: 20px;
+    font-size: 24px;
+    display: flex;
+    align-items: center; /* Center vertically within the container */
+    justify-content: flex-end; /* Right-align the content */
+    
+    font-weight: 400;
 }
 
 .tally {
     display: inline-block;
-    width: 5px;
-    height: 35px;
+    width: 4px;
+    height: 32px;
     background-color: #ea80fc;
-    margin: 0 4px;
+    margin: 0 3.5px;
     border-radius: 1px;
 }
 
 @media screen and (max-width: 1000px) {
 
-    .container{
-        width: 90%;
-        top: 55%;
+    h1{
+        margin-bottom: 10px;
     }
+
+    .hud{
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    .container{
+       margin-top: 75px;
+    }
+
+    .keyboard-container{
+        margin-top: 90px;
+    }
+
+    
     input{
-        width: 70%;
-        margin-top: 100px;
+        width: 80%;
+        margin: 10px;       
+    }
+
+    .button{
+        margin-top: 10px;
     }
 
     .letterSquare {
-        width: 40px;
-        height: 40px;
-        font-size: 17px;
+        width: 55px;
+        height: 55px;
+        font-size: 25px;
         margin: 3px 5px; /* Adjust margin for smaller screens */
     }
 
     #lives{
-        width: 100%;
+       
         justify-content: center;
     }
 
     .tally {
         width: 4px;
         height: 30px;
-
     }
 }
