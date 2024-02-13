@@ -12,14 +12,54 @@
 </head>
 <body>
     <h1>Anagramdle</h1>
-        <p id="lives">Lives: 5</p>
-    <div class="container" id="wordContainer">
+        <div class="hud">
+            <h2 id="score">Score: 0</h2>
+            <p id="lives">Lives:&nbsp;&nbsp;5</p>
 
-        <div id="letterSquares"></div>
-        <input type="text" id="guessInput">
-        <button onclick="submitGuess()">Submit</button>
+        </div>
+        
+        <div class="container">
+            <div id="letterSquares"></div>
+            <div id="letterSquares2"></div>
+
+            <div class="keyboard-container">
+            <div class="row">
+              <div class="letter letter1" id="q">Q</div>
+              <div class="letter letter2" id="w">W</div>
+              <div class="letter letter3" id="e">E</div>
+              <div class="letter letter4" id="r">R</div>
+              <div class="letter letter5" id="t">T</div>
+              <div class="letter letter6" id="y">Y</div>
+              <div class="letter letter7" id="u">U</div>
+              <div class="letter letter8" id="i">I</div>
+              <div class="letter letter9" id="o">O</div>
+              <div class="letter letter10" id="p">P</div>
+            </div>
+            <div class="row">
+              <div class="letter letter11" id="a">A</div>
+              <div class="letter letter12" id="s">S</div>
+              <div class="letter letter13" id="d">D</div>
+              <div class="letter letter14" id="f">F</div>
+              <div class="letter letter15" id="g">G</div>
+              <div class="letter letter16" id="h">H</div>
+              <div class="letter letter17" id="j">J</div>
+              <div class="letter letter18" id="k">K</div>
+              <div class="letter letter19" id="l">L</div>
+            </div>
+            <div class="row">
+              <div class="letterButton letter20" id="enter"><p>ENTER</p></div>
+              <div class="letter letter21" id="z">Z</div>
+              <div class="letter letter22" id="x">X</div>
+              <div class="letter letter23" id="c">C</div>
+              <div class="letter letter24" id="v">V</div>
+              <div class="letter letter25" id="b">B</div>
+              <div class="letter letter26" id="n">N</div>
+              <div class="letter letter27" id="m">M</div>
+              <div class="letterButton letter28" id="back"><p>BACK</p></div>
+            </div>
+          </div>
         <p id="feedback"></p>
-    </div>
+        </div>
 
     <script src="anagram.js"></script>
 </body>
