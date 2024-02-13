@@ -36,7 +36,7 @@ body {
 }
 
 .projs h1{
-    font-weight: lighter;
+    font-weight: 200;
 }
 
 .projOne, .projTwo, .projThree, .projFour, .projFive{
@@ -45,13 +45,16 @@ body {
     justify-content: center;
     width: 350px;
     height: 150px;
-    border: 3px solid #733fc7;
+    background-color: rgba(255,255,255,.70);
+    color: #733fc7;
     border-radius: 10px;
     cursor: pointer;
+    transition-duration: 1s;
 }
 
 .projOne:hover, .projTwo:hover, .projThree:hover, .projFour:hover, .projFive:hover{
-    transform: scale(1.01);
+    transform: scale(1.05);
+    background-color: #fff;
 }
 
 @media screen and (max-width: 1000px) {
