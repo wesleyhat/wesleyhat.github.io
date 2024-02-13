@@ -44,14 +44,14 @@ body {
     align-items: center;
     justify-content: center;
     width: 350px;
-    height: 200px;
-    border: 2px solid #733fc7;
+    height: 150px;
+    border: 3px solid #733fc7;
     border-radius: 10px;
     cursor: pointer;
 }
 
 .projOne:hover, .projTwo:hover, .projThree:hover, .projFour:hover{
-    transform: scale(1.05);
+    transform: scale(1.01);
 }
 
 @media screen and (max-width: 1000px) {
