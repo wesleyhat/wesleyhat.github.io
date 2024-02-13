@@ -1,0 +1,130 @@
+
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    background-color: #1e1e1e;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    overflow: hidden;
+}
+
+h1{
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    font-size: 50px;
+    font-weight: 200;
+    margin-bottom: 50px;
+}
+
+.container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    width: 50%; /* Set width to 50% of the container */
+}
+
+h1 {
+    color: #ea80fc;
+}
+
+#letterSquares {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.letterSquare {
+    width: 65px;
+    height: 65px;
+    background-color: #2b2b2b;
+    color: #fff;
+    font-size: 20px;
+    margin: 5px 10px; /* Adjust margin between letter squares */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 3px;
+}
+
+input {
+    padding: 12px;
+    font-size: 16px;
+    background-color: #2b2b2b;
+    color: #fff;
+    border: none;
+    margin: 20px;
+    width: 40%; /* Set width to 60% of the container */
+    border-radius: 5px;
+}
+
+button {
+    padding: 12px;
+    font-size: 20px;
+    cursor: pointer;
+    background-color: #ea80fc;
+    color: #fff;
+    border: none;
+    margin-top: 20px;
+    width: 100px; /* Set width to 60% of the container */
+    box-sizing: border-box; /* Include padding and border in the width calculation */
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+#feedback {
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+#lives {
+    margin-top: 20px;
+    font-size: 24px;
+    display: flex;
+    align-items: center; /* Center vertically within the container */
+    justify-content: flex-end; /* Right-align the content */
+    width: 80%;
+    font-weight: 200;
+}
+
+.tally {
+    display: inline-block;
+    width: 5px;
+    height: 35px;
+    background-color: #ea80fc;
+    margin: 0 4px;
+    border-radius: 1px;
+}
+
+@media screen and (max-width: 1000px) {
+
+    .container{
+        width: 90%;
+        top: 55%;
+    }
+    input{
+        width: 70%;
+        margin-top: 100px;
+    }
+
+    .letterSquare {
+        width: 40px;
+        height: 40px;
+        font-size: 17px;
+        margin: 3px 5px; /* Adjust margin for smaller screens */
+    }
+
+    #lives{
+        width: 100%;
+        justify-content: center;
+    }
+
+    .tally {
+        width: 4px;
+        height: 30px;
+
+    }
+}
