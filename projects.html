@@ -31,6 +31,9 @@
           <div class="projFour" id="projFour">
                 <h1>Hangman</h1>
             </div>
+          <div class="projFive" id="projFive">
+                <h1>Anagramdle</h1>
+            </div>
         </div>
     </div>
 
@@ -38,6 +41,8 @@
         let projOne = document.getElementById("projOne")
         let projTwo = document.getElementById("projTwo")
         let projThree = document.getElementById("projThree")
+        let projFour = document.getElementById("projFour")
+        let projFive = document.getElementById("projFive")
 
         projOne.addEventListener('click', function() {
  
@@ -57,6 +62,11 @@
       projFour.addEventListener('click', function() {
  
             window.open('hangman.html', '_blank').focus();
+        });
+
+      projFive.addEventListener('click', function() {
+ 
+            window.open('anagramdle.html', '_blank').focus();
         });
 
 
