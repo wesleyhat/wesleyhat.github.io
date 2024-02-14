@@ -16,7 +16,6 @@ body{
 
 .top{
     text-align: center;
-    height: 10vh;
     padding: 40px;
 }
 
@@ -67,7 +66,6 @@ h1{
 }
 
 .container {
-    height: 90vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -194,7 +192,7 @@ input{
 
 
     .container{
-        height: 42.8vh;
+    
         justify-content: flex-end;
     
     }
@@ -202,6 +200,7 @@ input{
 
     .txtBox{
         width: 300px;
+        margin-top: 20px;
     }
 
     .keypad{
@@ -229,13 +228,13 @@ input{
     }
 
     .grid{
-        grid-template-columns: repeat(13, 70px);
-        grid-template-rows: repeat(2, 70px);
+        grid-template-columns: repeat(13, 65px);
+        grid-template-rows: repeat(2, 65px);
     }
 
     .grid p{
-        width: 70px;
-        height: 70px;
+        width: 65px;
+        height: 65px;
         font-size: 20px;
     }
 
@@ -246,7 +245,7 @@ input{
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        margin-top: 60px;
+        margin-top: 43px;
     }
     
     .row{
