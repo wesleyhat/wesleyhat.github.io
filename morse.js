@@ -226,7 +226,8 @@ function submitGuess(){
 var isDragging = false;
 var startX, scrollLeft;
 
-document.getElementById('key').addEventListener('mousedown', startDrag);
+
+    document.getElementById('key').addEventListener('mousedown', startDrag);
     document.getElementById('key').addEventListener('touchstart', startDrag);
 
     document.addEventListener('mousemove', drag);
@@ -239,10 +240,21 @@ document.getElementById('key').addEventListener('mousedown', startDrag);
         isDragging = true;
         startX = e.type === 'touchstart' ? e.touches[0].pageX : e.pageX;
         scrollLeft = document.getElementById('key').scrollLeft;
+
+        // Prevent default behavior for touch events
+        if (e.type === 'touchstart') {
+            e.preventDefault();
+        }
     }
 
     function drag(e) {
         if (!isDragging) return;
+
+        // Prevent default behavior for touch events
+        if (e.type === 'touchmove') {
+            e.preventDefault();
+        }
+
         var x = e.type === 'touchmove' ? e.touches[0].pageX : e.pageX;
         var walk = (x - startX) * 3; // Adjust the multiplier based on the desired drag speed
         document.getElementById('key').scrollLeft = Math.max(scrollLeft - walk, 0);
