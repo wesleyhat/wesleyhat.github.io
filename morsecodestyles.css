@@ -35,7 +35,7 @@ h1{
 
 .key{
     position: absolute;
-    top: 65%;
+    top: 70%;
     right: 50%;
     -ms-transform: translate(50%, -50%);
     transform: translate(50%, -50%);
