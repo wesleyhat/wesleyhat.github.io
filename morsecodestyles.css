@@ -21,7 +21,7 @@ body{
 
 h1{
     font-family: "Victor Mono", monospace;
-    font-size: 55px;
+    font-size: 50px;
     letter-spacing: 3px;
 }
 
@@ -43,8 +43,8 @@ h1{
 
 .grid {
     display: grid;
-    grid-template-columns: repeat(3, 90px);
-    grid-template-rows: repeat(9, 90px);
+    grid-template-columns: repeat(3, 70px);
+    grid-template-rows: repeat(9, 70px);
     grid-column-gap: 3px;
     grid-row-gap: 3px;
     /* Remove the following line */
@@ -52,13 +52,13 @@ h1{
 }
 
 .grid p{
-    width: 80px;
-    height: 80px;
+    width: 70px;
+    height: 70px;
     padding: 5px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 25px;
+    font-size: 23px;
     background-color: #fff;
     color: #0d1117;
     border-radius: 3px;
@@ -76,9 +76,9 @@ h1{
 }
 
 h2{
-    font-size: 55px;
+    font-size: 45px;
     margin: 50px;
-    letter-spacing: 20px;
+    letter-spacing: 15px;
     font-weight: 400;
 }
 
@@ -164,13 +164,13 @@ input{
 }
 
 .btn{
-    padding: 0px 25px;;
+    padding: 10px 25px;;
     font-size: 20px;
     background-color: #1ce2b0;
     color: #fff;
     border-style: none;
-    border-radius: 3px;
-    height: 50px;
+
+    height: 60px;
 }
 
 @media screen and (max-width: 1000px) {
