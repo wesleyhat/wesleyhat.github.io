@@ -1,3 +1,9 @@
+*{
+    margin: 0;
+    padding: 0;
+    border: 1px solid red;
+}
+
 body {
     font-family: "Roboto", sans-serif;
     background-color: #0d1117;
@@ -23,7 +29,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 60%;
+    width: 100%;
 }
 
 .projs{
@@ -32,7 +38,7 @@ body {
     place-items: center;
     grid-template-columns: auto auto auto auto;
     gap: 40px;
-    width: 60%;
+    width: 80%;
 }
 
 .projs h1{
@@ -43,7 +49,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 350px;
+    width: 300px;
     height: 150px;
     background-color: rgba(255,255,255,.70);
     color: #733fc7;
@@ -57,7 +63,14 @@ body {
     background-color: #fff;
 }
 
-@media screen and (max-width: 1000px) {
+@media screen and (max-width: 1560px) {
+    .projOne, .projTwo, .projThree, .projFour, .projFive, .projSix{
+        
+        width: 200px;
+    }
+}
+
+@media screen and (max-width: 1175px) {
 
     .head{
         font-size: 30px;
