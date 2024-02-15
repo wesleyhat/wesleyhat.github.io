@@ -224,8 +224,8 @@ function submitGuess(){
 
 var isDragging = false;
 var startX, scrollLeft;
-document.getElementById('wordDisplay').addEventListener('mousedown', startDrag);
-document.getElementById('wordDisplay').addEventListener('touchstart', startDrag);
+document.getElementById('slider').addEventListener('mousedown', startDrag);
+document.getElementById('slider').addEventListener('touchstart', startDrag);
 document.addEventListener('mousemove', drag);
 document.addEventListener('touchmove', drag);
 document.addEventListener('mouseup', stopDrag);
@@ -266,4 +266,3 @@ document.addEventListener('DOMContentLoaded', function () {
     getKeys();
     registerKeyboardEvents();
 });
-
