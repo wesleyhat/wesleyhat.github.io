@@ -35,16 +35,16 @@ h1{
 
 .key{
     position: absolute;
-    top: 50%;
-    right: 20px;
-    -ms-transform: translate(0, -50%);
-    transform: translate(0, -50%);
+    top: 65%;
+    right: 50%;
+    -ms-transform: translate(50%, -50%);
+    transform: translate(50%, -50%);
 }
 
 .grid {
     display: grid;
-    grid-template-columns: repeat(3, 70px);
-    grid-template-rows: repeat(9, 70px);
+    grid-template-columns: repeat(8, 70px);
+    grid-template-rows: repeat(4, 70px);
     grid-column-gap: 3px;
     grid-row-gap: 3px;
     /* Remove the following line */
@@ -76,7 +76,7 @@ h1{
 }
 
 h2{
-    margin: 50px;
+    margin: 75px;
     letter-spacing: 15px;
     font-weight: 400;
     font-size: 30px;
