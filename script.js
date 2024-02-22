@@ -76,7 +76,6 @@ function setHover(){
 
   itemOne.addEventListener("mouseover", (event) => {
 
-    itemOne.style.transform = "rotateY(180deg)";
     itemOne.style.backgroundColor = "#28d59c";
     mercerImage.style.display = "none";
     mercerText.style.display = "initial";
@@ -90,7 +89,6 @@ function setHover(){
 
   itemOne.addEventListener("mouseleave", (event) => {
 
-    itemOne.style.transform = "rotateY(0deg)";
     itemOne.style.backgroundColor = "#fff";
     mercerImage.style.display = "initial";
     mercerText.style.display = "none";
@@ -104,7 +102,6 @@ function setHover(){
 
   itemTwo.addEventListener("mouseover", (event) => {
 
-    itemTwo.style.transform = "rotateY(180deg)";
     itemTwo.style.backgroundColor = "#28d59c";
     cgtcImage.style.display = "none";
     cgtcText.style.display = "initial";
@@ -118,7 +115,6 @@ function setHover(){
 
   itemTwo.addEventListener("mouseleave", (event) => {
 
-    itemTwo.style.transform = "rotateY(0deg)";
     itemTwo.style.backgroundColor = "#fff";
     cgtcImage.style.display = "initial";
     cgtcText.style.display = "none";
