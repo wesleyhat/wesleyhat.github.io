@@ -41,7 +41,7 @@ body {
     font-weight: 200;
 }
 
-.projOne, .projTwo, .projThree, .projFour, .projFive, .projSix{
+.projOne, .projTwo, .projThree, .projFour, .projFive, .projSix, .projSeven{
     display: flex;
     align-items: center;
     justify-content: center;
@@ -54,13 +54,13 @@ body {
     transition-duration: 1s;
 }
 
-.projOne:hover, .projTwo:hover, .projThree:hover, .projFour:hover, .projFive:hover, .projSix:hover{
+.projOne:hover, .projTwo:hover, .projThree:hover, .projFour:hover, .projFive:hover, .projSix:hover, .projSeven:hover{
     transform: scale(1.05);
     background-color: #fff;
 }
 
 @media screen and (max-width: 1560px) {
-    .projOne, .projTwo, .projThree, .projFour, .projFive, .projSix{
+    .projOne, .projTwo, .projThree, .projFour, .projFive, .projSix, .projSeven{
         
         width: 200px;
     }
@@ -86,7 +86,7 @@ body {
     }
 
     
-.projOne, .projTwo, .projThree, .projFour, .projFive, .projSix{
+.projOne, .projTwo, .projThree, .projFour, .projFive, .projSix, .projSeven{
     width: 275px;
     height: 175px;
 }
