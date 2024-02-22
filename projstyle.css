@@ -59,6 +59,16 @@ body {
     background-color: #fff;
 }
 
+.projThree:before, .projSix:before {
+    content: "";
+    margin-left: -100%;
+}
+
+.projThree:after, .projSix:after {
+    content: "";
+    margin-right: -100%;
+}
+
 @media screen and (max-width: 1560px) {
     .projOne, .projTwo, .projThree, .projFour, .projFive, .projSix, .projSeven{
         
