@@ -79,9 +79,6 @@ function setHover(){
     itemOne.style.backgroundColor = "#28d59c";
     mercerImage.style.display = "none";
     mercerText.style.display = "initial";
-    mercerHeading.style.transform = "rotateY(180deg)";
-    mercerDeg.style.transform = "rotateY(180deg)";
-    mercerYear.style.transform = "rotateY(180deg)";
     mercerHeading.style.color= "#fff";
     mercerDeg.style.color= "#fff";
     mercerYear.style.color= "#fff";
@@ -92,9 +89,6 @@ function setHover(){
     itemOne.style.backgroundColor = "#fff";
     mercerImage.style.display = "initial";
     mercerText.style.display = "none";
-    mercerHeading.style.transform = "rotateY(0deg)";
-    mercerDeg.style.transform = "rotateY(0deg)";
-    mercerYear.style.transform = "rotateY(0deg)";
     mercerHeading.style.color= "initial";
     mercerDeg.style.color= "initial";
     mercerYear.style.color= "initial";
@@ -105,9 +99,6 @@ function setHover(){
     itemTwo.style.backgroundColor = "#28d59c";
     cgtcImage.style.display = "none";
     cgtcText.style.display = "initial";
-    cgtcHeading.style.transform = "rotateY(180deg)";
-    cgtcDeg.style.transform = "rotateY(180deg)";
-    cgtcYear.style.transform = "rotateY(180deg)";
     cgtcHeading.style.color= "#fff";
     cgtcDeg.style.color= "#fff";
     cgtcYear.style.color= "#fff";
@@ -118,9 +109,6 @@ function setHover(){
     itemTwo.style.backgroundColor = "#fff";
     cgtcImage.style.display = "initial";
     cgtcText.style.display = "none";
-    cgtcHeading.style.transform = "rotateY(0deg)";
-    cgtcDeg.style.transform = "rotateY(0deg)";
-    cgtcYear.style.transform = "rotateY(0deg)";
     cgtcHeading.style.color= "initial";
     cgtcDeg.style.color= "initial";
     cgtcYear.style.color= "initial";
