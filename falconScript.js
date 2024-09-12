@@ -44,7 +44,7 @@ var json;
 
 const options = {method: 'GET', headers: {accept: 'application/json'}};
 
-fetch('http://api.sportradar.us/nfl/official/trial/v7/en/games/' + sYear + '/REG/'+ weekNumber +'/schedule.json?api_key=mqOP3WFz3vXXAVoasREi6EyNqyL1KXh7no8lyYV6', options)
+fetch('https://api.sportradar.us/nfl/official/trial/v7/en/games/' + sYear + '/REG/'+ weekNumber +'/schedule.json?api_key=mqOP3WFz3vXXAVoasREi6EyNqyL1KXh7no8lyYV6', options)
   .then(response => response.json())
   .then(response => {
     json = response;
