@@ -35,7 +35,7 @@ async function getGamesForAllTeams() {
         const sites = data.items.map(item => toHttps(item.$ref)); // Convert to HTTPS for each site
 
 
-        console.log(httpsSites);
+
 
         const dates = [];
 
