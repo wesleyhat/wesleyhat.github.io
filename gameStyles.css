@@ -58,7 +58,7 @@ body{
 }
 
 .game {
-    background-color: rgba(255,255,255,.75); /* Semi-transparent black */
+    background-color: rgba(255,255,255,.7); /* Semi-transparent black */
     border-radius: 15px; /* Rounded corners */
     padding: 5px;
     display: flex;
