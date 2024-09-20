@@ -122,6 +122,11 @@ async function getGamesForAllTeams() {
 
     // Now inject the gamesInfo into the page
     displayGames(gamesInfo);
+
+    // Hide the loading screen and show the games container
+    document.getElementById('loading-screen').style.display = 'none';
+    document.getElementById('games-container').style.display = 'grid';  // Or flex/grid, depending on your layout
+
 }
 
 // Helper function to find the index of the next game date
