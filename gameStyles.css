@@ -1,0 +1,96 @@
+/* Basic styling for the game display */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    
+}
+
+body{
+    background-color: #121212;
+    color: #ffffff;
+    text-align: center;
+    font-family: "Roboto", sans-serif;
+    font-style: normal;
+    font-weight: lighter;
+    font-size: 25px;
+    padding: 25px;
+}
+
+.container{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 25px;
+}
+
+#games-container {
+    display: grid;
+    margin-top: 15px;
+    grid-template-columns: repeat(4, 1fr); /* 4 columns */
+    gap: 15px; /* Space between game divs */
+}
+
+.game {
+    background-color: rgba(255,255,255,.75); /* Semi-transparent black */
+    border-radius: 15px; /* Rounded corners */
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center items horizontally */
+    justify-content: center; /* Center items vertically */
+    width: 225px; /* Make it wider than tall */
+    height: 200px; /* Set a fixed height */
+}
+
+.team {
+    width: 100%; /* 90% of the game div's width */
+    height: 40%; /* Roughly 40% of the height of the game div */
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Space between logo and score */
+    padding: 5px;
+    color: white; /* Font color white */
+    border-radius: 15px; /* Rounded corners */
+    margin-bottom: 5px;
+    padding-right: 20px;
+    padding-left: 10px;
+}
+
+.team img {
+    height: 50px; /* Keep logo size */
+    margin-right: 10px;
+}
+
+.score {
+    font-family: "Roboto", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.game-date {
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 14px;
+    color: #121212; /* Font color white */
+    margin-top: 5px; /* Space above the date */
+    text-align: center; /* Center the date text */
+}
+
+/* For tablets */
+@media (max-width: 1100px) {
+    #games-container {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns for tablets */
+    }
+}
+
+/* For mobile */
+@media (max-width: 480px) {
+    #games-container {
+        grid-template-columns: 1fr; /* 1 column for mobile */
+    }
+}
