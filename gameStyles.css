@@ -108,6 +108,7 @@ body{
 
 /* For tablets */
 @media (max-width: 1100px) {
+
     #games-container {
         grid-template-columns: repeat(2, 1fr); /* 2 columns for tablets */
     }
@@ -115,7 +116,26 @@ body{
 
 /* For mobile */
 @media (max-width: 480px) {
+    body{
+        font-size: 15px;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .container{
+        padding-left: 5px;
+        padding-right: 5px;
+    }
     #games-container {
-        grid-template-columns: 1fr; /* 1 column for mobile */
+        grid-template-columns: repeat(2, 1fr); /* 1 column for mobile */
+    }
+
+    .game {
+      
+        border-radius: 15px; /* Rounded corners */
+        padding: 5px;
+       
+        width: 175px; /* Make it wider than tall */
+        height: 175px; /* Set a fixed height */
     }
 }
