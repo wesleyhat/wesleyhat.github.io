@@ -237,8 +237,8 @@ function displayGames(games) {
 
         // Append everything to gameDiv
         
-        gameDiv.appendChild(homeTeamDiv);
         gameDiv.appendChild(awayTeamDiv);
+        gameDiv.appendChild(homeTeamDiv);
         gameDiv.appendChild(gameDateDiv);
 
         // Append gameDiv to container
