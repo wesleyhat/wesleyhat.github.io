@@ -32,6 +32,34 @@ async function getGamesForAllTeams() {
     let gameIds = [];  // To track unique games by ID
     let gamesInfo = [];  // To store the actual game data
 
+    let firstTeam = ids[0];
+
+
+    const page = toHttps(`http://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/${currentYear}/teams/${firstTeam}/events?lang=en&region=us`);
+    const req = await fetch(page);
+    tally++;  // Increment tally for each team API call
+    const data = await req.json();
+    const firstTeamSites = data.items.map(item => toHttps(item.$ref)); // Convert to HTTPS for each site
+
+    const firstTeamDates = [];
+
+    // Now fetch each site using the updated URLs
+    for (const site of firstTeamSites) {
+        const siteReq = await fetch(site);
+        tally++;  // Increment tally for each team API call
+        const siteRes = await siteReq.json();
+        if (siteRes.date) {
+            firstTeamDates.push(siteRes.date);
+        } else {
+            console.warn(`No date found for site: ${httpsUrl}`);
+        }
+    }
+
+    const firstTeamFDates = firstTeamDates.map(date => new Date(date));
+    let firstTeamDateIndex = findNextDateIndex(firstTeamFDates);
+
+    console.log(firstTeamDateIndex);
+
     for (const teamId of ids) {
         const page = toHttps(`http://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/${currentYear}/teams/${teamId}/events?lang=en&region=us`);
         const req = await fetch(page);
@@ -39,34 +67,22 @@ async function getGamesForAllTeams() {
         const data = await req.json();
         const sites = data.items.map(item => toHttps(item.$ref)); // Convert to HTTPS for each site
 
-        const dates = [];
-
-        // Now fetch each site using the updated URLs
-        for (const site of sites) {
-            const siteReq = await fetch(site);
-            tally++;  // Increment tally for each team API call
-            const siteRes = await siteReq.json();
-            if (siteRes.date) {
-                dates.push(siteRes.date);
-            } else {
-                console.warn(`No date found for site: ${httpsUrl}`);
-            }
+        // Check if the index is valid for the current team's sites
+        if (firstTeamDateIndex >= sites.length) {
+            console.warn(`Index ${firstTeamDateIndex} is out of bounds for team ${teamId}`);
+            continue; // Skip if the index is invalid
         }
 
-        const fDates = dates.map(date => new Date(date));
-        let nextDateIndex = findNextDateIndex(fDates);
-
-        if (nextDateIndex === -1) continue;
-
-        const current = sites[nextDateIndex];
-        const currentReq = await fetch(current);
+        const currentSite = sites[firstTeamDateIndex]; // Get the specific site using the index
+        const currentReq = await fetch(currentSite);
+        tally++;  // Increment tally for the site API call
         const currentGame = await currentReq.json();
+        
         const competitors = currentGame.competitions[0].competitors;
-
         const gameId = currentGame.id || currentGame.$ref;
 
         if (gameIds.includes(gameId)) {
-            continue;
+            continue; // Skip if the game ID has already been processed
         }
 
         gameIds.push(gameId);
@@ -108,20 +124,32 @@ async function getGamesForAllTeams() {
             awayScore = "--";
         }
 
-        // Store the game info in the gamesInfo array
-        gamesInfo.push({
-            gameId: gameId,
-            date: gameDate,
-            homeTeam: home,
-            awayTeam: away,
-            homeScore: homeScore,
-            awayScore: awayScore,
-            homeLogo: homeLogoUrl,
-            awayLogo: awayLogoUrl,
-            homeColor: homeColor,
-            awayColor: awayColor
-        });
+        // Calculate the Start and End of the Week
+        const startOfWeek = new Date(currentDate);
+        startOfWeek.setDate(currentDate.getDate() - (currentDate.getDay() + 5) % 7); // Tuesday
+        startOfWeek.setHours(0, 0, 0, 0);
+
+        const endOfWeek = new Date(currentDate);
+        endOfWeek.setDate(currentDate.getDate() + (1 - currentDate.getDay() + 7) % 7); // Next Monday
+        endOfWeek.setHours(23, 59, 59, 999);
+
+        // Check if the game is within the current week
+        if (gameDate >= startOfWeek && gameDate <= endOfWeek) {
+            gamesInfo.push({
+                gameId: gameId,
+                date: gameDate,
+                homeTeam: home,
+                awayTeam: away,
+                homeScore: homeScore,
+                awayScore: awayScore,
+                homeLogo: homeLogoUrl,
+                awayLogo: awayLogoUrl,
+                homeColor: homeColor,
+                awayColor: awayColor
+            });
+        }
     }
+    
 
     // Now inject the gamesInfo into the page
     displayGames(gamesInfo);
