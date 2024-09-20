@@ -1,6 +1,10 @@
+function toHttps(url) {
+    return url.replace(/^http:/, 'https:');
+}
+
 async function getGamesForAllTeams() {
 
-    const teamsPage = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams";
+    const teamsPage = toHttps("http://site.api.espn.com/apis/site/v2/sports/football/nfl/teams");
     const teamsReq = await fetch(teamsPage);
     const teamsData = await teamsReq.json();
     let sports = teamsData["sports"];
@@ -23,21 +27,21 @@ async function getGamesForAllTeams() {
     let gamesInfo = [];  // To store the actual game data
 
     for (const teamId of ids) {
-        const page = `https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/${currentYear}/teams/${teamId}/events?lang=en&region=us`;
+        const page = toHttps(`http://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/${currentYear}/teams/${teamId}/events?lang=en&region=us`);
         const req = await fetch(page);
         const data = await req.json();
 
 
-        const sites = data.items.map(item => item.$ref);
-        const httpsSites = sites.map(site => site.replace(/^http:/, 'https:'));
+        const sites = data.items.map(item => toHttps(item.$ref)); // Convert to HTTPS for each site
+
 
         console.log(httpsSites);
 
         const dates = [];
 
         // Now fetch each site using the updated URLs
-        for (const httpsUrl of httpsSites) {
-            const siteReq = await fetch(httpsUrl);
+        for (const site of sites) {
+            const siteReq = await fetch(site);
             const siteRes = await siteReq.json();
             if (siteRes.date) {
                 dates.push(siteRes.date);
@@ -67,10 +71,10 @@ async function getGamesForAllTeams() {
         const homeUrl = competitors[0].team.$ref;
         const awayUrl = competitors[1].team.$ref;
 
-        const homeRequest = await fetch(homeUrl);
+        const homeRequest = await fetch(toHttps(homeUrl)); // Convert to HTTPS
         const homeInfo = await homeRequest.json();
 
-        const awayRequest = await fetch(awayUrl);
+        const awayRequest = await fetch(toHttps(awayUrl)); // Convert to HTTPS
         const awayInfo = await awayRequest.json();
 
         let homeColor = homeInfo.color;
@@ -88,10 +92,10 @@ async function getGamesForAllTeams() {
         const homeTeamScoreUrl = competitors[0].score.$ref;
         const awayTeamScoreUrl = competitors[1].score.$ref;
 
-        const homeResponse = await fetch(homeTeamScoreUrl);
+        const homeResponse = await fetch(toHttps(homeTeamScoreUrl)); // Convert to HTTPS
         const homeData = await homeResponse.json();
 
-        const awayResponse = await fetch(awayTeamScoreUrl);
+        const awayResponse = await fetch(toHttps(awayTeamScoreUrl)); // Convert to HTTPS
         const awayData = await awayResponse.json();
 
         let homeScore = homeData.value;
