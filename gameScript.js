@@ -212,19 +212,19 @@ function displayGames(games) {
         const gameDiv = document.createElement('div');
         gameDiv.classList.add('game');
 
+        const awayTeamDiv = document.createElement('div');
+        awayTeamDiv.classList.add('team');
+        awayTeamDiv.innerHTML = `
+            <img src="${game.awayLogo}" alt="${game.awayTeam} Logo">
+            <span class="score">${game.awayScore}</span>
+        `;
+
         // Create team elements
         const homeTeamDiv = document.createElement('div');
         homeTeamDiv.classList.add('team');
         homeTeamDiv.innerHTML = `
             <img src="${game.homeLogo}" alt="${game.homeTeam} Logo">
             <span class="score">${game.homeScore}</span>
-        `;
-        
-        const awayTeamDiv = document.createElement('div');
-        awayTeamDiv.classList.add('team');
-        awayTeamDiv.innerHTML = `
-            <img src="${game.awayLogo}" alt="${game.awayTeam} Logo">
-            <span class="score">${game.awayScore}</span>
         `;
 
         homeTeamDiv.style.backgroundColor = "#" + game.homeColor; // Set home team color
@@ -233,7 +233,7 @@ function displayGames(games) {
         // Create game date element
         const gameDateDiv = document.createElement('div');
         gameDateDiv.classList.add('game-date');
-        gameDateDiv.textContent = `Date: ${game.date.toDateString()}`;
+        gameDateDiv.textContent = `${game.date.toDateString()}`;
 
         // Append everything to gameDiv
         
