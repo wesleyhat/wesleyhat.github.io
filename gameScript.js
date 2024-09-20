@@ -1,6 +1,6 @@
 async function getGamesForAllTeams() {
 
-    const teamsPage = "http://site.api.espn.com/apis/site/v2/sports/football/nfl/teams";
+    const teamsPage = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams";
     const teamsReq = await fetch(teamsPage);
     const teamsData = await teamsReq.json();
     let sports = teamsData["sports"];
@@ -23,7 +23,7 @@ async function getGamesForAllTeams() {
     let gamesInfo = [];  // To store the actual game data
 
     for (const teamId of ids) {
-        const page = `http://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/${currentYear}/teams/${teamId}/events?lang=en&region=us`;
+        const page = `https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/${currentYear}/teams/${teamId}/events?lang=en&region=us`;
         const req = await fetch(page);
         const data = await req.json();
         const sites = data.items.map(item => item.$ref);
