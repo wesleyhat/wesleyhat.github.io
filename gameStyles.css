@@ -14,7 +14,21 @@ body{
     font-style: normal;
     font-weight: lighter;
     font-size: 25px;
-    padding: 25px;
+
+}
+
+.navbar {
+    border-bottom: 1px solid #333; /* Dark background color */
+    color: white; /* White text color */
+    padding: 10px 20px; /* Padding for spacing */
+    display: flex; /* Use flexbox for alignment */
+    align-items: center; /* Center items vertically */
+}
+
+.navbar-title {
+    margin: 0; /* Remove default margin */
+    font-size: 25px; /* Adjust font size */
+    font-weight: lighter;
 }
 
 .container{
@@ -23,7 +37,7 @@ body{
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 25px;
+    padding: 50px;
 }
 
 /* Loading screen styles */
