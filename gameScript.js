@@ -3,9 +3,15 @@ function toHttps(url) {
 }
 
 async function getGamesForAllTeams() {
+    // Show the loading screen
+    document.getElementById('loading-screen').style.display = 'flex';
+    document.getElementById('games-container').style.display = 'none';
+
+    let tally = 0;  // Initialize tally variable
 
     const teamsPage = toHttps("http://site.api.espn.com/apis/site/v2/sports/football/nfl/teams");
     const teamsReq = await fetch(teamsPage);
+    tally++;  // Increment tally for the teams API call
     const teamsData = await teamsReq.json();
     let sports = teamsData["sports"];
     let sport = sports[0];
@@ -29,19 +35,16 @@ async function getGamesForAllTeams() {
     for (const teamId of ids) {
         const page = toHttps(`http://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/${currentYear}/teams/${teamId}/events?lang=en&region=us`);
         const req = await fetch(page);
+        tally++;  // Increment tally for each team API call
         const data = await req.json();
-
-
         const sites = data.items.map(item => toHttps(item.$ref)); // Convert to HTTPS for each site
-
-
-
 
         const dates = [];
 
         // Now fetch each site using the updated URLs
         for (const site of sites) {
             const siteReq = await fetch(site);
+            tally++;  // Increment tally for each team API call
             const siteRes = await siteReq.json();
             if (siteRes.date) {
                 dates.push(siteRes.date);
@@ -126,6 +129,9 @@ async function getGamesForAllTeams() {
     // Hide the loading screen and show the games container
     document.getElementById('loading-screen').style.display = 'none';
     document.getElementById('games-container').style.display = 'grid';  // Or flex/grid, depending on your layout
+
+    // Log the total number of API calls made
+    console.log(`Total API calls made: ${tally}`);
 
 }
 
