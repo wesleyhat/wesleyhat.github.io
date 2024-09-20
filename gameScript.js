@@ -26,16 +26,23 @@ async function getGamesForAllTeams() {
         const page = `https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/${currentYear}/teams/${teamId}/events?lang=en&region=us`;
         const req = await fetch(page);
         const data = await req.json();
+
+
         const sites = data.items.map(item => item.$ref);
+        const httpsSites = sites.map(site => site.replace(/^http:/, 'https:'));
+
+        console.log(httpsSites);
 
         const dates = [];
-        for (const site of sites) {
-            const siteReq = await fetch(site);
+
+        // Now fetch each site using the updated URLs
+        for (const httpsUrl of httpsSites) {
+            const siteReq = await fetch(httpsUrl);
             const siteRes = await siteReq.json();
             if (siteRes.date) {
                 dates.push(siteRes.date);
             } else {
-                console.warn(`No date found for site: ${site}`);
+                console.warn(`No date found for site: ${httpsUrl}`);
             }
         }
 
