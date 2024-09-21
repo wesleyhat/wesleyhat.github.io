@@ -182,6 +182,15 @@ body{
         font-size: 15px;
     }
 
+    .navbar {
+        padding: 10px 20px;
+    }
+
+    .nav-button{
+        padding: none;
+        font-weight: 400;
+    }
+
     
     #games-container,  #games-container-past {
         grid-template-columns: repeat(2, 1fr); /* 1 column for mobile */
