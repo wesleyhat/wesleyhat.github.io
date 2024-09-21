@@ -187,10 +187,10 @@ async function getGamesForAllTeams() {
             if (homeScore > awayScore) {
                 awayColor = "#0d0b15";
                 awayText = "#8c899c";
-            } else {
+            } else if(homeScore < awayScore){
                 homeColor = "#0d0b15";
                 homeText = "#8c899c";
-            }
+            } 
         } else {
             gameStatus = "live";
             liveGameFound = true; // A live game is found
@@ -284,16 +284,25 @@ function displayGames(games) {
         gameDateDiv.classList.add('game-date');
         gameDateDiv.textContent = `${formatGameDate(game.date)}`;
 
-        gameDiv.appendChild(awayTeamDiv);
-        gameDiv.appendChild(homeTeamDiv);
-        gameDiv.appendChild(gameDateDiv);
-
         if (game.gameStatus === "post") {
+            if(game.homeScore < game.awayScore){
+                gameDiv.appendChild(awayTeamDiv);
+                gameDiv.appendChild(homeTeamDiv);
+                gameDiv.appendChild(gameDateDiv);
+            } else {
+                gameDiv.appendChild(homeTeamDiv);
+                gameDiv.appendChild(awayTeamDiv);
+                gameDiv.appendChild(gameDateDiv);
+            }
             containerPast.appendChild(gameDiv);
             gameDateDiv.textContent = "Final";
         } else {
+
+            gameDiv.appendChild(awayTeamDiv);
+            gameDiv.appendChild(homeTeamDiv);
+            gameDiv.appendChild(gameDateDiv);
             if (game.gameStatus === "live") {
-                gameDateDiv.innerHTML = `<span style="color: #e13534;">Live</span>&nbsp;&nbsp;${game.inning}`;
+                gameDateDiv.innerHTML = `<span style="color: #e13534;">Live</span>&nbsp;&nbsp;&nbsp;${game.inning}`;
             }
             container.appendChild(gameDiv);
         }
@@ -303,3 +312,4 @@ function displayGames(games) {
 
 
 getGamesForAllTeams();
+
