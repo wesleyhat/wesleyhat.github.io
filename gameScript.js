@@ -109,6 +109,8 @@ async function getGamesForAllTeams() {
         const homeUrl = competitors[0].team.$ref;
         const awayUrl = competitors[1].team.$ref;
 
+        const isLive = currentGame.competitions[0].liveAvailable;
+
         const homeRequest = await fetch(toHttps(homeUrl)); // Convert to HTTPS
         const homeInfo = await homeRequest.json();
 
@@ -134,8 +136,6 @@ async function getGamesForAllTeams() {
 
         const gameDate = new Date(currentGame.date);
         const currentDate = new Date();
-
-        console.log(gameDate);
 
         const homeTeamScoreUrl = competitors[0].score.$ref;
         const awayTeamScoreUrl = competitors[1].score.$ref;
@@ -196,7 +196,8 @@ async function getGamesForAllTeams() {
                 awayColor: awayColor,
                 homeText: homeText,
                 awayText: awayText,
-                gameOpacity: gameOpacity
+                gameOpacity: gameOpacity,
+                isLive: isLive
             });
         }
 
@@ -272,6 +273,9 @@ function displayGames(games) {
         const gameDiv = document.createElement('div');
         gameDiv.classList.add('game');
 
+        const matchup = document.createElement('h2');
+        matchup.textContent = "Matchup:"
+
         gameDiv.style.opacity = game.gameOpacity;
 
         const awayTeamDiv = document.createElement('div');
@@ -297,9 +301,12 @@ function displayGames(games) {
         // Create game date element
         const gameDateDiv = document.createElement('div');
         gameDateDiv.classList.add('game-date');
+
+
         gameDateDiv.textContent = `${formatGameDate(game.date)}`;
 
         // Append everything to gameDiv
+
         
         gameDiv.appendChild(awayTeamDiv);
         gameDiv.appendChild(homeTeamDiv);
@@ -308,11 +315,19 @@ function displayGames(games) {
         const date = new Date();
 
         if(game.date < date) {
+
+
             // Append gameDiv to container
             containerPast.appendChild(gameDiv);
+            gameDateDiv.textContent = "Final";
 
-            console.log("game found")
         } else {
+
+            if(game.isLive){
+                gameDateDiv.textContent = "Live";
+                gameDateDiv.style.color = "#e13534";
+            }
+
             // Append gameDiv to container
             container.appendChild(gameDiv);
         }
