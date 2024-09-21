@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="gameStyles.css">
+    <link rel="icon" href="sport.png" type="image/png">
+    <title>MLB Games</title>
+</head>
+<body>
+
+    <header class="navbar">
+        <h1 class="navbar-title">Scores</h1>
+
+        <nav class="nav-links"></nav>
+            <a href="nfl.html" class="nav-button">NFL</a>
+            <a href="mlb.html" class="nav-button">MLB</a>
+        </nav>
+    </header>
+
+    <div class="container">
+
+        <div id="loading-screen" class="loading">
+            <p>Loading games, please wait...</p>
+        </div>
+        
+        <div id="games-container">
+        </div> <!-- Where the games will be displayed -->
+
+        <div class="line"></div>
+
+        <div id="games-container-past"></div>
+    </div>
+
+    <script src="mlbScript.js"></script> <!-- Your JavaScript file -->
+</body>
+</html>
