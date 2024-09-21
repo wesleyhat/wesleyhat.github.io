@@ -37,7 +37,6 @@ body{
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 50px;
 }
 
 /* Loading screen styles */
@@ -70,7 +69,15 @@ body{
     margin-top: 15px;
     grid-template-columns: repeat(4, 1fr); /* 4 columns */
     gap: 15px; /* Space between game divs */
-    padding-bottom: 75px;
+    padding: 50px 50px 75px 50px;
+}
+
+.line {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 1px;
+    background-color: #333;
 }
 
 .game{
@@ -83,6 +90,11 @@ body{
     justify-content: center; /* Center items vertically */
     width: 175px; /* Make it wider than tall */
     height: 175px; /* Set a fixed height */
+}
+
+.game:hover{
+    transform: scale(1.02);
+
 }
 
 .team {
@@ -131,14 +143,14 @@ body{
     }
     
 
-    #games-container {
+    #games-container, #games-container-past {
         grid-template-columns: repeat(3, 1fr); /* 2 columns for tablets */
     }
 }
 
 @media (max-width: 860px) {
 
-    #games-container {
+    #games-container,  #games-container-past {
         grid-template-columns: repeat(2, 1fr); /* 2 columns for tablets */
     }
 }
@@ -155,16 +167,13 @@ body{
         padding-left: 5px;
         padding-right: 5px;
     }
-    #games-container {
+    #games-container,  #games-container-past {
         grid-template-columns: repeat(2, 1fr); /* 1 column for mobile */
     }
 
     .game {
       
         border-radius: 15px; /* Rounded corners */
-        padding: 5px;
-       
-        width: 175px; /* Make it wider than tall */
-        height: 175px; /* Set a fixed height */
+        padding: 5px; 
     }
 }
