@@ -18,17 +18,39 @@ body{
 }
 
 .navbar {
-    border-bottom: 1px solid #333; /* Dark background color */
-    color: white; /* White text color */
-    padding: 10px 20px; /* Padding for spacing */
-    display: flex; /* Use flexbox for alignment */
-    align-items: center; /* Center items vertically */
+    border-bottom: 1px solid #333;
+    color: white;
+    padding: 15px 50px; /* Ensure this is the same on both pages */
+    display: flex;
+    align-items: center;
 }
 
 .navbar-title {
-    margin: 0; /* Remove default margin */
-    font-size: 25px; /* Adjust font size */
+    margin: 0;
+    font-size: 25px;
     font-weight: lighter;
+}
+
+/* Optional: Add margin to the nav-links for consistency */
+.nav-links {
+    margin-left: auto; /* Pushes the links to the right */
+    display: flex; /* Ensures links are in a row */
+    align-items: center; /* Vertically centers the links */
+}
+
+.nav-button {
+    background-color: #333; /* Dark background for buttons */
+    color: white; /* White text color */
+    text-decoration: none; /* Remove underline */
+    padding: 10px 15px; /* Padding for buttons */
+    border-radius: 5px; /* Rounded corners */
+    margin-left: 10px; /* Space between buttons */
+    transition: background-color 0.3s, transform 0.2s; /* Smooth transitions */
+}
+
+.nav-button:hover {
+    background-color: #555; /* Darker background on hover */
+    transform: scale(1.05); /* Slightly enlarge on hover */
 }
 
 .container{
