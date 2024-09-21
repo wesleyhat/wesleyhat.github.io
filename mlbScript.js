@@ -225,8 +225,6 @@ async function getGamesForAllTeams() {
     // Now inject the gamesInfo into the page
     displayGames(gamesInfo);
 
-    console.log("Total number of APIs called: " + tally)
-
     // Hide the loading screen and show the games container
     document.getElementById('loading-screen').style.display = 'none';
     document.getElementById('games-container').style.display = 'grid';
