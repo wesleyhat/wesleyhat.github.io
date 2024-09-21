@@ -24,7 +24,7 @@ const teamInfo = {
         "logo": "https://a.espncdn.com/i/teamlogos/mlb/500-dark/chc.png"
     },
     "CHW": {
-        "color": "#c4ced4",
+        "color": "#949ca1",
         "logo": "https://a.espncdn.com/i/teamlogos/mlb/500/chw.png"
     },
     "CIN": {
