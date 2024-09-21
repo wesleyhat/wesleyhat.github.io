@@ -241,7 +241,7 @@ async function getGamesForAllTeams() {
     // Adjust refresh interval based on live game status
     if (liveGameFound) {
         if (!intervalId) {
-            refreshInterval = 30000; // Set to 30 seconds for live games
+            refreshInterval = 10000; // Set to 30 seconds for live games
             intervalId = setInterval(getGamesForAllTeams, refreshInterval); // Start refreshing
         }
     } else {
