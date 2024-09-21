@@ -129,8 +129,6 @@ async function getGamesForAllTeams() {
     // Now inject the gamesInfo into the page
     displayGames(gamesInfo);
 
-    console.log("Total number of APIs called: " + tally)
-
     // Hide the loading screen and show the games container
     document.getElementById('loading-screen').style.display = 'none';
     document.getElementById('games-container').style.display = 'grid';
@@ -163,28 +161,31 @@ function displayGames(games) {
 
         const awayTeamDiv = document.createElement('div');
         awayTeamDiv.classList.add('team');
-        awayTeamDiv.innerHTML = `
-                <img src="${game.awayLogo}" alt="${game.awayTeam} Logo">
-                <span class="score">${game.awayScore}</span>
-            `;
 
         if(!game.hasAwayLogo){
             awayTeamDiv.innerHTML = `
                 <h2 style="font-size: 20px; font-weight: 400;">${game.awayTeam}</h2>
                 <span class="score">${game.awayScore}</span>
             `;
+        } else {
+            awayTeamDiv.innerHTML = `
+                <img src="${game.awayLogo}" alt="${game.awayTeam} Logo">
+                <span class="score">${game.awayScore}</span>
+            `;
         }
 
         const homeTeamDiv = document.createElement('div');
         homeTeamDiv.classList.add('team');
-        homeTeamDiv.innerHTML = `
-            <img src="${game.homeLogo}" alt="${game.homeTeam} Logo">
-            <span class="score">${game.homeScore}</span>
-        `;
+        
 
         if(!game.hasHomeLogo){
             homeTeamDiv.innerHTML = `
             <h2 style="font-size: 20px; font-weight: 400;">${game.homeTeam}</h2>
+            <span class="score">${game.homeScore}</span>
+        `;
+        } else {
+            homeTeamDiv.innerHTML = `
+            <img src="${game.homeLogo}" alt="${game.homeTeam} Logo">
             <span class="score">${game.homeScore}</span>
         `;
         }
