@@ -4,18 +4,12 @@ function toHttps(url) {
 
 function getPeriodString(period) {
     switch (period) {
-        case 0:
-            return "0";
-        case 1:
-            return "1st";
-        case 2:
-            return "2nd";
-        case 3:
-            return "3rd";
-        case 4:
-            return "4th";
-        default:
-            return "Invalid period";
+        case 0: return "0";
+        case 1: return "1st";
+        case 2: return "2nd";
+        case 3: return "3rd";
+        case 4: return "4th";
+        default: return "Invalid period";
     }
 }
 
@@ -152,90 +146,64 @@ const teamInfo = {
 
 function formatGameDate(gameDate) {
     const date = new Date(gameDate);
-
-    // Get day, month, and year
-    const day = date.toLocaleString('en-US', {
-        weekday: 'short'
-    });
+    const day = date.toLocaleString('en-US', { weekday: 'short' });
     const month = date.getMonth() + 1; // Months are zero-indexed
     const dayOfMonth = date.getDate();
-
-    // Get hours and minutes
     let hours = date.getHours();
     const minutes = date.getMinutes().toString().padStart(2, '0'); // Ensure two digits for minutes
-
-    // Determine AM/PM and convert to 12-hour format
     const ampm = hours >= 12 ? 'pm' : 'am';
     hours = hours % 12;
     hours = hours ? hours : 12; // the hour '0' should be '12'
-
-    // Construct the formatted date string
     return `${day} ${month}/${dayOfMonth} ${hours}:${minutes}${ampm}`;
 }
 
+let refreshInterval = 10000; // Default to 30 seconds
+let intervalId;
+
 async function getGamesForAllTeams() {
-
-
     let tally = 0; // Initialize tally variable
-
     const page = toHttps(`https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard`);
     const req = await fetch(page);
     tally++; // Increment tally for the teams API call
     const data = await req.json();
-
-    const events = data.events
-
+    const events = data.events;
     let gamesInfo = []; // To store the actual game data
+    let liveGameFound = false; // To track if there's a live game
 
     for (const event of events) {
-
-
-        matchup = event.shortName
-
+        const matchup = event.shortName;
         const teams = matchup.split(" @ ");
-
         const away = teams[0];
         const home = teams[1];
-
         const homeLogoUrl = teamInfo[home].logo;
         let homeColor = teamInfo[home].color;
-
         const awayLogoUrl = teamInfo[away].logo;
         let awayColor = teamInfo[away].color;
-
         let awayScore = event.competitions[0].competitors[0].score;
         let homeScore = event.competitions[0].competitors[1].score;
-
         let gameDate = new Date(event.date);
-
         let homeText = "#ffffff";
         let awayText = "#ffffff";
-
         let period = event.status.period;
         let clock = event.status.displayClock;
-
         let quarter = getPeriodString(period);
-
         let gameState = event.status.type.state;
-
         let gameStatus = "";
 
         if (gameState === "pre") {
-
-            gameStatus = "pre"
+            gameStatus = "pre";
         } else if (gameState === "post") {
-
-            gameStatus = "post"
-
+            gameStatus = "post";
             if (homeScore > awayScore) {
                 awayColor = "#0d0b15";
-                awayText = "#8c899c"
+                awayText = "#8c899c";
             } else {
                 homeColor = "#0d0b15";
-                homeText = "#8c899c"
+                homeText = "#8c899c";
             }
         } else {
-            gameStatus = "live"
+            gameStatus = "live";
+            liveGameFound = true; // A live game is found
         }
 
         if (gameStatus === "pre") {
@@ -257,34 +225,42 @@ async function getGamesForAllTeams() {
             awayText: awayText,
             quarter: quarter,
             clock,
-            clock,
             gameStatus: gameStatus
         });
-
     }
 
     // Now inject the gamesInfo into the page
     displayGames(gamesInfo);
 
+    console.log("Total number of APIs called: " + tally)
+
     // Hide the loading screen and show the games container
     document.getElementById('loading-screen').style.display = 'none';
-    document.getElementById('games-container').style.display = 'grid'; // Or flex/grid, depending on your layout
+    document.getElementById('games-container').style.display = 'grid';
 
-    // Log the total number of API calls made
-    console.log(`Total API calls made: ${tally}`);
+    // Adjust refresh interval based on live game status
+    if (liveGameFound) {
+        if (!intervalId) {
+            refreshInterval = 30000; // Set to 30 seconds for live games
+            intervalId = setInterval(getGamesForAllTeams, refreshInterval); // Start refreshing
+        }
+    } else {
+        // If no live games, clear the interval
+        if (intervalId) {
+            clearInterval(intervalId);
+            intervalId = null; // Reset intervalId
+        }
+    }
 }
 
 // Function to display games on the webpage
 function displayGames(games) {
     const container = document.getElementById('games-container');
     container.innerHTML = ''; // Clear any previous content
-
     const containerPast = document.getElementById('games-container-past');
     containerPast.innerHTML = ''; // Clear any previous content
 
     games.forEach(game => {
-
-        // Create game container
         const gameDiv = document.createElement('div');
         gameDiv.classList.add('game');
 
@@ -295,7 +271,6 @@ function displayGames(games) {
             <span class="score">${game.awayScore}</span>
         `;
 
-        // Create team elements
         const homeTeamDiv = document.createElement('div');
         homeTeamDiv.classList.add('team');
         homeTeamDiv.innerHTML = `
@@ -303,45 +278,29 @@ function displayGames(games) {
             <span class="score">${game.homeScore}</span>
         `;
 
-        homeTeamDiv.style.backgroundColor = game.homeColor; // Set home team color
-        awayTeamDiv.style.backgroundColor = game.awayColor; // Set away team color
+        homeTeamDiv.style.backgroundColor = game.homeColor;
+        awayTeamDiv.style.backgroundColor = game.awayColor;
         homeTeamDiv.style.color = game.homeText;
         awayTeamDiv.style.color = game.awayText;
 
-        // Create game date element
         const gameDateDiv = document.createElement('div');
         gameDateDiv.classList.add('game-date');
-
-
         gameDateDiv.textContent = `${formatGameDate(game.date)}`;
-
-        // Append everything to gameDiv
-
 
         gameDiv.appendChild(awayTeamDiv);
         gameDiv.appendChild(homeTeamDiv);
         gameDiv.appendChild(gameDateDiv);
 
         if (game.gameStatus === "post") {
-
-
-            // Append gameDiv to container
             containerPast.appendChild(gameDiv);
             gameDateDiv.textContent = "Final";
-
         } else {
-
             if (game.gameStatus === "live") {
                 gameDateDiv.innerHTML = `<span style="color: #e13534;">Live</span>&nbsp;&nbsp;${game.quarter}&nbsp;&nbsp;${game.clock}`;
             }
-
-            // Append gameDiv to container
             container.appendChild(gameDiv);
         }
-
     });
 }
 
 getGamesForAllTeams();
-
-setInterval(getGamesForAllTeams, 10000); // Fetch data every 10 seconds
