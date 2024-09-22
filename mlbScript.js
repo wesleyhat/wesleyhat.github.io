@@ -1,3 +1,28 @@
+document.addEventListener("DOMContentLoaded", function() {
+    // Select all the nav buttons
+    const navButtons = document.querySelectorAll('.nav-button');
+    let originalActive = document.querySelector('.nav-button.active');
+
+    // Add hover and mouseout event listeners to each button
+    navButtons.forEach(function(button) {
+        button.addEventListener('mouseenter', function() {
+            // If the hovered button is not the active one, deactivate the original active
+            if (!button.classList.contains('active')) {
+                originalActive.classList.remove('active');
+                button.classList.add('active');
+            }
+        });
+
+        button.addEventListener('mouseleave', function() {
+            // Reset the original active when no longer hovering over a different button
+            if (originalActive && button !== originalActive) {
+                button.classList.remove('active');
+                originalActive.classList.add('active');
+            }
+        });
+    });
+});
+
 function toHttps(url) {
     return url.replace(/^http:/, 'https:');
 }
