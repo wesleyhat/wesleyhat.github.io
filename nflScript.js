@@ -116,8 +116,8 @@ async function getGamesForAllTeams() {
         hasHomeLogo = homeLogoUrl && homeLogoUrl !== "none";
         hasAwayLogo = awayLogoUrl && awayLogoUrl !== "none";
 
-        let awayScore = event.competitions[0].competitors[0].score;
-        let homeScore = event.competitions[0].competitors[1].score;
+        let awayScore = event.competitions[0].competitors[1].score;
+        let homeScore = event.competitions[0].competitors[0].score;
         let gameDate = new Date(event.date);
         let homeText = "#ffffff";
         let awayText = "#ffffff";
