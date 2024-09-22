@@ -18,7 +18,6 @@ body{
 }
 
 .navbar {
-    border-bottom: 1px solid #333;
     color: white;
     padding: 15px 50px; /* Ensure this is the same on both pages */
     display: flex;
@@ -33,24 +32,39 @@ body{
 
 /* Optional: Add margin to the nav-links for consistency */
 .nav-links {
-    margin-left: auto; /* Pushes the links to the right */
+    width: 100%;
     display: flex; /* Ensures links are in a row */
     align-items: center; /* Vertically centers the links */
+    align-items: center;
+    justify-content: center;
+    transition: ease-in-out .5s;
+}
+
+.nav-button.active {
+    border: 1px solid #555;
+    border-bottom: none;
+    border-top-left-radius: 5px; /* Top left corner */
+    border-top-right-radius: 5px; /* Top right corner */
+    z-index: 10;
+}
+
+.nav-button.active:hover {
+    background-color: #0d0b15; /* Darker background on hover */
+    transform: none; /* Slightly enlarge on hover */
 }
 
 .nav-button {
-    background-color: #333; /* Dark background for buttons */
     color: white; /* White text color */
     text-decoration: none; /* Remove underline */
-    padding: 10px 15px; /* Padding for buttons */
-    border-radius: 5px; /* Rounded corners */
-    margin-left: 10px; /* Space between buttons */
+    padding: 10px 20px; /* Padding for buttons */
+    border-bottom: 1px solid #555;
     transition: background-color 0.3s, transform 0.2s; /* Smooth transitions */
+    border-top-left-radius: 5px; /* Top left corner */
+    border-top-right-radius: 5px; /* Top right corner */
 }
 
 .nav-button:hover {
     background-color: #555; /* Darker background on hover */
-    transform: scale(1.05); /* Slightly enlarge on hover */
 }
 
 .container{
@@ -174,6 +188,10 @@ body{
     #games-container,  #games-container-past {
         grid-template-columns: repeat(2, 1fr); /* 2 columns for tablets */
     }
+
+    .nav-button {
+        font-size: 17px;
+    }
 }
 
 /* For mobile */
@@ -184,18 +202,22 @@ body{
 
     .navbar {
         padding: 10px 20px;
+        margin-top: 10px;
     }
 
     .nav-button{
         padding: none;
         font-weight: 400;
+        margin-top: 25px;
     }
 
     
     #games-container,  #games-container-past {
         grid-template-columns: repeat(2, 1fr); /* 1 column for mobile */
 
-        padding: 50px 0px 75px 0px;
+        padding: 0;
+
+        margin-top: 50px;
     }
 
 }
