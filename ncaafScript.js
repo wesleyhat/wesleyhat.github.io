@@ -41,13 +41,23 @@ function getPeriodString(period) {
 let teamInfo; // Declare teamInfo in the appropriate scope
 
 async function loadLocalJSON() {
-    const response = await fetch('ncaafInfo.json'); // Path to your local file
+    const response = await fetch('info.json'); // Path to your local file
     const data = await response.json();
     
     teamInfo = data;
 }
 
 loadLocalJSON();
+
+function isSameDateAsToday(date) {
+const today = new Date();
+
+return (
+    date.getFullYear() === today.getFullYear() &&
+    date.getMonth() === today.getMonth() &&
+    date.getDate() === today.getDate()
+);
+}
 
 function formatGameDate(gameDate) {
     const date = new Date(gameDate);
@@ -59,7 +69,12 @@ function formatGameDate(gameDate) {
     const ampm = hours >= 12 ? 'pm' : 'am';
     hours = hours % 12;
     hours = hours ? hours : 12; // the hour '0' should be '12'
-    return `${day} ${month}/${dayOfMonth} ${hours}:${minutes}${ampm}`;
+
+    if(isSameDateAsToday(gameDate)){
+    return `Today   ${hours}:${minutes}${ampm}`;
+    } else {
+    return `${day} ${month}/${dayOfMonth} ${hours}:${minutes}${ampm}`;    
+    }
 }
 
 let refreshInterval = 10000; // Default to 30 seconds
@@ -110,10 +125,10 @@ async function getGamesForAllTeams() {
     const homeId = mercerEvent.competitions[0].competitors[0].id;
     const awayId = mercerEvent.competitions[0].competitors[1].id;
 
-    homeLogoUrl = teamInfo[homeId]?.logo ?? "";
-    homeColor = teamInfo[homeId]?.color ?? "#121212";
-    awayLogoUrl = teamInfo[awayId]?.logo ?? "";
-    awayColor = teamInfo[awayId]?.color ?? "#121212";
+    homeLogoUrl = teamInfo.sports.ncaaf[homeId]?.logo ?? "";
+    homeColor = teamInfo.sports.ncaaf[homeId]?.color ?? "#121212";
+    awayLogoUrl = teamInfo.sports.ncaaf[awayId]?.logo ?? "";
+    awayColor = teamInfo.sports.ncaaf[awayId]?.color ?? "#121212";
 
     // Determine if logos exist (check if logo URL is empty or "none")
     hasHomeLogo = homeLogoUrl && homeLogoUrl !== "none";
@@ -189,10 +204,10 @@ async function getGamesForAllTeams() {
         let hasHomeLogo = true;
         let hasAwayLogo = true;
 
-        homeLogoUrl = teamInfo[homeId]?.logo ?? "";
-        homeColor = teamInfo[homeId]?.color ?? "#121212";
-        awayLogoUrl = teamInfo[awayId]?.logo ?? "";
-        awayColor = teamInfo[awayId]?.color ?? "#121212";
+        homeLogoUrl = teamInfo.sports.ncaaf[homeId]?.logo ?? "";
+        homeColor = teamInfo.sports.ncaaf[homeId]?.color ?? "#121212";
+        awayLogoUrl = teamInfo.sports.ncaaf[awayId]?.logo ?? "";
+        awayColor = teamInfo.sports.ncaaf[awayId]?.color ?? "#121212";
 
         // Determine if logos exist (check if logo URL is empty or "none")
         hasHomeLogo = homeLogoUrl && homeLogoUrl !== "none";
