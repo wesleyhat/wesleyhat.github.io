@@ -38,6 +38,8 @@ function getPeriodString(period) {
     }
 }
 
+let teamInfo; // Declare teamInfo in the appropriate scope
+
 async function loadLocalJSON() {
     const response = await fetch('ncaafInfo.json'); // Path to your local file
     const data = await response.json();
