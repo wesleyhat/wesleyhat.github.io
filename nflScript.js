@@ -131,10 +131,10 @@ async function getGamesForAllTeams() {
             gameStatus = "pre";
         } else if (gameState === "post") {
             gameStatus = "post";
-            if (homeScore > awayScore) {
+            if (homeScore < awayScore) {
                 awayColor = "#0d0b15";
                 awayText = "#8c899c";
-            } else if(homeScore < awayScore){
+            } else if(homeScore > awayScore){
                 homeColor = "#0d0b15";
                 homeText = "#8c899c";
             } 
@@ -247,7 +247,7 @@ function displayGames(games) {
         gameDateDiv.textContent = `${formatGameDate(game.date)}`;
 
         if (game.gameStatus === "post") {
-            if(game.homeScore < game.awayScore){
+            if(game.homeScore > game.awayScore){
                 gameDiv.appendChild(awayTeamDiv);
                 gameDiv.appendChild(homeTeamDiv);
                 gameDiv.appendChild(gameDateDiv);
