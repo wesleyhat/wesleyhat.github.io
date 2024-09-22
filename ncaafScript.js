@@ -265,6 +265,8 @@ async function getGamesForAllTeams() {
             hasHomeLogo: hasHomeLogo,
             hasAwayLogo: hasAwayLogo
         });
+
+        gamesInfo.sort((a, b) => new Date(a.date) - new Date(b.date));
     }
 
     // Now inject the gamesInfo into the page
