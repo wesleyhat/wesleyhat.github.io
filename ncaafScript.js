@@ -73,12 +73,111 @@ async function getGamesForAllTeams() {
     let gamesInfo = []; // To store the actual game data
     let liveGameFound = false; // To track if there's a live game
 
-   
+    let testEvent = events[0]
+
+    let idOne = testEvent.competitions[0].competitors[0].id;
+
+
+    const mercer = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2382?limit=1000";
+    const mercerReq = await fetch(mercer);
+    const mercerData = await mercerReq.json();
+
+    console.log(mercerData);
+
+    let mercerTeam = mercerData.team;
+
+    let mercerEvent = mercerTeam.nextEvent[0];
+
+
+
+    console.log(mercerEvent);
+
+    const matchup = mercerEvent.shortName;
+    const teams = matchup.split(" @ ");
+    const away = teams[0];
+    const home = teams[1];
+
+    let homeLogoUrl = "";
+    let homeColor = "";
+    let awayLogoUrl = "";
+    let awayColor = "";
+
+    let hasHomeLogo = true;
+    let hasAwayLogo = true;
+
+    const homeId = mercerEvent.competitions[0].competitors[0].id;
+    const awayId = mercerEvent.competitions[0].competitors[1].id;
+
+    homeLogoUrl = teamInfo[homeId]?.logo ?? "";
+    homeColor = teamInfo[homeId]?.color ?? "#121212";
+    awayLogoUrl = teamInfo[awayId]?.logo ?? "";
+    awayColor = teamInfo[awayId]?.color ?? "#121212";
+
+    // Determine if logos exist (check if logo URL is empty or "none")
+    hasHomeLogo = homeLogoUrl && homeLogoUrl !== "none";
+    hasAwayLogo = awayLogoUrl && awayLogoUrl !== "none";
+
+    let awayScore = mercerEvent.competitions[0].competitors[0].score.value;
+    let homeScore = mercerEvent.competitions[0].competitors[1].score.value;
+    let gameDate = new Date(mercerEvent.date);
+    let homeText = "#ffffff";
+    let awayText = "#ffffff";
+
+    let period = mercerEvent.competitions[0].status.period;
+    let clock = mercerEvent.competitions[0].status.displayClock;
+    let quarter = getPeriodString(period);
+    let gameState = mercerEvent.competitions[0].status.type.state;
+
+    let gameStatus = "";
+
+    if (gameState === "pre") {
+        gameStatus = "pre";
+    } else if (gameState === "post") {
+        gameStatus = "post";
+        if (homeScore > awayScore) {
+            awayColor = "#0d0b15";
+            awayText = "#8c899c";
+        } else if(homeScore < awayScore){
+            homeColor = "#0d0b15";
+            homeText = "#8c899c";
+        } 
+    } else {
+        gameStatus = "live";
+        liveGameFound = true; // A live game is found
+    }
+
+    if (gameStatus === "pre") {
+        homeScore = "--";
+        awayScore = "--";
+    }
+
+    gamesInfo.push({
+        date: gameDate,
+        homeTeam: home,
+        awayTeam: away,
+        homeScore: homeScore,
+        awayScore: awayScore,
+        homeLogo: homeLogoUrl,
+        awayLogo: awayLogoUrl,
+        homeColor: homeColor,
+        awayColor: awayColor,
+        homeText: homeText,
+        awayText: awayText,
+        quarter: quarter,
+        clock: clock,
+        gameStatus: gameStatus,
+        hasHomeLogo: hasHomeLogo,
+        hasAwayLogo: hasAwayLogo
+    });
+
     for (const event of events) {
         const matchup = event.shortName;
         const teams = matchup.split(" @ ");
         const away = teams[0];
         const home = teams[1];
+
+        const homeId = event.competitions[0].competitors[0].id;
+        const awayId = event.competitions[0].competitors[1].id;
 
         let homeLogoUrl = "";
         let homeColor = "";
@@ -88,10 +187,10 @@ async function getGamesForAllTeams() {
         let hasHomeLogo = true;
         let hasAwayLogo = true;
 
-        homeLogoUrl = teamInfo[home]?.logo ?? "";
-        homeColor = teamInfo[home]?.color ?? "#121212";
-        awayLogoUrl = teamInfo[away]?.logo ?? "";
-        awayColor = teamInfo[away]?.color ?? "#121212";
+        homeLogoUrl = teamInfo[homeId]?.logo ?? "";
+        homeColor = teamInfo[homeId]?.color ?? "#121212";
+        awayLogoUrl = teamInfo[awayId]?.logo ?? "";
+        awayColor = teamInfo[awayId]?.color ?? "#121212";
 
         // Determine if logos exist (check if logo URL is empty or "none")
         hasHomeLogo = homeLogoUrl && homeLogoUrl !== "none";
