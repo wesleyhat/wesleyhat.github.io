@@ -27,128 +27,16 @@ function toHttps(url) {
     return url.replace(/^http:/, 'https:');
 }
 
-const teamInfo = {
-    "ARI": {
-        "color": "#aa182c",
-        "logo": "https://a.espncdn.com/i/teamlogos/mlb/500-dark/ari.png"
-    },
-    "ATL": {
-        "color": "#0c2340",
-        "logo": "https://a.espncdn.com/i/teamlogos/mlb/500-dark/atl.png"
-    },
-    "BAL": {
-        "color": "#df4601",
-        "logo": "https://a.espncdn.com/i/teamlogos/mlb/500-dark/bal.png"
-    },
-    "BOS": {
-        "color": "#0d2b56",
-        "logo": "https://a.espncdn.com/i/teamlogos/mlb/500-dark/bos.png"
-    },
-    "CHC": {
-        "color": "#0e3386",
-        "logo": "https://a.espncdn.com/i/teamlogos/mlb/500-dark/chc.png"
-    },
-    "CHW": {
-        "color": "#949ca1",
-        "logo": "https://a.espncdn.com/i/teamlogos/mlb/500/chw.png"
-    },
-    "CIN": {
-        "color": "#c6011f",
-        "logo": "https://a.espncdn.com/i/teamlogos/mlb/500-dark/cin.png"
-    },
-    "CLE": {
-        "color": "#002b5c",
-        "logo": "https://a.espncdn.com/i/teamlogos/mlb/500-dark/cle.png"
-    },
-    "COL": {
-        "color": "#33006f",
-        "logo": "https://a.espncdn.com/i/teamlogos/mlb/500-dark/col.png"
-    },
-    "DET": {
-        "color": "#0a2240",
-        "logo": "https://a.espncdn.com/i/teamlogos/mlb/500-dark/det.png"
-    },
-    "HOU": {
-        "color": "#002d62",
-        "logo": "https://a.espncdn.com/i/teamlogos/mlb/500-dark/hou.png"
-    },
-    "KC": {
-        "color": "#004687",
-        "logo": "https://a.espncdn.com/i/teamlogos/mlb/500-dark/kc.png"
-    },
-    "LAA": {
-        "color": "#ba0021",
-        "logo": "https://a.espncdn.com/i/teamlogos/mlb/500-dark/laa.png"
-    },
-    "LAD": {
-        "color": "#005a9c",
-        "logo": "https://a.espncdn.com/i/teamlogos/mlb/500-dark/lad.png"
-    },
-    "MIA": {
-        "color": "#00a3e0",
-        "logo": "https://a.espncdn.com/i/teamlogos/mlb/500-dark/mia.png"
-    },
-    "MIL": {
-        "color": "#13294b",
-        "logo": "https://a.espncdn.com/i/teamlogos/mlb/500-dark/mil.png"
-    },
-    "MIN": {
-        "color": "#031f40",
-        "logo": "https://a.espncdn.com/i/teamlogos/mlb/500-dark/min.png"
-    },
-    "NYM": {
-        "color": "#002d72",
-        "logo": "https://a.espncdn.com/i/teamlogos/mlb/500-dark/nym.png"
-    },
-    "NYY": {
-        "color": "#132448",
-        "logo": "https://a.espncdn.com/i/teamlogos/mlb/500-dark/nyy.png"
-    },
-    "OAK": {
-        "color": "#003831",
-        "logo": "https://a.espncdn.com/i/teamlogos/mlb/500-dark/oak.png"
-    },
-    "PHI": {
-        "color": "#e81828",
-        "logo": "https://a.espncdn.com/i/teamlogos/mlb/500-dark/phi.png"
-    },
-    "PIT": {
-        "color": "#121212",
-        "logo": "https://a.espncdn.com/i/teamlogos/mlb/500-dark/pit.png"
-    },
-    "SD": {
-        "color": "#2f241d",
-        "logo": "https://a.espncdn.com/i/teamlogos/mlb/500-dark/sd.png"
-    },
-    "SF": {
-        "color": "#e8c999",
-        "logo": "https://a.espncdn.com/i/teamlogos/mlb/500/sf.png"
-    },
-    "SEA": {
-        "color": "#005c5c",
-        "logo": "https://a.espncdn.com/i/teamlogos/mlb/500-dark/sea.png"
-    },
-    "STL": {
-        "color": "#be0a14",
-        "logo": "https://a.espncdn.com/i/teamlogos/mlb/500-dark/stl.png"
-    },
-    "TB": {
-        "color": "#092c5c",
-        "logo": "https://a.espncdn.com/i/teamlogos/mlb/500-dark/tb.png"
-    },
-    "TEX": {
-        "color": "#003278",
-        "logo": "https://a.espncdn.com/i/teamlogos/mlb/500-dark/tex.png"
-    },
-    "TOR": {
-        "color": "#134a8e",
-        "logo": "https://a.espncdn.com/i/teamlogos/mlb/500-dark/tor.png"
-    },
-    "WSH": {
-        "color": "#ab0003",
-        "logo": "https://a.espncdn.com/i/teamlogos/mlb/500-dark/wsh.png"
-    }
-};
+let teamInfo; // Declare teamInfo in the appropriate scope
+
+async function loadLocalJSON() {
+    const response = await fetch('info.json'); // Path to your local file
+    const data = await response.json();
+    
+    teamInfo = data;
+}
+
+loadLocalJSON();
 
 function getPeriodString(period) {
     switch (period) {
@@ -157,8 +45,34 @@ function getPeriodString(period) {
         case 2: return "2nd";
         case 3: return "3rd";
         case 4: return "4th";
+        case 5: return "5th";
+        case 6: return "6th";
+        case 7: return "7th";
+        case 9: return "8th";
+        case 10: return "9th";
+        case 11: return "10th";
+        case 12: return "11th";
+        case 13: return "12th";
+        case 14: return "13th";
+        case 15: return "14th";
+        case 16: return "15th";
+        case 17: return "16th";
+        case 18: return "17th";
+        case 19: return "18th";
+        case 20: return "19th";
+        case 21: return "20th";
         default: return "Invalid period";
     }
+}
+
+function isSameDateAsToday(date) {
+const today = new Date();
+
+return (
+    date.getFullYear() === today.getFullYear() &&
+    date.getMonth() === today.getMonth() &&
+    date.getDate() === today.getDate()
+);
 }
 
 function formatGameDate(gameDate) {
@@ -171,7 +85,12 @@ function formatGameDate(gameDate) {
     const ampm = hours >= 12 ? 'pm' : 'am';
     hours = hours % 12;
     hours = hours ? hours : 12; // the hour '0' should be '12'
-    return `${day} ${month}/${dayOfMonth} ${hours}:${minutes}${ampm}`;
+
+    if(isSameDateAsToday(gameDate)){
+    return `Today   ${hours}:${minutes}${ampm}`;
+    } else {
+    return `${day} ${month}/${dayOfMonth} ${hours}:${minutes}${ampm}`;    
+    }
 }
 
 let refreshInterval = 10000; // Default to 30 seconds
@@ -192,10 +111,29 @@ async function getGamesForAllTeams() {
         const teams = matchup.split(" @ ");
         const away = teams[0];
         const home = teams[1];
-        const homeLogoUrl = teamInfo[home].logo;
-        let homeColor = teamInfo[home].color;
-        const awayLogoUrl = teamInfo[away].logo;
-        let awayColor = teamInfo[away].color;
+
+
+        const homeId = event.competitions[0].competitors[0].id;
+        const awayId = event.competitions[0].competitors[1].id;
+
+        let homeLogoUrl = "";
+        let homeColor = "";
+        let awayLogoUrl = "";
+        let awayColor = "";
+
+        let hasHomeLogo = true;
+        let hasAwayLogo = true;
+
+        homeLogoUrl = teamInfo.sports.mlb[homeId]?.logo ?? "";
+        homeColor = teamInfo.sports.mlb[homeId]?.color ?? "#121212";
+        awayLogoUrl = teamInfo.sports.mlb[awayId]?.logo ?? "";
+        awayColor = teamInfo.sports.mlb[awayId]?.color ?? "#121212";
+
+        // Determine if logos exist (check if logo URL is empty or "none")
+        hasHomeLogo = homeLogoUrl && homeLogoUrl !== "none";
+        hasAwayLogo = awayLogoUrl && awayLogoUrl !== "none";
+
+
         let awayScore = event.competitions[0].competitors[0].score;
         let homeScore = event.competitions[0].competitors[1].score;
         let gameDate = new Date(event.date);
@@ -239,7 +177,9 @@ async function getGamesForAllTeams() {
             homeText: homeText,
             awayText: awayText,
             inning: inning,
-            gameStatus: gameStatus
+            gameStatus: gameStatus,
+            hasHomeLogo: hasHomeLogo,
+            hasAwayLogo: hasAwayLogo
         });
 
 
@@ -271,8 +211,6 @@ async function getGamesForAllTeams() {
 
 }
 
-
-
 // Function to display games on the webpage
 function displayGames(games) {
     const container = document.getElementById('games-container');
@@ -286,17 +224,33 @@ function displayGames(games) {
 
         const awayTeamDiv = document.createElement('div');
         awayTeamDiv.classList.add('team');
-        awayTeamDiv.innerHTML = `
-            <img src="${game.awayLogo}" alt="${game.awayTeam} Logo">
-            <span class="score">${game.awayScore}</span>
-        `;
+
+        if(!game.hasAwayLogo){
+            awayTeamDiv.innerHTML = `
+                <h2 style="font-size: 20px; font-weight: 400;">${game.awayTeam}</h2>
+                <span class="score">${game.awayScore}</span>
+            `;
+        } else {
+            awayTeamDiv.innerHTML = `
+                <img src="${game.awayLogo}" alt="${game.awayTeam} Logo">
+                <span class="score">${game.awayScore}</span>
+            `;
+        }
 
         const homeTeamDiv = document.createElement('div');
         homeTeamDiv.classList.add('team');
-        homeTeamDiv.innerHTML = `
+
+        if(!game.hasHomeLogo){
+            homeTeamDiv.innerHTML = `
+            <h2 style="font-size: 20px; font-weight: 400;">${game.homeTeam}</h2>
+            <span class="score">${game.homeScore}</span>
+        `;
+        } else {
+            homeTeamDiv.innerHTML = `
             <img src="${game.homeLogo}" alt="${game.homeTeam} Logo">
             <span class="score">${game.homeScore}</span>
         `;
+        }
 
         homeTeamDiv.style.backgroundColor = game.homeColor;
         awayTeamDiv.style.backgroundColor = game.awayColor;
@@ -331,8 +285,6 @@ function displayGames(games) {
         }
     });
 }
-
-
 
 getGamesForAllTeams();
 
