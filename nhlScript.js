@@ -1,26 +1,26 @@
 document.addEventListener("DOMContentLoaded", function() {
-    // Select all the nav buttons
-    const navButtons = document.querySelectorAll('.nav-button');
-    let originalActive = document.querySelector('.nav-button.active');
+  // Select all the nav buttons
+  const navButtons = document.querySelectorAll('.nav-button');
+  let originalActive = document.querySelector('.nav-button.active');
 
-    // Add hover and mouseout event listeners to each button
-    navButtons.forEach(function(button) {
-        button.addEventListener('mouseenter', function() {
-            // If the hovered button is not the active one, deactivate the original active
-            if (!button.classList.contains('active')) {
-                originalActive.classList.remove('active');
-                button.classList.add('active');
-            }
-        });
+  // Add hover and mouseout event listeners to each button
+  navButtons.forEach(function(button) {
+      button.addEventListener('mouseenter', function() {
+          // If the hovered button is not the active one, deactivate the original active
+          if (!button.classList.contains('active')) {
+              originalActive.classList.remove('active');
+              button.classList.add('active');
+          }
+      });
 
-        button.addEventListener('mouseleave', function() {
-            // Reset the original active when no longer hovering over a different button
-            if (originalActive && button !== originalActive) {
-                button.classList.remove('active');
-                originalActive.classList.add('active');
-            }
-        });
-    });
+      button.addEventListener('mouseleave', function() {
+          // Reset the original active when no longer hovering over a different button
+          if (originalActive && button !== originalActive) {
+              button.classList.remove('active');
+              originalActive.classList.add('active');
+          }
+      });
+  });
 });
 
 function toHttps(url) {
@@ -49,14 +49,15 @@ async function loadLocalJSON() {
 
 loadLocalJSON();
 
-function isSameDateAsToday(date) {
-const today = new Date();
 
-return (
+function isSameDateAsToday(date) {
+  const today = new Date();
+
+  return (
     date.getFullYear() === today.getFullYear() &&
     date.getMonth() === today.getMonth() &&
     date.getDate() === today.getDate()
-);
+  );
 }
 
 function formatGameDate(gameDate) {
@@ -71,9 +72,9 @@ function formatGameDate(gameDate) {
     hours = hours ? hours : 12; // the hour '0' should be '12'
 
     if(isSameDateAsToday(gameDate)){
-    return `Today   ${hours}:${minutes}${ampm}`;
+      return `Today   ${hours}:${minutes}${ampm}`;
     } else {
-    return `${day} ${month}/${dayOfMonth} ${hours}:${minutes}${ampm}`;    
+      return `${day} ${month}/${dayOfMonth} ${hours}:${minutes}${ampm}`;    
     }
 }
 
@@ -82,7 +83,7 @@ let intervalId;
 
 async function getGamesForAllTeams() {
     let tally = 0; // Initialize tally variable
-    const page = toHttps(`https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard`);
+    const page = toHttps(`https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard`);
     const req = await fetch(page);
     tally++; // Increment tally for the teams API call
     const data = await req.json();
@@ -91,27 +92,34 @@ async function getGamesForAllTeams() {
     let liveGameFound = false; // To track if there's a live game
 
     for (const event of events) {
-        const matchup = event.shortName;
-        const teams = matchup.split(" @ ");
-        const away = teams[0];
-        const home = teams[1];
+      const matchup = event.shortName;
+      let teams;
+      if (matchup.includes(" VS ")) {
+          teams = matchup.split(" VS ");
+      } else if (matchup.includes("@")) {
+          teams = matchup.split("@");
+      }
 
-        const homeId = event.competitions[0].competitors[0].id;
-        const awayId = event.competitions[0].competitors[1].id;
+      // Use trim() to remove any unwanted spaces
+      const away = teams[0].trim();
+      const home = teams[1].trim();
+
+      const homeId = event.competitions[0].competitors[0].id;
+      const awayId = event.competitions[0].competitors[1].id;
 
         let homeLogoUrl = "";
         let homeColor = "";
         let awayLogoUrl = "";
         let awayColor = "";
-
+    
         let hasHomeLogo = true;
         let hasAwayLogo = true;
-
-        homeLogoUrl = teamInfo.sports.nfl[homeId]?.logo ?? "";
-        homeColor = teamInfo.sports.nfl[homeId]?.color ?? "#121212";
-        awayLogoUrl = teamInfo.sports.nfl[awayId]?.logo ?? "";
-        awayColor = teamInfo.sports.nfl[awayId]?.color ?? "#121212";
-
+    
+        homeLogoUrl = teamInfo.sports.nhl[homeId]?.logo ?? "";
+        homeColor = teamInfo.sports.nhl[homeId]?.color ?? "#121212";
+        awayLogoUrl = teamInfo.sports.nhl[awayId]?.logo ?? "";
+        awayColor = teamInfo.sports.nhl[awayId]?.color ?? "#121212";
+    
         // Determine if logos exist (check if logo URL is empty or "none")
         hasHomeLogo = homeLogoUrl && homeLogoUrl !== "none";
         hasAwayLogo = awayLogoUrl && awayLogoUrl !== "none";
@@ -131,10 +139,10 @@ async function getGamesForAllTeams() {
             gameStatus = "pre";
         } else if (gameState === "post") {
             gameStatus = "post";
-            if (homeScore < awayScore) {
+            if (homeScore > awayScore) {
                 awayColor = "#0d0b15";
                 awayText = "#8c899c";
-            } else if(homeScore > awayScore){
+            } else if(homeScore < awayScore){
                 homeColor = "#0d0b15";
                 homeText = "#8c899c";
             } 
@@ -197,15 +205,9 @@ function displayGames(games) {
     const containerPast = document.getElementById('games-container-past');
     containerPast.innerHTML = ''; // Clear any previous content
 
-    let gameCount = 1; // To track and assign unique IDs
-
     games.forEach(game => {
-        gameCount++;
-
         const gameDiv = document.createElement('div');
         gameDiv.classList.add('game');
-
-        gameDiv.setAttribute('data-game-id', gameCount);
 
         const awayTeamDiv = document.createElement('div');
         awayTeamDiv.classList.add('team');
@@ -242,12 +244,14 @@ function displayGames(games) {
         homeTeamDiv.style.color = game.homeText;
         awayTeamDiv.style.color = game.awayText;
 
+        let formattedDate = formatGameDate(game.date);
+
         const gameDateDiv = document.createElement('div');
         gameDateDiv.classList.add('game-date');
-        gameDateDiv.textContent = `${formatGameDate(game.date)}`;
+        gameDateDiv.textContent = `${formattedDate}`;
 
         if (game.gameStatus === "post") {
-            if(game.homeScore > game.awayScore){
+            if(game.homeScore < game.awayScore){
                 gameDiv.appendChild(awayTeamDiv);
                 gameDiv.appendChild(homeTeamDiv);
                 gameDiv.appendChild(gameDateDiv);
@@ -272,4 +276,3 @@ function displayGames(games) {
 }
 
 getGamesForAllTeams();
-
