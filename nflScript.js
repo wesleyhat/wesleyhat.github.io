@@ -38,136 +38,26 @@ function getPeriodString(period) {
     }
 }
 
-const teamInfo = {
-    "ARI": {
-        "color": "#a40227",
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500-dark/ari.png"
-    },
-    "DET": {
-        "color": "#0076b6",
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500-dark/det.png"
-    },
-    "ATL": {
-        "color": "#a71930",
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500-dark/atl.png"
-    },
-    "KC": {
-        "color": "#e31837",
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500-dark/kc.png"
-    },
-    "DAL": {
-        "color": "#002a5c",
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500-dark/dal.png"
-    },
-    "BAL": {
-        "color": "#29126f",
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500-dark/bal.png"
-    },
-    "BUF": {
-        "color": "#00338d",
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500-dark/buf.png"
-    },
-    "JAX": {
-        "color": "#007487",
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500-dark/jax.png"
-    },
-    "LV": {
-        "color": "#a5acaf",
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500-dark/lv.png"
-    },
-    "CAR": {
-        "color": "#0085ca",
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500-dark/car.png"
-    },
-    "CHI": {
-        "color": "#0b1c3a",
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500-dark/chi.png"
-    },
-    "CIN": {
-        "color": "#fb4f14",
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500-dark/cin.png"
-    },
-    "WSH": {
-        "color": "#5a1414",
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500-dark/wsh.png"
-    },
-    "CLE": {
-        "color": "#472a08",
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500-dark/cle.png"
-    },
-    "NYG": {
-        "color": "#003c7f",
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500-dark/nyg.png"
-    },
-    "TB": {
-        "color": "#bd1c36",
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500-dark/tb.png"
-    },
-    "DEN": {
-        "color": "#0a2343",
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500-dark/den.png"
-    },
-    "TEN": {
-        "color": "#4b92db",
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500-dark/ten.png"
-    },
-    "GB": {
-        "color": "#204e32",
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500-dark/gb.png"
-    },
-    "IND": {
-        "color": "#003b75",
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500-dark/ind.png"
-    },
-    "PIT": {
-        "color": "#ffb612",
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500-dark/pit.png"
-    },
-    "LAC": {
-        "color": "#0080c6",
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500-dark/lac.png"
-    },
-    "LAR": {
-        "color": "#003594",
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500-dark/lar.png"
-    },
-    "SF": {
-        "color": "#aa0000",
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500-dark/sf.png"
-    },
-    "SEA": {
-        "color": "#002a5c",
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500-dark/sea.png"
-    },
-    "MIA": {
-        "color": "#008e97",
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500-dark/mia.png"
-    },
-    "MIN": {
-        "color": "#4f2683",
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500-dark/min.png"
-    },
-    "HOU": {
-        "color": "#00143f",
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500-dark/hou.png"
-    },
-    "NYJ": {
-        "color": "#115740",
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500-dark/nyj.png"
-    },
-    "NE": {
-        "color": "#002a5c",
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500-dark/ne.png"
-    },
-    "NO": {
-        "color": "#d3bc8d",
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500-dark/no.png"
-    },
-    "PHI": {
-        "color": "#06424d",
-        "logo": "https://a.espncdn.com/i/teamlogos/nfl/500-dark/phi.png"
-    }
-};
+let teamInfo; // Declare teamInfo in the appropriate scope
+
+async function loadLocalJSON() {
+    const response = await fetch('info.json'); // Path to your local file
+    const data = await response.json();
+    
+    teamInfo = data;
+}
+
+loadLocalJSON();
+
+function isSameDateAsToday(date) {
+const today = new Date();
+
+return (
+    date.getFullYear() === today.getFullYear() &&
+    date.getMonth() === today.getMonth() &&
+    date.getDate() === today.getDate()
+);
+}
 
 function formatGameDate(gameDate) {
     const date = new Date(gameDate);
@@ -179,7 +69,12 @@ function formatGameDate(gameDate) {
     const ampm = hours >= 12 ? 'pm' : 'am';
     hours = hours % 12;
     hours = hours ? hours : 12; // the hour '0' should be '12'
-    return `${day} ${month}/${dayOfMonth} ${hours}:${minutes}${ampm}`;
+
+    if(isSameDateAsToday(gameDate)){
+    return `Today   ${hours}:${minutes}${ampm}`;
+    } else {
+    return `${day} ${month}/${dayOfMonth} ${hours}:${minutes}${ampm}`;    
+    }
 }
 
 let refreshInterval = 10000; // Default to 30 seconds
@@ -200,10 +95,27 @@ async function getGamesForAllTeams() {
         const teams = matchup.split(" @ ");
         const away = teams[0];
         const home = teams[1];
-        const homeLogoUrl = teamInfo[home].logo;
-        let homeColor = teamInfo[home].color;
-        const awayLogoUrl = teamInfo[away].logo;
-        let awayColor = teamInfo[away].color;
+
+        const homeId = event.competitions[0].competitors[0].id;
+        const awayId = event.competitions[0].competitors[1].id;
+
+        let homeLogoUrl = "";
+        let homeColor = "";
+        let awayLogoUrl = "";
+        let awayColor = "";
+
+        let hasHomeLogo = true;
+        let hasAwayLogo = true;
+
+        homeLogoUrl = teamInfo.sports.nfl[homeId]?.logo ?? "";
+        homeColor = teamInfo.sports.nfl[homeId]?.color ?? "#121212";
+        awayLogoUrl = teamInfo.sports.nfl[awayId]?.logo ?? "";
+        awayColor = teamInfo.sports.nfl[awayId]?.color ?? "#121212";
+
+        // Determine if logos exist (check if logo URL is empty or "none")
+        hasHomeLogo = homeLogoUrl && homeLogoUrl !== "none";
+        hasAwayLogo = awayLogoUrl && awayLogoUrl !== "none";
+
         let awayScore = event.competitions[0].competitors[0].score;
         let homeScore = event.competitions[0].competitors[1].score;
         let gameDate = new Date(event.date);
@@ -250,7 +162,9 @@ async function getGamesForAllTeams() {
             awayText: awayText,
             quarter: quarter,
             clock: clock,
-            gameStatus: gameStatus
+            gameStatus: gameStatus,
+            hasHomeLogo: hasHomeLogo,
+            hasAwayLogo: hasAwayLogo
         });
     }
 
@@ -283,23 +197,45 @@ function displayGames(games) {
     const containerPast = document.getElementById('games-container-past');
     containerPast.innerHTML = ''; // Clear any previous content
 
+    let gameCount = 1; // To track and assign unique IDs
+
     games.forEach(game => {
+        gameCount++;
+
         const gameDiv = document.createElement('div');
         gameDiv.classList.add('game');
 
+        gameDiv.setAttribute('data-game-id', gameCount);
+
         const awayTeamDiv = document.createElement('div');
         awayTeamDiv.classList.add('team');
-        awayTeamDiv.innerHTML = `
-            <img src="${game.awayLogo}" alt="${game.awayTeam} Logo">
-            <span class="score">${game.awayScore}</span>
-        `;
+
+        if(!game.hasAwayLogo){
+            awayTeamDiv.innerHTML = `
+                <h2 style="font-size: 20px; font-weight: 400;">${game.awayTeam}</h2>
+                <span class="score">${game.awayScore}</span>
+            `;
+        } else {
+            awayTeamDiv.innerHTML = `
+                <img src="${game.awayLogo}" alt="${game.awayTeam} Logo">
+                <span class="score">${game.awayScore}</span>
+            `;
+        }
 
         const homeTeamDiv = document.createElement('div');
         homeTeamDiv.classList.add('team');
-        homeTeamDiv.innerHTML = `
+
+        if(!game.hasHomeLogo){
+            homeTeamDiv.innerHTML = `
+            <h2 style="font-size: 20px; font-weight: 400;">${game.homeTeam}</h2>
+            <span class="score">${game.homeScore}</span>
+        `;
+        } else {
+            homeTeamDiv.innerHTML = `
             <img src="${game.homeLogo}" alt="${game.homeTeam} Logo">
             <span class="score">${game.homeScore}</span>
         `;
+        }
 
         homeTeamDiv.style.backgroundColor = game.homeColor;
         awayTeamDiv.style.backgroundColor = game.awayColor;
@@ -336,3 +272,4 @@ function displayGames(games) {
 }
 
 getGamesForAllTeams();
+
