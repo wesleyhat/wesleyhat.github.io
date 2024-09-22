@@ -38,136 +38,27 @@ function getPeriodString(period) {
     }
 }
 
-const teamInfo = {
-  "ANA": {
-    "color": "#fc4c02",
-    "logo": "https://a.espncdn.com/i/teamlogos/nhl/500-dark/ana.png"
-  },
-  "BOS": {
-    "color": "#fdbb30",
-    "logo": "https://a.espncdn.com/i/teamlogos/nhl/500-dark/bos.png"
-  },
-  "BUF": {
-    "color": "#00468b",
-    "logo": "https://a.espncdn.com/i/teamlogos/nhl/500-dark/buf.png"
-  },
-  "CGY": {
-    "color": "#dd1a32",
-    "logo": "https://a.espncdn.com/i/teamlogos/nhl/500-dark/cgy.png"
-  },
-  "CAR": {
-    "color": "#e30426",
-    "logo": "https://a.espncdn.com/i/teamlogos/nhl/500-dark/car.png"
-  },
-  "CHI": {
-    "color": "#e31937",
-    "logo": "https://a.espncdn.com/i/teamlogos/nhl/500-dark/chi.png"
-  },
-  "COL": {
-    "color": "#860038",
-    "logo": "https://a.espncdn.com/i/teamlogos/nhl/500-dark/col.png"
-  },
-  "CBJ": {
-    "color": "#002d62",
-    "logo": "https://a.espncdn.com/i/teamlogos/nhl/500-dark/cbj.png"
-  },
-  "DAL": {
-    "color": "#20864c",
-    "logo": "https://a.espncdn.com/i/teamlogos/nhl/500-dark/dal.png"
-  },
-  "DET": {
-    "color": "#e30526",
-    "logo": "https://a.espncdn.com/i/teamlogos/nhl/500-dark/det.png"
-  },
-  "EDM": {
-    "color": "#00205b",
-    "logo": "https://a.espncdn.com/i/teamlogos/nhl/500-dark/edm.png"
-  },
-  "FLA": {
-    "color": "#e51937",
-    "logo": "https://a.espncdn.com/i/teamlogos/nhl/500-dark/fla.png"
-  },
-  "LA": {
-    "color": "#a2aaad",
-    "logo": "https://a.espncdn.com/i/teamlogos/nhl/500-dark/la.png"
-  },
-  "MIN": {
-    "color": "#124734",
-    "logo": "https://a.espncdn.com/i/teamlogos/nhl/500-dark/min.png"
-  },
-  "MTL": {
-    "color": "#c41230",
-    "logo": "https://a.espncdn.com/i/teamlogos/nhl/500-dark/mtl.png"
-  },
-  "NSH": {
-    "color": "#fdba31",
-    "logo": "https://a.espncdn.com/i/teamlogos/nhl/500-dark/nsh.png"
-  },
-  "NJ": {
-    "color": "#e30b2b",
-    "logo": "https://a.espncdn.com/i/teamlogos/nhl/500-dark/nj.png"
-  },
-  "NYI": {
-    "color": "#00529b",
-    "logo": "https://a.espncdn.com/i/teamlogos/nhl/500-dark/nyi.png"
-  },
-  "NYR": {
-    "color": "#0056ae",
-    "logo": "https://a.espncdn.com/i/teamlogos/nhl/500-dark/nyr.png"
-  },
-  "OTT": {
-    "color": "#dd1a32",
-    "logo": "https://a.espncdn.com/i/teamlogos/nhl/500-dark/ott.png"
-  },
-  "PHI": {
-    "color": "#fe5823",
-    "logo": "https://a.espncdn.com/i/teamlogos/nhl/500-dark/phi.png"
-  },
-  "PIT": {
-    "color": "#fdb71a",
-    "logo": "https://a.espncdn.com/i/teamlogos/nhl/500-dark/pit.png"
-  },
-  "SJ": {
-    "color": "#00788a",
-    "logo": "https://a.espncdn.com/i/teamlogos/nhl/500-dark/sj.png"
-  },
-  "SEA": {
-    "color": "#000d33",
-    "logo": "https://a.espncdn.com/i/teamlogos/nhl/500-dark/sea.png"
-  },
-  "STL": {
-    "color": "#00468b",
-    "logo": "https://a.espncdn.com/i/teamlogos/nhl/500-dark/stl.png"
-  },
-  "TB": {
-    "color": "#003e7e",
-    "logo": "https://a.espncdn.com/i/teamlogos/nhl/500-dark/tb.png"
-  },
-  "TOR": {
-    "color": "#003e7e",
-    "logo": "https://a.espncdn.com/i/teamlogos/nhl/500-dark/tor.png"
-  },
-  "UTAH": {
-    "color": "#231F20",
-    "logo": "https://a.espncdn.com/i/teamlogos/nhl/500-dark/utah.png"
-  },
-  "VAN": {
-    "color": "#003e7e",
-    "logo": "https://a.espncdn.com/i/teamlogos/nhl/500-dark/van.png"
-  },
-  "VGK": {
-    "color": "#344043",
-    "logo": "https://a.espncdn.com/i/teamlogos/nhl/500-dark/vgk.png"
-  },
-  "WSH": {
-    "color": "#d71830",
-    "logo": "https://a.espncdn.com/i/teamlogos/nhl/500-dark/wsh.png"
-  },
-  "WPG": {
-    "color": "#002d62",
-    "logo": "https://a.espncdn.com/i/teamlogos/nhl/500-dark/wpg.png"
-  }
-};
+let teamInfo; // Declare teamInfo in the appropriate scope
+
+async function loadLocalJSON() {
+    const response = await fetch('info.json'); // Path to your local file
+    const data = await response.json();
+    
+    teamInfo = data;
+}
+
+loadLocalJSON();
+
+
+function isSameDateAsToday(date) {
+  const today = new Date();
+
+  return (
+    date.getFullYear() === today.getFullYear() &&
+    date.getMonth() === today.getMonth() &&
+    date.getDate() === today.getDate()
+  );
+}
 
 function formatGameDate(gameDate) {
     const date = new Date(gameDate);
@@ -179,7 +70,12 @@ function formatGameDate(gameDate) {
     const ampm = hours >= 12 ? 'pm' : 'am';
     hours = hours % 12;
     hours = hours ? hours : 12; // the hour '0' should be '12'
-    return `${day} ${month}/${dayOfMonth} ${hours}:${minutes}${ampm}`;
+
+    if(isSameDateAsToday(gameDate)){
+      return `Today   ${hours}:${minutes}${ampm}`;
+    } else {
+      return `${day} ${month}/${dayOfMonth} ${hours}:${minutes}${ampm}`;    
+    }
 }
 
 let refreshInterval = 10000; // Default to 30 seconds
@@ -196,14 +92,38 @@ async function getGamesForAllTeams() {
     let liveGameFound = false; // To track if there's a live game
 
     for (const event of events) {
-        const matchup = event.shortName;
-        const teams = matchup.split(" @ ");
-        const away = teams[0];
-        const home = teams[1];
-        const homeLogoUrl = teamInfo[home].logo;
-        let homeColor = teamInfo[home].color;
-        const awayLogoUrl = teamInfo[away].logo;
-        let awayColor = teamInfo[away].color;
+      const matchup = event.shortName;
+      let teams;
+      if (matchup.includes(" VS ")) {
+          teams = matchup.split(" VS ");
+      } else if (matchup.includes("@")) {
+          teams = matchup.split("@");
+      }
+
+      // Use trim() to remove any unwanted spaces
+      const away = teams[0].trim();
+      const home = teams[1].trim();
+
+      const homeId = event.competitions[0].competitors[0].id;
+      const awayId = event.competitions[0].competitors[1].id;
+
+        let homeLogoUrl = "";
+        let homeColor = "";
+        let awayLogoUrl = "";
+        let awayColor = "";
+    
+        let hasHomeLogo = true;
+        let hasAwayLogo = true;
+    
+        homeLogoUrl = teamInfo.sports.nhl[homeId]?.logo ?? "";
+        homeColor = teamInfo.sports.nhl[homeId]?.color ?? "#121212";
+        awayLogoUrl = teamInfo.sports.nhl[awayId]?.logo ?? "";
+        awayColor = teamInfo.sports.nhl[awayId]?.color ?? "#121212";
+    
+        // Determine if logos exist (check if logo URL is empty or "none")
+        hasHomeLogo = homeLogoUrl && homeLogoUrl !== "none";
+        hasAwayLogo = awayLogoUrl && awayLogoUrl !== "none";
+
         let awayScore = event.competitions[0].competitors[0].score;
         let homeScore = event.competitions[0].competitors[1].score;
         let gameDate = new Date(event.date);
@@ -250,7 +170,9 @@ async function getGamesForAllTeams() {
             awayText: awayText,
             quarter: quarter,
             clock: clock,
-            gameStatus: gameStatus
+            gameStatus: gameStatus,
+            hasHomeLogo: hasHomeLogo,
+            hasAwayLogo: hasAwayLogo
         });
     }
 
@@ -289,26 +211,44 @@ function displayGames(games) {
 
         const awayTeamDiv = document.createElement('div');
         awayTeamDiv.classList.add('team');
-        awayTeamDiv.innerHTML = `
-            <img src="${game.awayLogo}" alt="${game.awayTeam} Logo">
-            <span class="score">${game.awayScore}</span>
-        `;
+
+        if(!game.hasAwayLogo){
+            awayTeamDiv.innerHTML = `
+                <h2 style="font-size: 20px; font-weight: 400;">${game.awayTeam}</h2>
+                <span class="score">${game.awayScore}</span>
+            `;
+        } else {
+            awayTeamDiv.innerHTML = `
+                <img src="${game.awayLogo}" alt="${game.awayTeam} Logo">
+                <span class="score">${game.awayScore}</span>
+            `;
+        }
 
         const homeTeamDiv = document.createElement('div');
         homeTeamDiv.classList.add('team');
-        homeTeamDiv.innerHTML = `
+
+        if(!game.hasHomeLogo){
+            homeTeamDiv.innerHTML = `
+            <h2 style="font-size: 20px; font-weight: 400;">${game.homeTeam}</h2>
+            <span class="score">${game.homeScore}</span>
+        `;
+        } else {
+            homeTeamDiv.innerHTML = `
             <img src="${game.homeLogo}" alt="${game.homeTeam} Logo">
             <span class="score">${game.homeScore}</span>
         `;
+        }
 
         homeTeamDiv.style.backgroundColor = game.homeColor;
         awayTeamDiv.style.backgroundColor = game.awayColor;
         homeTeamDiv.style.color = game.homeText;
         awayTeamDiv.style.color = game.awayText;
 
+        let formattedDate = formatGameDate(game.date);
+
         const gameDateDiv = document.createElement('div');
         gameDateDiv.classList.add('game-date');
-        gameDateDiv.textContent = `${formatGameDate(game.date)}`;
+        gameDateDiv.textContent = `${formattedDate}`;
 
         if (game.gameStatus === "post") {
             if(game.homeScore < game.awayScore){
