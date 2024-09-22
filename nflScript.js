@@ -251,9 +251,13 @@ function displayGames(games) {
                 gameDiv.appendChild(awayTeamDiv);
                 gameDiv.appendChild(homeTeamDiv);
                 gameDiv.appendChild(gameDateDiv);
-            } else {
+            } else if(game.homeScore < game.awayScore){
                 gameDiv.appendChild(homeTeamDiv);
                 gameDiv.appendChild(awayTeamDiv);
+                gameDiv.appendChild(gameDateDiv);
+            } else {
+                gameDiv.appendChild(awayTeamDiv);
+                gameDiv.appendChild(homeTeamDiv);
                 gameDiv.appendChild(gameDateDiv);
             }
             containerPast.appendChild(gameDiv);
