@@ -38,128 +38,26 @@ function getPeriodString(period) {
     }
 }
 
-const teamInfo = {
-    "ATL": {
-      "color": "#c8102e",
-      "logo": "https://a.espncdn.com/i/teamlogos/nba/500-dark/atl.png"
-    },
-    "BOS": {
-      "color": "#008348",
-      "logo": "https://a.espncdn.com/i/teamlogos/nba/500-dark/bos.png"
-    },
-    "BKN": {
-      "color": "#ffffff",
-      "logo": "https://a.espncdn.com/i/teamlogos/nba/500-dark/bkn.png"
-    },
-    "CHA": {
-      "color": "#008ca8",
-      "logo": "https://a.espncdn.com/i/teamlogos/nba/500-dark/cha.png"
-    },
-    "CHI": {
-      "color": "#ce1141",
-      "logo": "https://a.espncdn.com/i/teamlogos/nba/500-dark/chi.png"
-    },
-    "CLE": {
-      "color": "#860038",
-      "logo": "https://a.espncdn.com/i/teamlogos/nba/500-dark/cle.png"
-    },
-    "DAL": {
-      "color": "#0064b1",
-      "logo": "https://a.espncdn.com/i/teamlogos/nba/500-dark/dal.png"
-    },
-    "DEN": {
-      "color": "#0e2240",
-      "logo": "https://a.espncdn.com/i/teamlogos/nba/500-dark/den.png"
-    },
-    "DET": {
-      "color": "#1d428a",
-      "logo": "https://a.espncdn.com/i/teamlogos/nba/500-dark/det.png"
-    },
-    "GS": {
-      "color": "#fdb927",
-      "logo": "https://a.espncdn.com/i/teamlogos/nba/500-dark/gs.png"
-    },
-    "HOU": {
-      "color": "#ce1141",
-      "logo": "https://a.espncdn.com/i/teamlogos/nba/500-dark/hou.png"
-    },
-    "IND": {
-      "color": "#002d62",
-      "logo": "https://a.espncdn.com/i/teamlogos/nba/500-dark/ind.png"
-    },
-    "LAC": {
-      "color": "#12173f",
-      "logo": "https://a.espncdn.com/i/teamlogos/nba/500-dark/lac.png"
-    },
-    "LAL": {
-      "color": "#552583",
-      "logo": "https://a.espncdn.com/i/teamlogos/nba/500-dark/lal.png"
-    },
-    "MEM": {
-      "color": "#5d76a9",
-      "logo": "https://a.espncdn.com/i/teamlogos/nba/500-dark/mem.png"
-    },
-    "MIA": {
-      "color": "#98002e",
-      "logo": "https://a.espncdn.com/i/teamlogos/nba/500-dark/mia.png"
-    },
-    "MIL": {
-      "color": "#00471b",
-      "logo": "https://a.espncdn.com/i/teamlogos/nba/500-dark/mil.png"
-    },
-    "MIN": {
-      "color": "#266092",
-      "logo": "https://a.espncdn.com/i/teamlogos/nba/500-dark/min.png"
-    },
-    "NO": {
-      "color": "#0a2240",
-      "logo": "https://a.espncdn.com/i/teamlogos/nba/500-dark/no.png"
-    },
-    "NY": {
-      "color": "#1d428a",
-      "logo": "https://a.espncdn.com/i/teamlogos/nba/500-dark/ny.png"
-    },
-    "OKC": {
-      "color": "#007ac1",
-      "logo": "https://a.espncdn.com/i/teamlogos/nba/500-dark/okc.png"
-    },
-    "ORL": {
-      "color": "#0077c0",
-      "logo": "https://a.espncdn.com/i/teamlogos/nba/500-dark/orl.png"
-    },
-    "PHI": {
-      "color": "#1d428a",
-      "logo": "https://a.espncdn.com/i/teamlogos/nba/500-dark/phi.png"
-    },
-    "PHX": {
-      "color": "#29127a",
-      "logo": "https://a.espncdn.com/i/teamlogos/nba/500-dark/phx.png"
-    },
-    "POR": {
-      "color": "#e03a3e",
-      "logo": "https://a.espncdn.com/i/teamlogos/nba/500-dark/por.png"
-    },
-    "SAC": {
-      "color": "#5a2d81",
-      "logo": "https://a.espncdn.com/i/teamlogos/nba/500-dark/sac.png"
-    },
-    "SA": {
-      "color": "#c4ced4",
-      "logo": "https://a.espncdn.com/i/teamlogos/nba/500-dark/sa.png"
-    },
-    "TOR": {
-      "color": "#d91244",
-      "logo": "https://a.espncdn.com/i/teamlogos/nba/500-dark/tor.png"
-    },
-    "UTAH": {
-      "color": "#fff21f",
-      "logo": "https://a.espncdn.com/i/teamlogos/nba/500/utah.png"
-    },
-    "WSH": {
-      "color": "#e31837",
-      "logo": "https://a.espncdn.com/i/teamlogos/nba/500-dark/wsh.png"
-    }
-  };
+let teamInfo; // Declare teamInfo in the appropriate scope
+
+async function loadLocalJSON() {
+    const response = await fetch('info.json'); // Path to your local file
+    const data = await response.json();
+    
+    teamInfo = data;
+}
+
+loadLocalJSON();
+
+  function isSameDateAsToday(date) {
+  const today = new Date();
+
+  return (
+    date.getFullYear() === today.getFullYear() &&
+    date.getMonth() === today.getMonth() &&
+    date.getDate() === today.getDate()
+  );
+}
 
 function formatGameDate(gameDate) {
     const date = new Date(gameDate);
@@ -171,7 +69,12 @@ function formatGameDate(gameDate) {
     const ampm = hours >= 12 ? 'pm' : 'am';
     hours = hours % 12;
     hours = hours ? hours : 12; // the hour '0' should be '12'
-    return `${day} ${month}/${dayOfMonth} ${hours}:${minutes}${ampm}`;
+
+    if(isSameDateAsToday(gameDate)){
+      return `Today   ${hours}:${minutes}${ampm}`;
+    } else {
+      return `${day} ${month}/${dayOfMonth} ${hours}:${minutes}${ampm}`;    
+    }
 }
 
 let refreshInterval = 10000; // Default to 30 seconds
@@ -200,6 +103,9 @@ async function getGamesForAllTeams() {
         const away = teams[0].trim();
         const home = teams[1].trim();
 
+        const homeId = event.competitions[0].competitors[0].id;
+        const awayId = event.competitions[0].competitors[1].id;
+
         let homeLogoUrl = "";
         let homeColor = "";
         let awayLogoUrl = "";
@@ -208,10 +114,10 @@ async function getGamesForAllTeams() {
         let hasHomeLogo = true;
         let hasAwayLogo = true;
 
-        homeLogoUrl = teamInfo[home]?.logo ?? "";
-        homeColor = teamInfo[home]?.color ?? "#121212";
-        awayLogoUrl = teamInfo[away]?.logo ?? "";
-        awayColor = teamInfo[away]?.color ?? "#121212";
+        homeLogoUrl = teamInfo.sports.nba[homeId]?.logo ?? "";
+        homeColor = teamInfo.sports.nba[homeId]?.color ?? "#121212";
+        awayLogoUrl = teamInfo.sports.nba[awayId]?.logo ?? "";
+        awayColor = teamInfo.sports.nba[awayId]?.color ?? "#121212";
 
         // Determine if logos exist (check if logo URL is empty or "none")
         hasHomeLogo = homeLogoUrl && homeLogoUrl !== "none";
