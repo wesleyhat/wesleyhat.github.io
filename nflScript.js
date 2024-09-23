@@ -1,4 +1,4 @@
-import { teamInfo, loadLocalJSON, toHttps, getPeriodString, formatGameDate } from './sportsScript.js';
+import { circleImg, teamInfo, loadLocalJSON, toHttps, getPeriodString, formatGameDate } from './sportsScript.js';
 
 let refreshInterval = 10000; // Default to 30 seconds
 let intervalId;
@@ -7,10 +7,8 @@ async function getGamesForAllTeams() {
 
     await loadLocalJSON();
     
-    let tally = 0; // Initialize tally variable
-    const page = toHttps(`https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard`);
+    const page = toHttps(`https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard`);                    // unique
     const req = await fetch(page);
-    tally++; // Increment tally for the teams API call
     const data = await req.json();
     const events = data.events;
     let gamesInfo = []; // To store the actual game data
@@ -33,10 +31,10 @@ async function getGamesForAllTeams() {
         let hasHomeLogo = true;
         let hasAwayLogo = true;
 
-        homeLogoUrl = teamInfo.sports.nfl[homeId]?.logo ?? "";
-        homeColor = teamInfo.sports.nfl[homeId]?.color ?? "#121212";
-        awayLogoUrl = teamInfo.sports.nfl[awayId]?.logo ?? "";
-        awayColor = teamInfo.sports.nfl[awayId]?.color ?? "#121212";
+        homeLogoUrl = teamInfo.sports.nfl[homeId]?.logo ?? "";                                                        // unique
+        homeColor = teamInfo.sports.nfl[homeId]?.color ?? "#121212";                                                  // unique
+        awayLogoUrl = teamInfo.sports.nfl[awayId]?.logo ?? "";                                                        // unique
+        awayColor = teamInfo.sports.nfl[awayId]?.color ?? "#121212";                                                  // unique
 
         // Determine if logos exist (check if logo URL is empty or "none")
         hasHomeLogo = homeLogoUrl && homeLogoUrl !== "none";
@@ -52,9 +50,13 @@ async function getGamesForAllTeams() {
         let clock = event.status.displayClock;
         let quarter = getPeriodString(period);
         let gameState = event.status.type.state;
+        let down = "1st & 10"
+        let field = "PIT 23"
+        let homeBall;
+        let awayBall;
 
         // Set gameStatus based on gameState
-        const gameStatus = gameState === "pre" ? "pre" : gameState === "post" ? "post" : "live";
+        let gameStatus = gameState === "pre" ? "pre" : gameState === "post" ? "post" : "live";
 
 
         if (gameStatus === "post") {
@@ -68,6 +70,8 @@ async function getGamesForAllTeams() {
             }
         } else if (gameStatus === "live") {
             liveGameFound = true; // A live game is found
+            homeBall = false;
+            awayBall = false;
         }
         
         // Handle pre-game scores
@@ -75,6 +79,9 @@ async function getGamesForAllTeams() {
             homeScore = "--";
             awayScore = "--";
         }
+
+        //gameStatus = "live";
+        //homeBall = true;
 
         gamesInfo.push({
             date: gameDate,
@@ -92,7 +99,11 @@ async function getGamesForAllTeams() {
             clock: clock,
             gameStatus: gameStatus,
             hasHomeLogo: hasHomeLogo,
-            hasAwayLogo: hasAwayLogo
+            hasAwayLogo: hasAwayLogo,
+            homeBall: homeBall,
+            awayBall: awayBall,
+            down: down,
+            field: field
         });
     }
 
@@ -150,6 +161,22 @@ function displayGames(games) {
             `;
         }
 
+        if(game.awayBall){
+            if(!game.hasAwayLogo){
+                awayTeamDiv.innerHTML = `
+                    <h2 style="font-size: 20px; font-weight: 400;">${game.awayTeam}</h2>
+                    <img src="${circleImg}" alt="has ball" style="width: 5px; height: 5px; margin-left: -20px; position: absolute; left: 90px;">
+                    <span class="score">${game.awayScore}</span>
+                `;
+            } else {
+                awayTeamDiv.innerHTML = `
+                    <img src="${game.awayLogo}" alt="${game.awayTeam} Logo">
+                    <img src="${circleImg}" alt="has ball" style="width: 5px; height: 5px; margin-left: -20px; position: absolute; left: 90px;">
+                    <span class="score">${game.awayScore}</span>
+                `;
+            }
+        }
+
         const homeTeamDiv = document.createElement('div');
         homeTeamDiv.classList.add('team');
 
@@ -163,6 +190,22 @@ function displayGames(games) {
             <img src="${game.homeLogo}" alt="${game.homeTeam} Logo">
             <span class="score">${game.homeScore}</span>
         `;
+        }
+
+        if(game.homeBall){
+            if(!game.hasHomeLogo){
+                homeTeamDiv.innerHTML = `
+                <h2 style="font-size: 20px; font-weight: 400;">${game.homeTeam}</h2>
+                <img src="${circleImg}" alt="has ball" style="width: 5px; height: 5px; margin-left: -20px; position: absolute; left: 90px;">
+                <span class="score">${game.homeScore}</span>
+            `;
+            } else {
+                homeTeamDiv.innerHTML = `
+                <img src="${game.homeLogo}" alt="${game.homeTeam} Logo">
+                <img src="${circleImg}" alt="has ball" style="width: 5px; height: 5px; margin-left: -20px; position: absolute; left: 90px;">
+                <span class="score">${game.homeScore}</span>
+            `;
+            }
         }
 
         homeTeamDiv.style.backgroundColor = game.homeColor;
@@ -196,7 +239,11 @@ function displayGames(games) {
             gameDiv.appendChild(homeTeamDiv);
             gameDiv.appendChild(gameDateDiv);
             if (game.gameStatus === "live") {
-                gameDateDiv.innerHTML = `<span style="color: #e13534;">Live</span>&nbsp;&nbsp;&nbsp;${game.quarter}&nbsp;&nbsp;${game.clock}`;
+
+                gameDiv.style.height = "205px";
+
+                gameDateDiv.innerHTML = `<span style="color: #e13534;">Live</span>&nbsp;&nbsp;&nbsp;${game.quarter}&nbsp;&nbsp;${game.clock}<br><br>
+                                         <span>${game.down}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${game.field}`;
             }
             container.appendChild(gameDiv);
         }
