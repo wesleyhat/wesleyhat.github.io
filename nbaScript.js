@@ -1,86 +1,13 @@
-document.addEventListener("DOMContentLoaded", function() {
-  // Select all the nav buttons
-  const navButtons = document.querySelectorAll('.nav-button');
-  let originalActive = document.querySelector('.nav-button.active');
+import { teamInfo, loadLocalJSON, toHttps, getPeriodString, formatGameDate } from './sportsScript.js';
 
-  // Add hover and mouseout event listeners to each button
-  navButtons.forEach(function(button) {
-      button.addEventListener('mouseenter', function() {
-          // If the hovered button is not the active one, deactivate the original active
-          if (!button.classList.contains('active')) {
-              originalActive.classList.remove('active');
-              button.classList.add('active');
-          }
-      });
-
-      button.addEventListener('mouseleave', function() {
-          // Reset the original active when no longer hovering over a different button
-          if (originalActive && button !== originalActive) {
-              button.classList.remove('active');
-              originalActive.classList.add('active');
-          }
-      });
-  });
-});
-
-function toHttps(url) {
-    return url.replace(/^http:/, 'https:');
-}
-
-function getPeriodString(period) {
-    switch (period) {
-        case 0: return "0";
-        case 1: return "1st";
-        case 2: return "2nd";
-        case 3: return "3rd";
-        case 4: return "4th";
-        default: return "Invalid period";
-    }
-}
-
-let teamInfo; // Declare teamInfo in the appropriate scope
-
-async function loadLocalJSON() {
-    const response = await fetch('info.json'); // Path to your local file
-    const data = await response.json();
-    
-    teamInfo = data;
-}
-
-loadLocalJSON();
-
-  function isSameDateAsToday(date) {
-  const today = new Date();
-
-  return (
-    date.getFullYear() === today.getFullYear() &&
-    date.getMonth() === today.getMonth() &&
-    date.getDate() === today.getDate()
-  );
-}
-
-function formatGameDate(gameDate) {
-    const date = new Date(gameDate);
-    const day = date.toLocaleString('en-US', { weekday: 'short' });
-    const month = date.getMonth() + 1; // Months are zero-indexed
-    const dayOfMonth = date.getDate();
-    let hours = date.getHours();
-    const minutes = date.getMinutes().toString().padStart(2, '0'); // Ensure two digits for minutes
-    const ampm = hours >= 12 ? 'pm' : 'am';
-    hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
-
-    if(isSameDateAsToday(gameDate)){
-      return `Today   ${hours}:${minutes}${ampm}`;
-    } else {
-      return `${day} ${month}/${dayOfMonth} ${hours}:${minutes}${ampm}`;    
-    }
-}
 
 let refreshInterval = 10000; // Default to 30 seconds
 let intervalId;
 
 async function getGamesForAllTeams() {
+
+    await loadLocalJSON();
+    
     let tally = 0; // Initialize tally variable
     const page = toHttps(`https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard`);
     const req = await fetch(page);
@@ -122,10 +49,10 @@ async function getGamesForAllTeams() {
         // Determine if logos exist (check if logo URL is empty or "none")
         hasHomeLogo = homeLogoUrl && homeLogoUrl !== "none";
         hasAwayLogo = awayLogoUrl && awayLogoUrl !== "none";
-
-
-        let awayScore = event.competitions[0].competitors[1].score;
-        let homeScore = event.competitions[0].competitors[0].score;
+        let awayScoreString = event.competitions[0].competitors[1].score;
+        let homeScoreString = event.competitions[0].competitors[0].score;
+        let awayScore = Number(awayScoreString);
+        let homeScore = Number(homeScoreString);
         let gameDate = new Date(event.date);
         let homeText = "#ffffff";
         let awayText = "#ffffff";
