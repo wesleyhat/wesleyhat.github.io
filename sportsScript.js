@@ -25,6 +25,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
 export let teamInfo; // Declare and export teamInfo globally
 
+export let circleImg = "https://wesleyhat.github.io/circle.png";
+
 export async function loadLocalJSON() {
     const response = await fetch('info.json');
     const data = await response.json();
