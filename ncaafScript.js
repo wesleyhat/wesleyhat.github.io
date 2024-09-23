@@ -1,86 +1,12 @@
-document.addEventListener("DOMContentLoaded", function() {
-    // Select all the nav buttons
-    const navButtons = document.querySelectorAll('.nav-button');
-    let originalActive = document.querySelector('.nav-button.active');
-
-    // Add hover and mouseout event listeners to each button
-    navButtons.forEach(function(button) {
-        button.addEventListener('mouseenter', function() {
-            // If the hovered button is not the active one, deactivate the original active
-            if (!button.classList.contains('active')) {
-                originalActive.classList.remove('active');
-                button.classList.add('active');
-            }
-        });
-
-        button.addEventListener('mouseleave', function() {
-            // Reset the original active when no longer hovering over a different button
-            if (originalActive && button !== originalActive) {
-                button.classList.remove('active');
-                originalActive.classList.add('active');
-            }
-        });
-    });
-});
-
-function toHttps(url) {
-    return url.replace(/^http:/, 'https:');
-}
-
-function getPeriodString(period) {
-    switch (period) {
-        case 0: return "0";
-        case 1: return "1st";
-        case 2: return "2nd";
-        case 3: return "3rd";
-        case 4: return "4th";
-        default: return "Invalid period";
-    }
-}
-
-let teamInfo; // Declare teamInfo in the appropriate scope
-
-async function loadLocalJSON() {
-    const response = await fetch('info.json'); // Path to your local file
-    const data = await response.json();
-    
-    teamInfo = data;
-}
-
-loadLocalJSON();
-
-function isSameDateAsToday(date) {
-const today = new Date();
-
-return (
-    date.getFullYear() === today.getFullYear() &&
-    date.getMonth() === today.getMonth() &&
-    date.getDate() === today.getDate()
-);
-}
-
-function formatGameDate(gameDate) {
-    const date = new Date(gameDate);
-    const day = date.toLocaleString('en-US', { weekday: 'short' });
-    const month = date.getMonth() + 1; // Months are zero-indexed
-    const dayOfMonth = date.getDate();
-    let hours = date.getHours();
-    const minutes = date.getMinutes().toString().padStart(2, '0'); // Ensure two digits for minutes
-    const ampm = hours >= 12 ? 'pm' : 'am';
-    hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
-
-    if(isSameDateAsToday(gameDate)){
-    return `Today   ${hours}:${minutes}${ampm}`;
-    } else {
-    return `${day} ${month}/${dayOfMonth} ${hours}:${minutes}${ampm}`;    
-    }
-}
+import { teamInfo, loadLocalJSON, toHttps, getPeriodString, formatGameDate } from './sportsScript.js';
 
 let refreshInterval = 10000; // Default to 30 seconds
 let intervalId;
 
 async function getGamesForAllTeams() {
+
+    await loadLocalJSON();
+
     let tally = 0; // Initialize tally variable
     const page = toHttps(`http://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?limit=1000`);
     const req = await fetch(page);
@@ -89,103 +15,6 @@ async function getGamesForAllTeams() {
     const events = data.events;
     let gamesInfo = []; // To store the actual game data
     let liveGameFound = false; // To track if there's a live game
-
-    let testEvent = events[0]
-
-    let idOne = testEvent.competitions[0].competitors[0].id;
-
-
-    const mercer = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2382?limit=1000";
-    const mercerReq = await fetch(mercer);
-    const mercerData = await mercerReq.json();
-
-    console.log(mercerData);
-
-    let mercerTeam = mercerData.team;
-
-    let mercerEvent = mercerTeam.nextEvent[0];
-
-
-
-    console.log(mercerEvent);
-
-    const matchup = mercerEvent.shortName;
-    const teams = matchup.split(" @ ");
-    const away = teams[0];
-    const home = teams[1];
-
-    let homeLogoUrl = "";
-    let homeColor = "";
-    let awayLogoUrl = "";
-    let awayColor = "";
-
-    let hasHomeLogo = true;
-    let hasAwayLogo = true;
-
-    const homeId = mercerEvent.competitions[0].competitors[0].id;
-    const awayId = mercerEvent.competitions[0].competitors[1].id;
-
-    homeLogoUrl = teamInfo.sports.ncaaf[homeId]?.logo ?? "";
-    homeColor = teamInfo.sports.ncaaf[homeId]?.color ?? "#121212";
-    awayLogoUrl = teamInfo.sports.ncaaf[awayId]?.logo ?? "";
-    awayColor = teamInfo.sports.ncaaf[awayId]?.color ?? "#121212";
-
-    // Determine if logos exist (check if logo URL is empty or "none")
-    hasHomeLogo = homeLogoUrl && homeLogoUrl !== "none";
-    hasAwayLogo = awayLogoUrl && awayLogoUrl !== "none";
-
-    let awayScore = mercerEvent.competitions[0].competitors[1].score.value;
-    let homeScore = mercerEvent.competitions[0].competitors[0].score.value;
-    let gameDate = new Date(mercerEvent.date);
-    let homeText = "#ffffff";
-    let awayText = "#ffffff";
-
-    let period = mercerEvent.competitions[0].status.period;
-    let clock = mercerEvent.competitions[0].status.displayClock;
-    let quarter = getPeriodString(period);
-    let gameState = mercerEvent.competitions[0].status.type.state;
-
-    let gameStatus = "";
-
-    if (gameState === "pre") {
-        gameStatus = "pre";
-    } else if (gameState === "post") {
-        gameStatus = "post";
-        if (homeScore > awayScore) {
-            awayColor = "#0d0b15";
-            awayText = "#8c899c";
-        } else if(homeScore < awayScore){
-            homeColor = "#0d0b15";
-            homeText = "#8c899c";
-        } 
-    } else {
-        gameStatus = "live";
-        liveGameFound = true; // A live game is found
-    }
-
-    if (gameStatus === "pre") {
-        homeScore = "--";
-        awayScore = "--";
-    }
-
-    gamesInfo.push({
-        date: gameDate,
-        homeTeam: home,
-        awayTeam: away,
-        homeScore: homeScore,
-        awayScore: awayScore,
-        homeLogo: homeLogoUrl,
-        awayLogo: awayLogoUrl,
-        homeColor: homeColor,
-        awayColor: awayColor,
-        homeText: homeText,
-        awayText: awayText,
-        quarter: quarter,
-        clock: clock,
-        gameStatus: gameStatus,
-        hasHomeLogo: hasHomeLogo,
-        hasAwayLogo: hasAwayLogo
-    });
 
     for (const event of events) {
         const matchup = event.shortName;
@@ -213,9 +42,10 @@ async function getGamesForAllTeams() {
         hasHomeLogo = homeLogoUrl && homeLogoUrl !== "none";
         hasAwayLogo = awayLogoUrl && awayLogoUrl !== "none";
 
-
-        let awayScore = event.competitions[0].competitors[1].score;
-        let homeScore = event.competitions[0].competitors[0].score;
+        let awayScoreString = event.competitions[0].competitors[1].score;
+        let homeScoreString = event.competitions[0].competitors[0].score;
+        let awayScore = Number(awayScoreString);
+        let homeScore = Number(homeScoreString);
         let gameDate = new Date(event.date);
         let homeText = "#ffffff";
         let awayText = "#ffffff";
