@@ -294,7 +294,7 @@ function displayGames(games) {
 
             if (game.gameStatus === "live") {
 
-                gameDiv.style.height = "200px";
+                gameDiv.style.height = "210px";
                 gameDateDiv.innerHTML = `<span style="color: #e13534;">Live</span>&nbsp;&nbsp;&nbsp;${game.quarter}&nbsp;&nbsp;${game.clock}<br><br>
                                      <span>${game.down}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${game.field}`;
 
