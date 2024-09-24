@@ -1,245 +1,321 @@
-/* Basic styling for the game display */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+import { circleImg, teamInfo, loadLocalJSON, toHttps, getPeriodString, formatGameDate } from './sportsScript.js';
+
+let gameVisibilityState = {};
+
+let refreshInterval = 10000; // Default to 30 seconds
+let intervalId;
+
+async function getGamesForAllTeams() {
+
+    await loadLocalJSON();
+    
+    //const page = toHttps(`https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard`);
+    const page = toHttps(`https://wesleyhat.github.io/test.json`);
+    const req = await fetch(page);
+    const data = await req.json();
+    const events = data.events;
+    let gamesInfo = []; // To store the actual game data
+    let liveGameFound = false; // To track if there's a live game
+
+    for (const event of events) {
+        const matchup = event.shortName;
+        const teams = matchup.split(" @ ");
+        const away = teams[0];
+        const home = teams[1];
+
+        const homeId = event.competitions[0].competitors[0].id;
+        const awayId = event.competitions[0].competitors[1].id;
+
+        let homeLogoUrl = "";
+        let homeColor = "";
+        let awayLogoUrl = "";
+        let awayColor = "";
+
+        let hasHomeLogo = true;
+        let hasAwayLogo = true;
+
+        homeLogoUrl = teamInfo.sports.nfl[homeId]?.logo ?? "";
+        homeColor = teamInfo.sports.nfl[homeId]?.color ?? "#121212";
+        awayLogoUrl = teamInfo.sports.nfl[awayId]?.logo ?? "";
+        awayColor = teamInfo.sports.nfl[awayId]?.color ?? "#121212";
+
+        // Determine if logos exist (check if logo URL is empty or "none")
+        hasHomeLogo = homeLogoUrl && homeLogoUrl !== "none";
+        hasAwayLogo = awayLogoUrl && awayLogoUrl !== "none";
+        let awayScoreString = event.competitions[0].competitors[1].score;
+        let homeScoreString = event.competitions[0].competitors[0].score;
+        let awayScore = Number(awayScoreString);
+        let homeScore = Number(homeScoreString);
+        let gameDate = new Date(event.date);
+        let homeText = "#ffffff";
+        let awayText = "#ffffff";
+        let period = event.status.period;
+        let clock = event.status.displayClock;
+        let quarter = getPeriodString(period);
+        let gameState = event.status.type.state;
+        let down = ""
+        let field = "";
+        let homeTimeouts = "";
+        let awayTimeouts = "";
+        let homeBall = false;
+        let awayBall = false;
+        let gameId = event.competitions[0].id;
+
+        // Set gameStatus based on gameState
+        let gameStatus = gameState === "pre" ? "pre" : gameState === "post" ? "post" : "live";
+
+
+        if (gameStatus === "post") {
+            // Determine winning team colors
+            if (homeScore > awayScore) {
+                awayColor = "#0d0b15";
+                awayText = "#8c899c";
+            } else if (homeScore < awayScore) {
+                homeColor = "#0d0b15";
+                homeText = "#8c899c";
+            }
+        } else if (gameStatus === "live") {
+            liveGameFound = true; // A live game is found
+
+            homeTimeouts = event.competitions[0].situation.homeTimeouts;
+            awayTimeouts = event.competitions[0].situation.awayTimeouts;
+
+            let test = event.competitions[0].situation
+
+            let possessionNumb = event.competitions[0].situation.possession;
+
+            let possession = Number(possessionNumb);
+
+            console.log(test)
+
+            if(possession === Number(homeId)) {
+                homeBall = true;
+            } else if(possession === Number(awayId)) {
+                awayBall = true;
+            }
+
+            down = event.competitions[0].situation.shortDownDistanceText || "-";
+            field = event.competitions[0].situation.possessionText || "-";
+
+            // Now check if `down` is `undefined`
+            if (typeof event.competitions[0].situation.shortDownDistanceText === 'undefined') {
+                // Retrieve the value of `unknown`
+                let unknown = event.competitions[0].situation.lastPlay?.type?.abbreviation;
+
+                // Check if `unknown` is "TO"
+                if (unknown === "HALF") {
+                    // Set down and field to the desired values if "TO" is found
+                    down = unknown;
+                }
+            }
+        }
+        
+        // Handle pre-game scores
+        if (gameStatus === "pre") {
+            homeScore = "--";
+            awayScore = "--";
+        }
+
+        //gameStatus = "live";
+
+        gamesInfo.push({
+            date: gameDate,
+            homeTeam: home,
+            awayTeam: away,
+            homeScore: homeScore,
+            awayScore: awayScore,
+            homeLogo: homeLogoUrl,
+            awayLogo: awayLogoUrl,
+            homeColor: homeColor,
+            awayColor: awayColor,
+            homeText: homeText,
+            awayText: awayText,
+            quarter: quarter,
+            clock: clock,
+            gameStatus: gameStatus,
+            hasHomeLogo: hasHomeLogo,
+            hasAwayLogo: hasAwayLogo,
+            homeBall: homeBall,
+            awayBall: awayBall,
+            down: down,
+            field: field,
+            gameId: gameId,
+            homeTimeouts: homeTimeouts,
+            awayTimeouts: awayTimeouts
+        });
+    }
+
+    // Now inject the gamesInfo into the page
+    displayGames(gamesInfo);
+
+    // Hide the loading screen and show the games container
+    document.getElementById('loading-screen').style.display = 'none';
+    document.getElementById('games-container').style.display = 'grid';
+
     
 }
 
-body{
-    background-color: #0d0b15;
-    color: #ffffff;
-    text-align: center;
-    font-family: "Roboto", sans-serif;
-    font-style: normal;
-    font-weight: lighter;
-    font-size: 25px;
-    overflow-x: hidden;
+// Function to display games on the webpage
+function displayGames(games) {
+    const container = document.getElementById('games-container');
+    container.innerHTML = ''; // Clear any previous content
+    const containerPast = document.getElementById('games-container-past');
+    containerPast.innerHTML = ''; // Clear any previous content
+
+    let gameCount = 1; // To track and assign unique IDs
+
+    games.forEach(game => {
+        gameCount++;
+
+        const gameDiv = document.createElement('div');
+        gameDiv.classList.add('game');
+
+        gameDiv.setAttribute('data-game-id', game.gameId);
+
+        const awayTeamDiv = document.createElement('div');
+        awayTeamDiv.classList.add('team');
+
+        if(!game.hasAwayLogo){
+            awayTeamDiv.innerHTML = `
+                <h2 style="font-size: 20px; font-weight: 400;">${game.awayTeam}</h2>
+                <span class="score">${game.awayScore}</span>
+            `;
+        } else {
+            awayTeamDiv.innerHTML = `
+                <img src="${game.awayLogo}" alt="${game.awayTeam} Logo">
+                <span class="score">${game.awayScore}</span>
+            `;
+        }
+
+        if(game.awayBall){
+            if(!game.hasAwayLogo){
+                awayTeamDiv.innerHTML = `
+                    <h2 style="font-size: 20px; font-weight: 400;">${game.awayTeam}</h2>
+                    <img src="${circleImg}" alt="has ball" style="width: 7px; height: 7px; margin-left: -20px; position: absolute; left: 90px;">
+                    <span class="score">${game.awayScore}</span>
+                `;
+            } else {
+                awayTeamDiv.innerHTML = `
+                    <img src="${game.awayLogo}" alt="${game.awayTeam} Logo">
+                    <img src="${circleImg}" alt="has ball" style="width: 7px; height: 7px; margin-left: -20px; position: absolute; left: 90px;">
+                    <span class="score">${game.awayScore}</span>
+                `;
+            }
+        }
+
+        if(game.awayTimeouts === 3){
+            awayTeamDiv.innerHTML = awayTeamDiv.innerHTML + `<img src="${circleImg}" alt="t1" class="TOone" style ="width: 4px; height: 4px;">
+                                                             <img src="${circleImg}" alt="t2" class="TOtwo" style ="width: 4px; height: 4px;">
+                                                             <img src="${circleImg}" alt="t3" class="TOthree" style ="width: 4px; height: 4px;">`
+        } else if(game.awayTimeouts === 2){
+            awayTeamDiv.innerHTML = awayTeamDiv.innerHTML + `<img src="${circleImg}" alt="t1" class="TOone" style ="width: 4px; height: 4px;">
+                                                             <img src="${circleImg}" alt="t2" class="TOtwo" style ="width: 4px; height: 4px;">`
+        } else if(game.awayTimeouts === 1){
+            awayTeamDiv.innerHTML = awayTeamDiv.innerHTML + `<img src="${circleImg}" alt="t1" class="TOone" style ="width: 4px; height: 4px;">`
+        } else {
+            awayTeamDiv.innerHTML = awayTeamDiv.innerHTML;
+        }
+
+        const homeTeamDiv = document.createElement('div');
+        homeTeamDiv.classList.add('team');
+
+        if(!game.hasHomeLogo){
+            homeTeamDiv.innerHTML = `
+            <h2 style="font-size: 20px; font-weight: 400;">${game.homeTeam}</h2>
+            <span class="score">${game.homeScore}</span>
+        `;
+        } else {
+            homeTeamDiv.innerHTML = `
+            <img src="${game.homeLogo}" alt="${game.homeTeam} Logo">
+            <span class="score">${game.homeScore}</span>
+        `;
+        }
+
+        if(game.homeBall){
+            if(!game.hasHomeLogo){
+                homeTeamDiv.innerHTML = `
+                <h2 style="font-size: 20px; font-weight: 400;">${game.homeTeam}</h2>
+                <img src="${circleImg}" alt="has ball" style="width: 7px; height: 7px; margin-left: -20px; position: absolute; left: 90px;">
+                <span class="score">${game.homeScore}</span>
+            `;
+            } else {
+                homeTeamDiv.innerHTML = `
+                <img src="${game.homeLogo}" alt="${game.homeTeam} Logo">
+                <img src="${circleImg}" alt="has ball" style="width: 7px; height: 7px; margin-left: -20px; position: absolute; left: 90px;">
+                <span class="score">${game.homeScore}</span>
+            `;
+            }
+        }
+
+        if(game.homeTimeouts === 3){
+            homeTeamDiv.innerHTML = homeTeamDiv.innerHTML + `<img src="${circleImg}" alt="t1" class="TOone" style ="width: 4px; height: 4px;">
+                                                             <img src="${circleImg}" alt="t2" class="TOtwo" style ="width: 4px; height: 4px;">
+                                                             <img src="${circleImg}" alt="t3" class="TOthree" style ="width: 4px; height: 4px;">`
+        } else if(game.homeTimeouts === 2){
+            homeTeamDiv.innerHTML = homeTeamDiv.innerHTML + `<img src="${circleImg}" alt="t1" class="TOone" style ="width: 4px; height: 4px;">
+                                                             <img src="${circleImg}" alt="t2" class="TOtwo" style ="width: 4px; height: 4px;">`
+        } else if(game.homeTimeouts === 1){
+            homeTeamDiv.innerHTML = homeTeamDiv.innerHTML + `<img src="${circleImg}" alt="t1" class="TOone" style ="width: 4px; height: 4px;">`
+        } else {
+            homeTeamDiv.innerHTML = homeTeamDiv.innerHTML;
+        }
+
+        homeTeamDiv.style.backgroundColor = game.homeColor;
+        awayTeamDiv.style.backgroundColor = game.awayColor;
+        homeTeamDiv.style.color = game.homeText;
+        awayTeamDiv.style.color = game.awayText;
+
+        const gameDateDiv = document.createElement('div');
+        gameDateDiv.classList.add('game-date');
+        gameDateDiv.setAttribute('data-game-date-id', game.gameId);
+        gameDateDiv.textContent = `${formatGameDate(game.date)}`;
+
+        if (game.gameStatus === "post") {
+            if(game.homeScore > game.awayScore){
+                gameDiv.appendChild(homeTeamDiv);
+                gameDiv.appendChild(awayTeamDiv);
+                gameDiv.appendChild(gameDateDiv);
+            } else if(game.homeScore < game.awayScore){
+                gameDiv.appendChild(awayTeamDiv);
+                gameDiv.appendChild(homeTeamDiv);
+                gameDiv.appendChild(gameDateDiv);
+            } else {
+                gameDiv.appendChild(awayTeamDiv);
+                gameDiv.appendChild(homeTeamDiv);
+                gameDiv.appendChild(gameDateDiv);
+            }
+            containerPast.appendChild(gameDiv);
+            gameDateDiv.textContent = "Final";
+        } else {
+
+            gameDiv.appendChild(awayTeamDiv);
+            gameDiv.appendChild(homeTeamDiv);
+            gameDiv.appendChild(gameDateDiv);
+
+            if (game.gameStatus === "live") {
+
+                gameDiv.style.height = "200px";
+                gameDateDiv.innerHTML = `<span style="color: #e13534;">Live</span>&nbsp;&nbsp;&nbsp;${game.quarter}&nbsp;&nbsp;${game.clock}<br><br>
+                                     <span>${game.down}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${game.field}`;
+
+
+                if (!intervalId) {
+                    refreshInterval = 10000; // Set to 30 seconds for live games
+                    intervalId = setInterval(getGamesForAllTeams, refreshInterval); // Start refreshing
+                }
+                } else {
+                    // If no live games, clear the interval
+                    if (intervalId) {
+                        clearInterval(intervalId);
+                        intervalId = null; // Reset intervalId
+                    }
+
+                
+                }
+                container.appendChild(gameDiv);
+            }
+    });
 }
 
-.navbar {
-    color: white;
-    padding: 15px 50px; /* Ensure this is the same on both pages */
-    display: flex;
-    align-items: center;
-}
+getGamesForAllTeams();
 
-.navbar-title {
-    margin: 0;
-    font-size: 25px;
-    font-weight: lighter;
-}
-
-/* Optional: Add margin to the nav-links for consistency */
-.nav-links {
-    width: 100%;
-    display: flex; /* Ensures links are in a row */
-    align-items: center; /* Vertically centers the links */
-    align-items: center;
-    justify-content: center;
-    transition: ease-in-out .5s;
-}
-
-.nav-button.active {
-    border: 1px solid #555;
-    border-bottom: none;
-    border-top-left-radius: 5px; /* Top left corner */
-    border-top-right-radius: 5px; /* Top right corner */
-    z-index: 10;
-}
-
-.nav-button.active:hover {
-    background-color: #0d0b15; /* Darker background on hover */
-    transform: none; /* Slightly enlarge on hover */
-}
-
-.nav-button {
-    color: white; /* White text color */
-    text-decoration: none; /* Remove underline */
-    padding: 10px 20px; /* Padding for buttons */
-    border-bottom: 1px solid #555;
-    transition: background-color 0.3s, transform 0.2s; /* Smooth transitions */
-    border-top-left-radius: 5px; /* Top left corner */
-    border-top-right-radius: 5px; /* Top right corner */
-}
-
-.nav-button:hover {
-    background-color: #555; /* Darker background on hover */
-}
-
-.container{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Loading screen styles */
-#loading-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 24px;
-    z-index: 9999;
-}
-
-.loading p {
-    animation: blink 1.5s infinite;
-}
-
-@keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
-}
-
-#games-container, #games-container-past {
-    display: grid;
-    margin-top: 15px;
-    grid-template-columns: repeat(4, 1fr); /* 4 columns */
-    gap: 15px; /* Space between game divs */
-    padding: 50px 50px 75px 50px;
-}
-
-.line {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 1px;
-    background-color: #333;
-}
-
-.game{
-    background-color: #000000; /* Semi-transparent black */
-    border-radius: 25px; /* Rounded corners */
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Center items horizontally */
-    justify-content: center; /* Center items vertically */
-    width: 175px; /* Make it wider than tall */
-    height: 175px; /* Set a fixed height */
-}
-
-.game:hover{
-    transform: scale(1.02);
-
-}
-
-.team {
-    width: 100%; /* 90% of the game div's width */
-    height: 62px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between; /* Space between logo and score */
-    padding: 5px;
-    color: white; /* Font color white */
-    border-radius: 20px; /* Rounded corners */
-    margin-bottom: 5px;
-    padding-right: 20px;
-    padding-left: 10px;
-    position: relative;
-}
-
-
-
-.TOone, .TOtwo, .TOthree{
-    position: absolute;
-    bottom: 4px;
-}
-
-.TOone {
-    left: 23px;
-}
-
-.TOtwo {
-    left: 33px;
-}
-
-.TOthree {
-    left: 43px;
-}
-
-.team img {
-    height: 50px; /* Keep logo size */
-    width: 50px;
-    margin-right: 10px;
-}
-
-.score {
-    font-family: "Roboto", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-    font-size: 25px;
-
-}
-
-.game-date {
-    font-family: "Roboto", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-    font-size: 13px;
-    color: #D3D3D3; /* Font color white */
-    margin-top: 5px; /* Space above the date */
-    text-align: center; /* Center the date text */
-}
-
-/* For tablets */
-@media (max-width: 1100px) {
-    body{
-        font-size: 20px;
-        padding-left: 0;
-        padding-right: 0;
-    }
-    
-
-    #games-container, #games-container-past {
-        grid-template-columns: repeat(3, 1fr); /* 2 columns for tablets */
-    }
-}
-
-@media (max-width: 860px) {
-
-    #games-container,  #games-container-past {
-        grid-template-columns: repeat(2, 1fr); /* 2 columns for tablets */
-    }
-
-    .nav-button {
-        font-size: 17px;
-    }
-}
-
-/* For mobile */
-@media (max-width: 620px) {
-    body{
-        font-size: 15px;
-    }
-
-    .navbar {
-        padding: 10px 20px;
-        margin-top: 10px;
-    }
-
-    .nav-button{
-        padding: none;
-        font-weight: 400;
-        margin-top: 25px;
-    }
-
-    
-    #games-container,  #games-container-past {
-        grid-template-columns: repeat(2, 1fr); /* 1 column for mobile */
-
-        padding: 0;
-
-        margin-top: 50px;
-        margin-bottom: 50px;
-    }
-
-}
