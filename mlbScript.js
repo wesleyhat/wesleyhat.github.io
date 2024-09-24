@@ -220,15 +220,8 @@ function displayGames(games) {
         gameDateDiv.textContent = `${formatGameDate(game.date)}`;
 
         if (game.gameStatus === "post") {
-            if(game.homeScore < game.awayScore){
-                gameDiv.appendChild(awayTeamDiv);
-                gameDiv.appendChild(homeTeamDiv);
-                gameDiv.appendChild(gameDateDiv);
-            } else {
-                gameDiv.appendChild(homeTeamDiv);
-                gameDiv.appendChild(awayTeamDiv);
-                gameDiv.appendChild(gameDateDiv);
-            }
+            gameDiv.appendChild(awayTeamDiv);
+            gameDiv.appendChild(homeTeamDiv);
             containerPast.appendChild(gameDiv);
             gameDateDiv.textContent = "Final";
         } else {
@@ -334,7 +327,11 @@ function displayGames(games) {
                 if(!game.homeAtBat && !game.awayAtBat){
                     gameDateDiv.innerHTML = gameDateDiv.innerHTML + `<br><br><span class="atBat">-</span>`;
                 } else{
-                    gameDateDiv.innerHTML = gameDateDiv.innerHTML + `<br><br><span class="atBat">${game.balls}/${game.strikes} Count&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${game.outs} Outs</span>`;
+                    if(Number(game.outs) === 1){
+                        gameDateDiv.innerHTML = gameDateDiv.innerHTML + `<br><br><span class="atBat">${game.balls}/${game.strikes} Count&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${game.outs} Out</span>`;
+                    } else{
+                        gameDateDiv.innerHTML = gameDateDiv.innerHTML + `<br><br><span class="atBat">${game.balls}/${game.strikes} Count&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${game.outs} Outs</span>`;
+                    }
                 }
 
                 
