@@ -180,15 +180,9 @@ function displayGames(games) {
         gameDateDiv.textContent = `${formattedDate}`;
 
         if (game.gameStatus === "post") {
-            if(game.homeScore < game.awayScore){
-                gameDiv.appendChild(awayTeamDiv);
-                gameDiv.appendChild(homeTeamDiv);
-                gameDiv.appendChild(gameDateDiv);
-            } else {
-                gameDiv.appendChild(homeTeamDiv);
-                gameDiv.appendChild(awayTeamDiv);
-                gameDiv.appendChild(gameDateDiv);
-            }
+            gameDiv.appendChild(awayTeamDiv);
+            gameDiv.appendChild(homeTeamDiv);
+            gameDiv.appendChild(gameDateDiv);
             containerPast.appendChild(gameDiv);
             gameDateDiv.textContent = "Final";
         } else {
