@@ -23,6 +23,8 @@ async function getGamesForAllTeams() {
         const home = teams[1];
 
 
+
+
         const homeId = event.competitions[0].competitors[0].id;
         const awayId = event.competitions[0].competitors[1].id;
 
@@ -61,9 +63,9 @@ async function getGamesForAllTeams() {
         let second = false;
         let third = false;
 
-        let test = event.competitions[0].situation
+        let test = event.competitions[0]
 
-        //console.log(test);
+        console.log(test);
 
         if (gameState === "pre") {
             gameStatus = "pre";
@@ -87,13 +89,21 @@ async function getGamesForAllTeams() {
             second = event.competitions[0].situation.onSecond;
             third = event.competitions[0].situation.onThird;
 
+            let teamOnField = "";
 
             try{
-                let p = event.competitions[0].situation.pitcher[0];
+                teamOnField = event.competitions[0].situation.pitcher.athlete.team.id;
+            } catch{
+                teamOnField = "";
+            }
 
+            if(Number(teamOnField) === Number(homeId)){
                 awayAtBat = true;
-            } catch {
-                homeAtBat = true;
+            } else if(Number(teamOnField) === Number(awayId)){
+                homeAtBat = true
+            } else{
+                awayAtBat = false;
+                homeAtBat = false;
             }
         }
 
@@ -230,8 +240,8 @@ function displayGames(games) {
                 gameDateDiv.innerHTML = `<span style="color: #e13534;">Live</span>&nbsp;&nbsp;&nbsp;${game.inning}`;
 
                 gameDiv.style.height = "225px";
-                homeTeamDiv.style.height = "75px";
-                awayTeamDiv.style.height = "75px";
+                homeTeamDiv.style.height = "70px";
+                awayTeamDiv.style.height = "70px";
 
                 let firstBase = "baseOn.png";
                 let secondBase = "baseOff.png";
@@ -243,12 +253,12 @@ function displayGames(games) {
                     case "true-false-false":
                         firstBase = "baseOn.png";
                         secondBase = "baseOff.png";
-                        thirdBase= "baseOff";
+                        thirdBase= "baseOff.png";
                         break;
                     case "false-true-false":
                         firstBase = "baseOff.png";
                         secondBase = "baseOn.png";
-                        thirdBase= "baseOff";
+                        thirdBase= "baseOff.png";
                         break;
                     case "false-false-true":
                         firstBase = "baseOff.png";
@@ -280,8 +290,6 @@ function displayGames(games) {
                         secondBase = "baseOff.png";
                         thirdBase= "baseOff.png";
                 }
-
-                game.homeAtBat = true;
 
                 if(game.homeAtBat){
 
@@ -323,7 +331,13 @@ function displayGames(games) {
                     }
                 }
 
-                gameDateDiv.innerHTML = gameDateDiv.innerHTML + `<br><br><span class="atBat">Count: ${game.balls}/${game.strikes}&nbsp;&nbsp;&nbsp;${game.outs} Outs</span>`;
+                if(!game.homeAtBat && !game.awayAtBat){
+                    gameDateDiv.innerHTML = gameDateDiv.innerHTML + `<br><br><span class="atBat">-</span>`;
+                } else{
+                    gameDateDiv.innerHTML = gameDateDiv.innerHTML + `<br><br><span class="atBat">${game.balls}/${game.strikes} Count&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${game.outs} Outs</span>`;
+                }
+
+                
 
 
             }
