@@ -164,6 +164,27 @@ body{
     left: 43px;
 }
 
+.baseOne, .baseTwo, .baseThree{
+    position: absolute;
+    width: 15px;
+    height: 15px;
+}
+
+.baseTwo{
+    left: 75px;
+    bottom: 33px;
+}
+
+.baseOne{
+    left: 65px;
+    bottom: 20px;
+}
+
+.baseThree{
+    left: 85px;
+    bottom: 20px;
+}
+
 .score {
     font-family: "Roboto", sans-serif;
     font-weight: 400;
