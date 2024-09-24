@@ -1,5 +1,7 @@
 import { circleImg, teamInfo, loadLocalJSON, toHttps, getPeriodString, formatGameDate } from './sportsScript.js';
 
+let gameVisibilityState = {};
+
 let refreshInterval = 10000; // Default to 30 seconds
 let intervalId;
 
@@ -50,10 +52,11 @@ async function getGamesForAllTeams() {
         let clock = event.status.displayClock;
         let quarter = getPeriodString(period);
         let gameState = event.status.type.state;
-        let down = "1st & 10"
-        let field = "PIT 23"
-        let homeBall;
-        let awayBall;
+        let down = ""
+        let field = "";
+        let homeBall = false;
+        let awayBall = false;
+        let gameId = event.competitions[0].id;
 
         // Set gameStatus based on gameState
         let gameStatus = gameState === "pre" ? "pre" : gameState === "post" ? "post" : "live";
@@ -70,8 +73,48 @@ async function getGamesForAllTeams() {
             }
         } else if (gameStatus === "live") {
             liveGameFound = true; // A live game is found
-            homeBall = false;
-            awayBall = false;
+
+            let test = event.competitions[0].situation
+
+            let possessionNumb = event.competitions[0].situation.possession;
+
+            let possession = Number(possessionNumb);
+
+            console.log(test)
+
+            if(possession === Number(homeId)) {
+                homeBall = true;
+            } else if(possession === Number(awayId)) {
+                awayBall = true;
+            }
+
+            let yardLine = Number(event.competitions[0].situation.yardLine)
+            let currentTeam = "";
+
+            if(yardLine > 50){
+                yardLine = 100 - yardLine
+                currentTeam = away
+            } else if(yardLine < 50){
+                currentTeam = home
+            }
+
+
+
+            down = event.competitions[0].situation.shortDownDistanceText || "-";
+            field = event.competitions[0].situation.possessionText || "-";
+
+            // Now check if `down` is `undefined`
+            if (typeof event.competitions[0].situation.shortDownDistanceText === 'undefined') {
+                // Retrieve the value of `unknown`
+                let unknown = event.competitions[0].situation.lastPlay?.type?.abbreviation;
+
+                // Check if `unknown` is "TO"
+                if (unknown === "TO") {
+                    // Set down and field to the desired values if "TO" is found
+                    down = "Time Out";
+                    field = currentTeam + " " + yardLine;
+                }
+            }
         }
         
         // Handle pre-game scores
@@ -103,7 +146,8 @@ async function getGamesForAllTeams() {
             homeBall: homeBall,
             awayBall: awayBall,
             down: down,
-            field: field
+            field: field,
+            gameId: gameId
         });
     }
 
@@ -114,19 +158,7 @@ async function getGamesForAllTeams() {
     document.getElementById('loading-screen').style.display = 'none';
     document.getElementById('games-container').style.display = 'grid';
 
-    // Adjust refresh interval based on live game status
-    if (liveGameFound) {
-        if (!intervalId) {
-            refreshInterval = 10000; // Set to 30 seconds for live games
-            intervalId = setInterval(getGamesForAllTeams, refreshInterval); // Start refreshing
-        }
-    } else {
-        // If no live games, clear the interval
-        if (intervalId) {
-            clearInterval(intervalId);
-            intervalId = null; // Reset intervalId
-        }
-    }
+    
 }
 
 // Function to display games on the webpage
@@ -144,7 +176,7 @@ function displayGames(games) {
         const gameDiv = document.createElement('div');
         gameDiv.classList.add('game');
 
-        gameDiv.setAttribute('data-game-id', gameCount);
+        gameDiv.setAttribute('data-game-id', game.gameId);
 
         const awayTeamDiv = document.createElement('div');
         awayTeamDiv.classList.add('team');
@@ -215,6 +247,7 @@ function displayGames(games) {
 
         const gameDateDiv = document.createElement('div');
         gameDateDiv.classList.add('game-date');
+        gameDateDiv.setAttribute('data-game-date-id', game.gameId);
         gameDateDiv.textContent = `${formatGameDate(game.date)}`;
 
         if (game.gameStatus === "post") {
@@ -238,15 +271,29 @@ function displayGames(games) {
             gameDiv.appendChild(awayTeamDiv);
             gameDiv.appendChild(homeTeamDiv);
             gameDiv.appendChild(gameDateDiv);
+
             if (game.gameStatus === "live") {
 
-                gameDiv.style.height = "205px";
-
+                gameDiv.style.height = "200px";
                 gameDateDiv.innerHTML = `<span style="color: #e13534;">Live</span>&nbsp;&nbsp;&nbsp;${game.quarter}&nbsp;&nbsp;${game.clock}<br><br>
-                                         <span>${game.down}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${game.field}`;
+                                     <span>${game.down}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${game.field}`;
+
+
+                if (!intervalId) {
+                    refreshInterval = 10000; // Set to 30 seconds for live games
+                    intervalId = setInterval(getGamesForAllTeams, refreshInterval); // Start refreshing
+                }
+                } else {
+                    // If no live games, clear the interval
+                    if (intervalId) {
+                        clearInterval(intervalId);
+                        intervalId = null; // Reset intervalId
+                    }
+
+                
+                }
+                container.appendChild(gameDiv);
             }
-            container.appendChild(gameDiv);
-        }
     });
 }
 
