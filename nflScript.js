@@ -271,19 +271,9 @@ function displayGames(games) {
         gameDateDiv.textContent = `${formatGameDate(game.date)}`;
 
         if (game.gameStatus === "post") {
-            if(game.homeScore > game.awayScore){
-                gameDiv.appendChild(homeTeamDiv);
-                gameDiv.appendChild(awayTeamDiv);
-                gameDiv.appendChild(gameDateDiv);
-            } else if(game.homeScore < game.awayScore){
-                gameDiv.appendChild(awayTeamDiv);
-                gameDiv.appendChild(homeTeamDiv);
-                gameDiv.appendChild(gameDateDiv);
-            } else {
-                gameDiv.appendChild(awayTeamDiv);
-                gameDiv.appendChild(homeTeamDiv);
-                gameDiv.appendChild(gameDateDiv);
-            }
+            gameDiv.appendChild(homeTeamDiv);
+            gameDiv.appendChild(awayTeamDiv);
+            gameDiv.appendChild(gameDateDiv);
             containerPast.appendChild(gameDiv);
             gameDateDiv.textContent = "Final";
         } else {
