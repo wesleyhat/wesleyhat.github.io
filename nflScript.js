@@ -9,8 +9,8 @@ async function getGamesForAllTeams() {
 
     await loadLocalJSON();
     
-    //const page = toHttps(`https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard`);
-    const page = toHttps(`https://wesleyhat.github.io/test.json`);
+    const page = toHttps(`https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard`);
+    //const page = toHttps(`https://wesleyhat.github.io/test.json`);
     const req = await fetch(page);
     const data = await req.json();
     const events = data.events;
