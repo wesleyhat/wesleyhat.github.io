@@ -134,7 +134,7 @@ body{
 
 .team {
     width: 100%; /* 90% of the game div's width */
-    height: 40%; /* Roughly 40% of the height of the game div */
+    height: 62px;
     display: flex;
     align-items: center;
     justify-content: space-between; /* Space between logo and score */
@@ -144,10 +144,31 @@ body{
     margin-bottom: 5px;
     padding-right: 20px;
     padding-left: 10px;
+    position: relative;
+}
+
+
+
+.TOone, .TOtwo, .TOthree{
+    position: absolute;
+    bottom: 4px;
+}
+
+.TOone {
+    left: 23px;
+}
+
+.TOtwo {
+    left: 33px;
+}
+
+.TOthree {
+    left: 43px;
 }
 
 .team img {
     height: 50px; /* Keep logo size */
+    width: 50px;
     margin-right: 10px;
 }
 
