@@ -87,6 +87,8 @@ async function getGamesForAllTeams() {
             date: gameDate,
             homeTeam: home,
             awayTeam: away,
+            homeId: homeId,
+            awayId: awayId,
             homeScore: homeScore,
             awayScore: awayScore,
             homeLogo: homeLogoUrl,
@@ -146,7 +148,7 @@ function displayGames(games) {
             `;
         } else {
             awayTeamDiv.innerHTML = `
-                <img src="${game.awayLogo}" alt="${game.awayTeam} Logo">
+                <img src="${game.awayLogo}" alt="${game.awayTeam} Logo"style="width:50px;height:50px;">
                 <span class="score">${game.awayScore}</span>
             `;
         }
@@ -161,7 +163,7 @@ function displayGames(games) {
         `;
         } else {
             homeTeamDiv.innerHTML = `
-            <img src="${game.homeLogo}" alt="${game.homeTeam} Logo">
+            <img src="${game.homeLogo}" alt="${game.homeTeam} Logo"style="width:50px;height:50px;">
             <span class="score">${game.homeScore}</span>
         `;
         }
