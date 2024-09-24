@@ -1,7 +1,5 @@
 import { circleImg, teamInfo, loadLocalJSON, toHttps, getPeriodString, formatGameDate } from './sportsScript.js';
 
-let gameVisibilityState = {};
-
 let refreshInterval = 10000; // Default to 30 seconds
 let intervalId;
 
@@ -10,7 +8,7 @@ async function getGamesForAllTeams() {
     await loadLocalJSON();
     
     const page = toHttps(`https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard`);
-    //const page = toHttps(`https://wesleyhat.github.io/test.json`);
+    //const page = './test.json';
     const req = await fetch(page);
     const data = await req.json();
     const events = data.events;
@@ -82,11 +80,11 @@ async function getGamesForAllTeams() {
 
             let test = event.competitions[0].situation
 
+            //console.log(test);
+
             let possessionNumb = event.competitions[0].situation.possession;
 
             let possession = Number(possessionNumb);
-
-            console.log(test)
 
             if(possession === Number(homeId)) {
                 homeBall = true;
@@ -122,6 +120,8 @@ async function getGamesForAllTeams() {
             date: gameDate,
             homeTeam: home,
             awayTeam: away,
+            homeId: homeId,
+            awayId: awayId,
             homeScore: homeScore,
             awayScore: awayScore,
             homeLogo: homeLogoUrl,
@@ -182,7 +182,7 @@ function displayGames(games) {
             `;
         } else {
             awayTeamDiv.innerHTML = `
-                <img src="${game.awayLogo}" alt="${game.awayTeam} Logo">
+                <img src="${game.awayLogo}" alt="${game.awayTeam} Logo" style="width:${teamInfo.sports.nfl[game.awayId].width};height:${teamInfo.sports.nfl[game.awayId].height};margin-left:${teamInfo.sports.nfl[game.awayId].margin};">
                 <span class="score">${game.awayScore}</span>
             `;
         }
@@ -196,7 +196,7 @@ function displayGames(games) {
                 `;
             } else {
                 awayTeamDiv.innerHTML = `
-                    <img src="${game.awayLogo}" alt="${game.awayTeam} Logo">
+                    <img src="${game.awayLogo}" alt="${game.awayTeam} Logo" style="width:${teamInfo.sports.nfl[game.awayId].width};height:${teamInfo.sports.nfl[game.awayId].height};margin-left:${teamInfo.sports.nfl[game.awayId].margin};">
                     <img src="${circleImg}" alt="has ball" style="width: 7px; height: 7px; margin-left: -20px; position: absolute; left: 90px;">
                     <span class="score">${game.awayScore}</span>
                 `;
@@ -226,7 +226,7 @@ function displayGames(games) {
         `;
         } else {
             homeTeamDiv.innerHTML = `
-            <img src="${game.homeLogo}" alt="${game.homeTeam} Logo">
+            <img src="${game.homeLogo}" alt="${game.homeTeam} Logo" style="width:${teamInfo.sports.nfl[game.homeId].width};height:${teamInfo.sports.nfl[game.homeId].height};margin-left:${teamInfo.sports.nfl[game.homeId].margin};">
             <span class="score">${game.homeScore}</span>
         `;
         }
@@ -240,7 +240,7 @@ function displayGames(games) {
             `;
             } else {
                 homeTeamDiv.innerHTML = `
-                <img src="${game.homeLogo}" alt="${game.homeTeam} Logo">
+                <img src="${game.homeLogo}" alt="${game.homeTeam} Logo" style="width:${teamInfo.sports.nfl[game.homeId].width};height:${teamInfo.sports.nfl[game.homeId].height};margin-left: ${teamInfo.sports.nfl[game.homeId].margin};">
                 <img src="${circleImg}" alt="has ball" style="width: 7px; height: 7px; margin-left: -20px; position: absolute; left: 90px;">
                 <span class="score">${game.homeScore}</span>
             `;
@@ -294,13 +294,15 @@ function displayGames(games) {
 
             if (game.gameStatus === "live") {
 
-                gameDiv.style.height = "210px";
+                gameDiv.style.height = "225px";
+                homeTeamDiv.style.height = "70px";
+                awayTeamDiv.style.height = "70px";
                 gameDateDiv.innerHTML = `<span style="color: #e13534;">Live</span>&nbsp;&nbsp;&nbsp;${game.quarter}&nbsp;&nbsp;${game.clock}<br><br>
                                      <span>${game.down}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${game.field}`;
 
 
                 if (!intervalId) {
-                    refreshInterval = 10000; // Set to 30 seconds for live games
+                    //refreshInterval = 10000; // Set to 30 seconds for live games
                     intervalId = setInterval(getGamesForAllTeams, refreshInterval); // Start refreshing
                 }
                 } else {
