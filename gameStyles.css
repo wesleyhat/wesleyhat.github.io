@@ -147,11 +147,9 @@ body{
     position: relative;
 }
 
-
-
 .TOone, .TOtwo, .TOthree{
     position: absolute;
-    bottom: 4px;
+    bottom: 6px;
 }
 
 .TOone {
@@ -164,12 +162,6 @@ body{
 
 .TOthree {
     left: 43px;
-}
-
-.team img {
-    height: 50px; /* Keep logo size */
-    width: 50px;
-    margin-right: 10px;
 }
 
 .score {
