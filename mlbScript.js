@@ -52,6 +52,18 @@ async function getGamesForAllTeams() {
         let inning = event.status.type.detail;
         let gameState = event.status.type.state;
         let gameStatus = "";
+        let homeAtBat = false;
+        let awayAtBat = false;
+        let balls = "0";
+        let strikes = "0";
+        let outs = "0";
+        let first = false;
+        let second = false;
+        let third = false;
+
+        let test = event.competitions[0].situation
+
+        //console.log(test);
 
         if (gameState === "pre") {
             gameStatus = "pre";
@@ -67,12 +79,30 @@ async function getGamesForAllTeams() {
         } else {
             gameStatus = "live";
             liveGameFound = true; // A live game is found
+
+            balls = event.competitions[0].situation.balls;
+            strikes = event.competitions[0].situation.strikes;
+            outs = event.competitions[0].situation.outs;
+            first = event.competitions[0].situation.onFirst;
+            second = event.competitions[0].situation.onSecond;
+            third = event.competitions[0].situation.onThird;
+
+
+            try{
+                let p = event.competitions[0].situation.pitcher[0];
+
+                awayAtBat = true;
+            } catch {
+                homeAtBat = true;
+            }
         }
 
         if (gameStatus === "pre") {
             homeScore = "-";
             awayScore = "-";
         }
+
+        //gameStatus = "live";
 
         gamesInfo.push({
             date: gameDate,
@@ -91,13 +121,19 @@ async function getGamesForAllTeams() {
             inning: inning,
             gameStatus: gameStatus,
             hasHomeLogo: hasHomeLogo,
-            hasAwayLogo: hasAwayLogo
+            hasAwayLogo: hasAwayLogo,
+            homeAtBat : homeAtBat,
+            awayAtBat : awayAtBat,
+            balls: balls,
+            strikes: strikes,
+            outs: outs,
+            first: first,
+            second: second,
+            third: third,
         });
 
 
     }
-
-
 
     // Now inject the gamesInfo into the page
     displayGames(gamesInfo);
@@ -192,6 +228,104 @@ function displayGames(games) {
             gameDiv.appendChild(gameDateDiv);
             if (game.gameStatus === "live") {
                 gameDateDiv.innerHTML = `<span style="color: #e13534;">Live</span>&nbsp;&nbsp;&nbsp;${game.inning}`;
+
+                gameDiv.style.height = "225px";
+                homeTeamDiv.style.height = "75px";
+                awayTeamDiv.style.height = "75px";
+
+                let firstBase = "baseOn.png";
+                let secondBase = "baseOff.png";
+                let thirdBase= "baseOn.png";
+
+                let baseStatus = `${game.first}-${game.second}-${game.third}`;  // Create a unique string key for each combination
+
+                switch (baseStatus) {
+                    case "true-false-false":
+                        firstBase = "baseOn.png";
+                        secondBase = "baseOff.png";
+                        thirdBase= "baseOff";
+                        break;
+                    case "false-true-false":
+                        firstBase = "baseOff.png";
+                        secondBase = "baseOn.png";
+                        thirdBase= "baseOff";
+                        break;
+                    case "false-false-true":
+                        firstBase = "baseOff.png";
+                        secondBase = "baseOff.png";
+                        thirdBase= "baseOn.png";
+                        break;
+                    case "true-true-false":
+                        firstBase = "baseOn.png";
+                        secondBase = "baseOn.png";
+                        thirdBase= "baseOff.png";
+                        break;
+                    case "true-false-true":
+                        firstBase = "baseOn.png";
+                        secondBase = "baseOff.png";
+                        thirdBase= "baseOn.png";
+                        break;
+                    case "false-true-true":
+                        firstBase = "baseOff.png";
+                        secondBase = "baseOn.png";
+                        thirdBase= "baseOn.png";
+                        break;
+                    case "true-true-true":
+                        firstBase = "baseOn.png";
+                        secondBase = "baseOn.png";
+                        thirdBase= "baseOn.png";
+                        break;
+                    default:
+                        firstBase = "baseOff.png";
+                        secondBase = "baseOff.png";
+                        thirdBase= "baseOff.png";
+                }
+
+                game.homeAtBat = true;
+
+                if(game.homeAtBat){
+
+                    if(!game.hasHomeLogo){
+                        homeTeamDiv.innerHTML = `
+                            <h2 style="font-size: 20px; font-weight: 400;">${game.homeTeam}</h2>
+                            <img src="${firstBase}" alt="first" class="baseOne">
+                            <img src="${secondBase}" alt="first" class="baseTwo">
+                            <img src="${thirdBase}" alt="first" class="baseThree">
+                            <span class="score">${game.homeScore}</span>
+                        `;
+                    } else {
+                        homeTeamDiv.innerHTML = `
+                            <img src="${game.homeLogo}" alt="${game.homeTeam} Logo" style="width:${teamInfo.sports.nfl[game.awayId].width};height:${teamInfo.sports.nfl[game.awayId].height};margin-left:${teamInfo.sports.nfl[game.homeId].margin};">
+                            <img src="${firstBase}" alt="first" class="baseOne">
+                            <img src="${secondBase}" alt="first" class="baseTwo">
+                            <img src="${thirdBase}" alt="first" class="baseThree">
+                            <span class="score">${game.homeScore}</span>
+                        `;
+                    }
+
+                } else if(game.awayAtBat) {
+                    if(!game.hasAwayLogo){
+                        awayTeamDiv.innerHTML = `
+                            <h2 style="font-size: 20px; font-weight: 400;">${game.awayTeam}</h2>
+                            <img src="${firstBase}" alt="first" class="baseOne">
+                            <img src="${secondBase}" alt="first">
+                            <img src="${thirdBase}" alt="first">
+                            <span class="score">${game.awayScore}</span>
+                        `;
+                    } else {
+                        awayTeamDiv.innerHTML = `
+                            <img src="${game.awayLogo}" alt="${game.awayTeam} Logo" style="width:${teamInfo.sports.nfl[game.awayId].width};height:${teamInfo.sports.nfl[game.awayId].height};margin-left:${teamInfo.sports.nfl[game.homeId].margin};">
+                            <img src="${firstBase}" alt="first" class="baseOne">
+                            <img src="${secondBase}" alt="first" class="baseTwo">
+                            <img src="${thirdBase}" alt="first" class="baseThree">
+                            <span class="score">${game.awayScore}</span>
+                        `;
+                    }
+                }
+
+                gameDateDiv.innerHTML = gameDateDiv.innerHTML + `<br><br><span class="atBat">Count: ${game.balls}/${game.strikes}&nbsp;&nbsp;&nbsp;${game.outs} Outs</span>`;
+
+
             }
             container.appendChild(gameDiv);
         }
