@@ -65,7 +65,7 @@ async function getGamesForAllTeams() {
 
         let test = event.competitions[0]
 
-        console.log(test);
+        //console.log(test);
 
         if (gameState === "pre") {
             gameStatus = "pre";
