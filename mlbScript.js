@@ -222,8 +222,9 @@ function displayGames(games) {
         if (game.gameStatus === "post") {
             gameDiv.appendChild(awayTeamDiv);
             gameDiv.appendChild(homeTeamDiv);
-            containerPast.appendChild(gameDiv);
             gameDateDiv.textContent = "Final";
+            gameDiv.appendChild(gameDateDiv);
+            containerPast.appendChild(gameDiv);
         } else {
 
             gameDiv.appendChild(awayTeamDiv);
