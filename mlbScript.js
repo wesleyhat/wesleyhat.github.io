@@ -289,17 +289,17 @@ function displayGames(games) {
                     if(!game.hasHomeLogo){
                         homeTeamDiv.innerHTML = `
                             <h2 style="font-size: 20px; font-weight: 400;">${game.homeTeam}</h2>
-                            <img src="${firstBase}" alt="first" class="baseOne">
-                            <img src="${secondBase}" alt="first" class="baseTwo">
-                            <img src="${thirdBase}" alt="first" class="baseThree">
+                            <img src="${thirdBase}" alt="base" class="baseThree">
+                            <img src="${secondBase}" alt=base" class="baseTwo">
+                            <img src="${firstBase}" alt="base" class="baseOne">
                             <span class="score">${game.homeScore}</span>
-                        `;
+                        `; 
                     } else {
                         homeTeamDiv.innerHTML = `
                             <img src="${game.homeLogo}" alt="${game.homeTeam} Logo" style="width:${teamInfo.sports.nfl[game.awayId].width};height:${teamInfo.sports.nfl[game.awayId].height};margin-left:${teamInfo.sports.nfl[game.homeId].margin};">
-                            <img src="${firstBase}" alt="first" class="baseOne">
-                            <img src="${secondBase}" alt="first" class="baseTwo">
                             <img src="${thirdBase}" alt="first" class="baseThree">
+                            <img src="${secondBase}" alt="first" class="baseTwo">
+                            <img src="${firstBase}" alt="first" class="baseOne">
                             <span class="score">${game.homeScore}</span>
                         `;
                     }
@@ -308,17 +308,17 @@ function displayGames(games) {
                     if(!game.hasAwayLogo){
                         awayTeamDiv.innerHTML = `
                             <h2 style="font-size: 20px; font-weight: 400;">${game.awayTeam}</h2>
-                            <img src="${firstBase}" alt="first" class="baseOne">
-                            <img src="${secondBase}" alt="first">
-                            <img src="${thirdBase}" alt="first">
+                            <img src="${thirdBase}" alt="first" class="baseThree">
+                            <img src="${secondBase}" alt="first"class="baseTwo">
+                            <img src="${firstBase}" alt="first"class=baseOne>
                             <span class="score">${game.awayScore}</span>
                         `;
                     } else {
                         awayTeamDiv.innerHTML = `
                             <img src="${game.awayLogo}" alt="${game.awayTeam} Logo" style="width:${teamInfo.sports.nfl[game.awayId].width};height:${teamInfo.sports.nfl[game.awayId].height};margin-left:${teamInfo.sports.nfl[game.homeId].margin};">
-                            <img src="${firstBase}" alt="first" class="baseOne">
-                            <img src="${secondBase}" alt="first" class="baseTwo">
                             <img src="${thirdBase}" alt="first" class="baseThree">
+                            <img src="${secondBase}" alt="first" class="baseTwo">
+                            <img src="${firstBase}" alt="first" class="baseOne">
                             <span class="score">${game.awayScore}</span>
                         `;
                     }
