@@ -271,8 +271,8 @@ function displayGames(games) {
         gameDateDiv.textContent = `${formatGameDate(game.date)}`;
 
         if (game.gameStatus === "post") {
-            gameDiv.appendChild(homeTeamDiv);
             gameDiv.appendChild(awayTeamDiv);
+            gameDiv.appendChild(homeTeamDiv);
             gameDiv.appendChild(gameDateDiv);
             containerPast.appendChild(gameDiv);
             gameDateDiv.textContent = "Final";
