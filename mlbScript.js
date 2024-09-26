@@ -224,7 +224,7 @@ function displayGames(games) {
             gameDiv.appendChild(homeTeamDiv);
             gameDiv.appendChild(gameDateDiv);
             containerPast.appendChild(gameDiv);
-            gameDateDiv.textContent = game.awayScore;
+            gameDateDiv.textContent = game.inning;
         } else {
 
             gameDiv.appendChild(awayTeamDiv);
