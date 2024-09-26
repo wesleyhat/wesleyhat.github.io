@@ -224,7 +224,7 @@ function displayGames(games) {
             gameDiv.appendChild(homeTeamDiv);
             gameDiv.appendChild(gameDateDiv);
             containerPast.appendChild(gameDiv);
-            gameDateDiv.textContent = "Final";
+            gameDateDiv.textContent = game.awayScore;
         } else {
 
             gameDiv.appendChild(awayTeamDiv);
