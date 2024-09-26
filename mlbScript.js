@@ -52,6 +52,7 @@ async function getGamesForAllTeams() {
         let homeText = "#ffffff";
         let awayText = "#ffffff";
         let inning = event.status.type.detail;
+        let final = event.status.type.description;
         let gameState = event.status.type.state;
         let gameStatus = "";
         let homeAtBat = false;
@@ -140,6 +141,7 @@ async function getGamesForAllTeams() {
             first: first,
             second: second,
             third: third,
+            final: final
         });
 
 
@@ -183,6 +185,11 @@ function displayGames(games) {
         const awayTeamDiv = document.createElement('div');
         awayTeamDiv.classList.add('team');
 
+        if(game.final === "Postponed"){
+            game.homeScore = "-";
+            game.awaySore = "-";
+        }
+
         if(!game.hasAwayLogo){
             awayTeamDiv.innerHTML = `
                 <h2 style="font-size: 20px; font-weight: 400;">${game.awayTeam}</h2>
@@ -224,7 +231,7 @@ function displayGames(games) {
             gameDiv.appendChild(homeTeamDiv);
             gameDiv.appendChild(gameDateDiv);
             containerPast.appendChild(gameDiv);
-            gameDateDiv.textContent = game.inning;
+            gameDateDiv.textContent = game.final;
         } else {
 
             gameDiv.appendChild(awayTeamDiv);
