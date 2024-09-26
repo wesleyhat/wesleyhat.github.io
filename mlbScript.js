@@ -187,7 +187,7 @@ function displayGames(games) {
 
         if(game.final === "Postponed"){
             game.homeScore = "-";
-            game.awaySore = "-";
+            game.awayScore = "-";
         }
 
         if(!game.hasAwayLogo){
