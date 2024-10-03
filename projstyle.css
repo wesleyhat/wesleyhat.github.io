@@ -2,8 +2,7 @@
 
 body {
     font-family: "Roboto", sans-serif;
-    background-color: #0d1117;
-    color: #fff;
+
     margin: 0;
 }
 
@@ -32,9 +31,9 @@ body {
     font-family: "Open Sans", sans-serif;
     display: grid;
     place-items: center;
-    grid-template-columns: auto auto auto auto;
-    gap: 40px;
-    width: 80%;
+    grid-template-columns: auto auto auto;
+    gap: 20px;
+    margin-bottom: 25px;
 }
 
 .projs h1{
@@ -45,31 +44,77 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 300px;
+    width: 425px;
     height: 150px;
-    background-color: rgba(255,255,255,.70);
-    color: #733fc7;
-    border-radius: 10px;
+    border: 3px solid #000;
+    color: #fff;
+    border-radius: 25px;
     cursor: pointer;
-    transition-duration: 1s;
+    transition-duration: transform .07s linear, filter .1s ease-out, opacity .15s linear;
+    background-size: contain;
+}
+
+.projThree{
+    background-image: url(images/AHH.png);
+}
+
+.projOne{
+    background-image: url(images/AL.png);
+}
+
+.projFour{
+    background-image: url(images/SU.png);
+}
+
+.projTwo{
+    background-image: url(images/WES.png);
+}
+
+.projFive{
+    background-image: url(images/ANA.png);
+}
+
+.projSix{
+    background-image: url(images/MOR.png);
 }
 
 .projOne:hover, .projTwo:hover, .projThree:hover, .projFour:hover, .projFive:hover, .projSix:hover, .projSeven:hover{
-    transform: scale(1.05);
+    transform: scale(1.02);
     background-color: #fff;
 }
 
 @media screen and (max-width: 1560px) {
     .projOne, .projTwo, .projThree, .projFour, .projFive, .projSix, .projSeven{
         
-        width: 200px;
+        width: 300px;
+        height: 106px;
     }
 }
 
 @media screen and (max-width: 1175px) {
 
     .head{
-        font-size: 30px;
+        font-size: 20px;
+    }
+
+    .content{
+        width: 100%;
+        margin: 0;
+        
+    }
+
+    .projs{
+        grid-template-columns: auto auto;
+    }
+    
+
+    
+}
+
+@media screen and (max-width: 800px) {
+
+    .head{
+        font-size: 20px;
     }
 
     .content{
@@ -83,12 +128,8 @@ body {
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        gap: 35px;
     }
 
-    
-.projOne, .projTwo, .projThree, .projFour, .projFive, .projSix, .projSeven{
-    width: 275px;
-    height: 175px;
-}
     
 }
