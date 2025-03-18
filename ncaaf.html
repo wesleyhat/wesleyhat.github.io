@@ -1,78 +1,47 @@
-document.addEventListener("DOMContentLoaded", function() {
-    // Select all the nav buttons
-    const navButtons = document.querySelectorAll('.nav-button');
-    let originalActive = document.querySelector('.nav-button.active');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="gameStyles.css">
+    <link rel="icon" href="sport.png" type="image/png">
+    <title>NCAAF Games</title>
+</head>
+<body>
 
-    // Add hover and mouseout event listeners to each button
-    navButtons.forEach(function(button) {
-        button.addEventListener('mouseenter', function() {
-            // If the hovered button is not the active one, deactivate the original active
-            if (!button.classList.contains('active')) {
-                originalActive.classList.remove('active');
-                button.classList.add('active');
-            }
-        });
+    <header class="navbar">
+        <h1 class="navbar-title">Scores</h1>
+    </header>
 
-        button.addEventListener('mouseleave', function() {
-            // Reset the original active when no longer hovering over a different button
-            if (originalActive && button !== originalActive) {
-                button.classList.remove('active');
-                originalActive.classList.add('active');
-            }
-        });
-    });
-});
+    <nav class="nav-links">
+            <a href="nfl.html" class="nav-button">NFL</a>
+            <a href="mlb.html" class="nav-button">MLB</a>
+            <a href="#" class="nav-button active">NCAAF</a>
+            <a href="nba.html" class="nav-button">NBA</a>
+            <a href="nhl.html"  class="nav-button">NHL</a>
+    </nav>
 
-export let teamInfo; // Declare and export teamInfo globally
+    <div class="container">
 
-export let circleImg = "https://wesleyhat.github.io/circle.png";
+        <div id="loading-screen" class="loading">
+            <p>Loading games, please wait...</p>
+        </div>
+        
+        <div id="games-container">
+            <div id="offseason-screen" class="offseason">
+                <p>The NFL is currently in the Offseason.</p>
+            </div>
+        </div> <!-- Where the games will be displayed -->
 
-export async function loadLocalJSON() {
-    const response = await fetch('info.json');
-    const data = await response.json();
-    
-    teamInfo = data;
-}
+        <div class="line"></div>
 
-export function toHttps(url) {
-    return url.replace(/^http:/, 'https:');
-}
+        <div id="games-container-past"></div>
+    </div>
 
-export function getPeriodString(period) {
-    switch (period) {
-        case 0: return "0";
-        case 1: return "1st";
-        case 2: return "2nd";
-        case 3: return "3rd";
-        case 4: return "4th";
-        default: return "Invalid period";
-    }
-}
-
-export function isSameDateAsToday(date) {
-const today = new Date();
-
-return (
-    date.getFullYear() === today.getFullYear() &&
-    date.getMonth() === today.getMonth() &&
-    date.getDate() === today.getDate()
-);
-}
-
-export function formatGameDate(gameDate) {
-    const date = new Date(gameDate);
-    const day = date.toLocaleString('en-US', { weekday: 'short' });
-    const month = date.getMonth() + 1; // Months are zero-indexed
-    const dayOfMonth = date.getDate();
-    let hours = date.getHours();
-    const minutes = date.getMinutes().toString().padStart(2, '0'); // Ensure two digits for minutes
-    const ampm = hours >= 12 ? 'pm' : 'am';
-    hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
-
-    if(isSameDateAsToday(gameDate)){
-    return `Today   ${hours}:${minutes}${ampm}`;
-    } else {
-    return `${day} ${month}/${dayOfMonth} ${hours}:${minutes}${ampm}`;    
-    }
-}
+    <script type="module" src="sportsScript.js"></script> <!-- Your JavaScript file -->
+    <script type="module" src="ncaafScript.js"></script> <!-- Your JavaScript file -->
+</body>
+</html>
