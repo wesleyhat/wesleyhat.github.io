@@ -3,6 +3,44 @@ import { circleImg, teamInfo, loadLocalJSON, toHttps, getPeriodString, formatGam
 let refreshInterval = 10000; // Default to 30 seconds
 let intervalId;
 
+function isNCAAFActive() {
+    let today = new Date();
+    let year = today.getFullYear();
+
+    // Get the inactive period
+    let { startDate, endDate } = getNCAAFInactivePeriod(year);
+
+    // Football is active if the current date is **before** startDate or **after** endDate
+    return today < startDate || today > endDate;
+}
+
+// Helper function to get the NCAAF inactive period
+function getNCAAFInactivePeriod(year) {
+    // CFP National Championship: 2nd Monday of January
+    let cfpChampionship = new Date(year, 0, 1); // January 1st
+    while (cfpChampionship.getDay() !== 1) { // Find first Monday of January
+        cfpChampionship.setDate(cfpChampionship.getDate() + 1);
+    }
+    cfpChampionship.setDate(cfpChampionship.getDate() + 7); // Move to 2nd Monday
+
+    // Start date: 2 weeks after CFP Championship
+    let startDate = new Date(cfpChampionship);
+    startDate.setDate(startDate.getDate() + 14);
+
+    // Approximate Spring Practice Start: 2nd Monday of March
+    let springPracticeStart = new Date(year, 2, 1); // March 1st
+    while (springPracticeStart.getDay() !== 1) { // Find first Monday
+        springPracticeStart.setDate(springPracticeStart.getDate() + 1);
+    }
+    springPracticeStart.setDate(springPracticeStart.getDate() + 7); // Move to 2nd Monday
+
+    // End date: 2 weeks before Spring Practice
+    let endDate = new Date(springPracticeStart);
+    endDate.setDate(endDate.getDate() - 14);
+
+    return { startDate, endDate };
+}
+
 async function getGamesForAllTeams() {
 
     await loadLocalJSON();
@@ -307,5 +345,10 @@ function displayGames(games) {
     });
 }
 
-getGamesForAllTeams();
+if(isNCAAFActive()){
+    document.getElementById('offseason-screen').style.display = 'none';
+    getGamesForAllTeams();
+} else {
+    document.getElementById('loading-screen').style.display = 'none';
+}
 
