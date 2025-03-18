@@ -4,6 +4,43 @@ import { teamInfo, loadLocalJSON, toHttps, getPeriodString, formatGameDate } fro
 let refreshInterval = 10000; // Default to 30 seconds
 let intervalId;
 
+function isNBAActive() {
+    let today = new Date();
+    let year = today.getFullYear();
+
+    // Get the inactive period
+    let { startDate, endDate } = getNBAInactivePeriod(year);
+
+    // Basketball is active if the current date is **before** startDate or **after** endDate
+    return today < startDate || today > endDate;
+}
+
+// Helper function to get the NBA inactive period
+function getNBAInactivePeriod(year) {
+    // NBA Finals usually end around the 2nd Sunday of June
+    let nbaFinalsEnd = new Date(year, 5, 1); // June 1st
+    while (nbaFinalsEnd.getDay() !== 0) { // Find first Sunday of June
+        nbaFinalsEnd.setDate(nbaFinalsEnd.getDate() + 1);
+    }
+    nbaFinalsEnd.setDate(nbaFinalsEnd.getDate() + 7); // Move to 2nd Sunday
+
+    // Start date: 2 weeks after NBA Finals
+    let startDate = new Date(nbaFinalsEnd);
+    startDate.setDate(startDate.getDate() + 14);
+
+    // NBA Training Camp begins: Last Tuesday of September
+    let trainingCampStart = new Date(year, 8, 30); // September 30th
+    while (trainingCampStart.getDay() !== 2) { // Find last Tuesday of September
+        trainingCampStart.setDate(trainingCampStart.getDate() - 1);
+    }
+
+    // End date: 2 weeks before Training Camp
+    let endDate = new Date(trainingCampStart);
+    endDate.setDate(endDate.getDate() - 14);
+
+    return { startDate, endDate };
+}
+
 async function getGamesForAllTeams() {
 
     await loadLocalJSON();
@@ -198,4 +235,9 @@ function displayGames(games) {
     });
 }
 
-getGamesForAllTeams();
+if(isNBAActive()){
+    document.getElementById('offseason-screen').style.display = 'none';
+    getGamesForAllTeams();
+} else {
+    document.getElementById('loading-screen').style.display = 'none';
+}
