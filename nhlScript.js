@@ -3,6 +3,43 @@ import { teamInfo, loadLocalJSON, toHttps, getPeriodString, formatGameDate } fro
 let refreshInterval = 10000; // Default to 30 seconds
 let intervalId;
 
+function isNHLActive() {
+    let today = new Date();
+    let year = today.getFullYear();
+
+    // Get the inactive period
+    let { startDate, endDate } = getNHLInactivePeriod(year);
+
+    // Hockey is active if the current date is **before** startDate or **after** endDate
+    return today < startDate || today > endDate;
+}
+
+// Helper function to get the NHL inactive period
+function getNHLInactivePeriod(year) {
+    // Stanley Cup Finals usually end around the 2nd Monday of June
+    let stanleyCupEnd = new Date(year, 5, 1); // June 1st
+    while (stanleyCupEnd.getDay() !== 1) { // Find first Monday of June
+        stanleyCupEnd.setDate(stanleyCupEnd.getDate() + 1);
+    }
+    stanleyCupEnd.setDate(stanleyCupEnd.getDate() + 7); // Move to 2nd Monday
+
+    // Start date: 2 weeks after Stanley Cup Finals
+    let startDate = new Date(stanleyCupEnd);
+    startDate.setDate(startDate.getDate() + 14);
+
+    // NHL Training Camp begins: Third Friday of September
+    let trainingCampStart = new Date(year, 8, 15); // September 15th
+    while (trainingCampStart.getDay() !== 5) { // Find first Friday after Sep 15
+        trainingCampStart.setDate(trainingCampStart.getDate() + 1);
+    }
+
+    // End date: 2 weeks before Training Camp
+    let endDate = new Date(trainingCampStart);
+    endDate.setDate(endDate.getDate() - 14);
+
+    return { startDate, endDate };
+}
+
 async function getGamesForAllTeams() {
 
     await loadLocalJSON();
@@ -198,4 +235,9 @@ function displayGames(games) {
     });
 }
 
-getGamesForAllTeams();
+if(isNHLActive()){
+    document.getElementById('offseason-screen').style.display = 'none';
+    getGamesForAllTeams();
+} else {
+    document.getElementById('loading-screen').style.display = 'none';
+}
