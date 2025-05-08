@@ -32,7 +32,7 @@ document.body.onkeyup = function(e) {
         e.keyCode == 32      
     ) {
         const draw = () => {
-            context.fillStyle = '#1e1e2e';
+            context.fillStyle = 'rbga(17, 17, 27,.05)';
             context.fillRect(0, 0, canvas.width, canvas.height);
         
             context.fillStyle = '#b4befe';
