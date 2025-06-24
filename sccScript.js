@@ -3,6 +3,7 @@ let first = true;
 let turn = 0;
 let total = 0;
 let animation = false;
+let animationArray = [];
 
 let btn = document.getElementById("roll");
 btn.textContent = "Roll " + (turn + 1);
@@ -32,6 +33,8 @@ btn.onclick = function () {
 
     const allSaved = numbs.every(die => die.saved);
 
+    animationArray = [];
+
     // Render all dice (with or without animation)
     numbs.forEach((die, i) => {
         const dice = document.createElement("div");
@@ -44,20 +47,22 @@ btn.onclick = function () {
 
         if (die.saved || allSaved) {
             img.src = `dice${die.value}.png`;
-            animation = false;
+            animationArray.push(0);
         } else {
             const tempValue = Math.floor(Math.random() * 6) + 1;
             img.src = `dice${tempValue}.png`;
-            animation = true;
+            animationArray.push(1);
             rollDieAnimation(img, die.value);
         }
 
         dice.appendChild(img);
         diceContainer.appendChild(dice);
+        console.log(animationArray)
     });
 
+    let animationTotal = animationArray.reduce((sum, val) => sum + val, 0);
 
-    if(animation){
+    if(animationTotal !== 0){
         // Delay placement until after animation
         setTimeout(() => {
             const placed = { six: false, five: false, four: false };
