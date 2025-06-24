@@ -39,8 +39,12 @@
 }
 
 #total-text{
+    font-family: "Pirata One", system-ui;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 50px;
     display: none;
-    color: #fff;
+    color: #f8f8ba;
     position: absolute;
     bottom: 200px;
     z-index: 2000;
