@@ -5,7 +5,8 @@
 
 }
 
-#bg-video {
+
+#bg-image {
     position: fixed;
     right: 0;
     bottom: 0;
@@ -74,9 +75,9 @@
 
 button {
     padding: 20px 40px;
-    background-color: #3b2f2f; /* leather brown */
+    background-color: #4d3e3e; /* leather brown */
     color: #fff;
-    border: 3px solid #2a1f1f;
+    border: 3px solid #4d3e3e;
     border-radius: 12px;
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4),
                 0 4px 8px rgba(0, 0, 0, 0.5);
