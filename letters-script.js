@@ -3,6 +3,7 @@ const currentRowDiv = document.getElementById('currentRow');
 
 let currentLetters = 'asdfghjkl'; // Default to A-L row
 let spacePressed = false; // Flag to check if SPACE is pressed
+let muted = true;
 
 // Function to get a random letter from selected row
 function getRandomLetter() {
@@ -14,7 +15,31 @@ function showNewLetter() {
   const newLetter = getRandomLetter();
   letterDiv.textContent = newLetter;
   letterDiv.className = ''; // reset classes
+// --- Speak the new letter ---
+  const utterance = new SpeechSynthesisUtterance(newLetter);
+  utterance.rate = 1;   // normal speed
+  utterance.pitch = 1;  // normal pitch
+  utterance.volume = 1; // full volume
+
+  // Try to find "Mark" voice
+  const voices = speechSynthesis.getVoices();
+  const markVoice = voices.find(v => v.name.toLowerCase().includes("mark"));
+  if (markVoice) {
+    utterance.voice = markVoice;
+  }
+
+  // Speak the letter
+  speechSynthesis.cancel(); // stop any currently playing speech
+  if(!muted){
+    speechSynthesis.speak(utterance);
+  }
 }
+
+// Ensure voices are loaded before first use
+speechSynthesis.onvoiceschanged = () => {
+  // Optional: preload Mark voice so it's ready immediately
+  speechSynthesis.getVoices();
+};
 
 // Handle key presses for typing and row selection
 document.addEventListener('keydown', (e) => {
@@ -54,6 +79,13 @@ document.addEventListener('keydown', (e) => {
         letterDiv.classList.add('fade');
         setTimeout(showNewLetter, 300);
         break;
+      case 'm': // SPACE+! for all letters
+        if(!muted){
+            muted = true;
+        }
+        else {
+            muted = false;
+        }
     }
     spacePressed = false; // reset flag after selection
     e.preventDefault();
