@@ -1,0 +1,36 @@
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #1e1e2e;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  user-select: none;
+}
+
+#currentRow {
+  position: absolute;
+  top: 20px;
+  font-size: 2rem;
+  color: #ffffff;
+}
+
+#letter {
+  font-size: 10rem;
+  color: white;
+  transition: color 0.2s, opacity 0.3s;
+}
+
+#letter.correct {
+  color: #a6e3a1; /* green */
+}
+
+#letter.wrong {
+  color: #f38ba8; /* red */
+}
+
+#letter.fade {
+  opacity: 0;
+}
