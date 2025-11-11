@@ -2,7 +2,8 @@
 
 body {
     font-family: "Roboto", sans-serif;
-
+    background-color: #1e1e2e;
+    color: #fff;
     margin: 0;
 }
 
@@ -141,4 +142,5 @@ body {
 
     
 }
+
 
