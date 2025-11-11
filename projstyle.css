@@ -40,7 +40,7 @@ body {
     font-weight: 200;
 }
 
-.projOne, .projTwo, .projThree, .projFour, .projFive, .projSix, .projSeven{
+.projOne, .projTwo, .projThree, .projFour, .projFive, .projSix, .projSeven, .projEight{
     display: flex;
     align-items: center;
     justify-content: center;
@@ -78,13 +78,21 @@ body {
     background-image: url(images/MOR.png);
 }
 
-.projOne:hover, .projTwo:hover, .projThree:hover, .projFour:hover, .projFive:hover, .projSix:hover, .projSeven:hover{
+.projSeven{
+    background-image: url(images/SCC.png);
+}
+
+.projEight{
+    background-image: url(images/TRAIN.png);
+}
+
+.projOne:hover, .projTwo:hover, .projThree:hover, .projFour:hover, .projFive:hover, .projSix:hover, .projSeven:hover, .projEight:hover{
     transform: scale(1.02);
     background-color: #fff;
 }
 
 @media screen and (max-width: 1560px) {
-    .projOne, .projTwo, .projThree, .projFour, .projFive, .projSix, .projSeven{
+    .projOne, .projTwo, .projThree, .projFour, .projFive, .projSix, .projSeven, .projEight{
         
         width: 300px;
         height: 106px;
@@ -133,3 +141,4 @@ body {
 
     
 }
+
