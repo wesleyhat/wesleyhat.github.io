@@ -79,6 +79,18 @@ document.addEventListener('keydown', (e) => {
         letterDiv.classList.add('fade');
         setTimeout(showNewLetter, 300);
         break;
+      case ';': // SPACE+! for all letters
+        currentLetters = 'qwertyuiopasdfghjkl';
+        currentRowDiv.textContent = 'Middle + Top Rows';
+        letterDiv.classList.add('fade');
+        setTimeout(showNewLetter, 300);
+        break;
+      case '/': // SPACE+! for all letters
+        currentLetters = 'asdfghjklzxcvbnm';
+        currentRowDiv.textContent = 'Middle + Bottom Rows';
+        letterDiv.classList.add('fade');
+        setTimeout(showNewLetter, 300);
+        break;
       case 'm': // SPACE+! for all letters
         if(!muted){
             muted = true;
@@ -113,3 +125,4 @@ document.addEventListener('keyup', (e) => {
 
 // Start the trainer
 showNewLetter();
+
