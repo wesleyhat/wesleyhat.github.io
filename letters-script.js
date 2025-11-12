@@ -91,6 +91,12 @@ document.addEventListener('keydown', (e) => {
         letterDiv.classList.add('fade');
         setTimeout(showNewLetter, 300);
         break;
+      case 'P': // SPACE+! for all letters
+        currentLetters = 'qwertyuiopzxcvbnm';
+        currentRowDiv.textContent = 'Top + Bottom Rows';
+        letterDiv.classList.add('fade');
+        setTimeout(showNewLetter, 300);
+        break;
       case 'm': // SPACE+! for all letters
         if(!muted){
             muted = true;
@@ -125,4 +131,5 @@ document.addEventListener('keyup', (e) => {
 
 // Start the trainer
 showNewLetter();
+
 
