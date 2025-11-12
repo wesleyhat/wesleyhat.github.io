@@ -63,13 +63,13 @@ document.addEventListener('keydown', (e) => {
         break;
       case 't':
         currentLetters = 'qwert';
-        currentRowDiv.textContent = 'Top Row';
+        currentRowDiv.textContent = 'Top Row A';
         letterDiv.classList.add('fade');
         setTimeout(showNewLetter, 300);
         break;
       case 'y':
         currentLetters = 'yuiop';
-        currentRowDiv.textContent = 'Middle Row';
+        currentRowDiv.textContent = 'Top Row B';
         letterDiv.classList.add('fade');
         setTimeout(showNewLetter, 300);
         break;
@@ -81,19 +81,31 @@ document.addEventListener('keydown', (e) => {
         break;
       case 'g':
         currentLetters = 'asdfg';
-        currentRowDiv.textContent = 'Middle Row';
+        currentRowDiv.textContent = 'Middle Row A';
         letterDiv.classList.add('fade');
         setTimeout(showNewLetter, 300);
         break;
       case 'h':
         currentLetters = 'jkl';
-        currentRowDiv.textContent = 'Middle Row';
+        currentRowDiv.textContent = 'Middle Row B';
         letterDiv.classList.add('fade');
         setTimeout(showNewLetter, 300);
         break;
       case 'z':
         currentLetters = 'zxcvbnm';
         currentRowDiv.textContent = 'Bottom Row';
+        letterDiv.classList.add('fade');
+        setTimeout(showNewLetter, 300);
+        break;
+      case 'b':
+        currentLetters = 'zxcv';
+        currentRowDiv.textContent = 'Bottom Row A';
+        letterDiv.classList.add('fade');
+        setTimeout(showNewLetter, 300);
+        break;
+      case 'n':
+        currentLetters = 'nm';
+        currentRowDiv.textContent = 'Bottom Row B';
         letterDiv.classList.add('fade');
         setTimeout(showNewLetter, 300);
         break;
@@ -155,6 +167,7 @@ document.addEventListener('keyup', (e) => {
 
 // Start the trainer
 showNewLetter();
+
 
 
 
