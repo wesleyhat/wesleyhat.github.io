@@ -61,6 +61,18 @@ document.addEventListener('keydown', (e) => {
         letterDiv.classList.add('fade');
         setTimeout(showNewLetter, 300);
         break;
+      case 't':
+        currentLetters = 'qwert';
+        currentRowDiv.textContent = 'Top Row';
+        letterDiv.classList.add('fade');
+        setTimeout(showNewLetter, 300);
+        break;
+      case 'y':
+        currentLetters = 'yuiop';
+        currentRowDiv.textContent = 'Middle Row';
+        letterDiv.classList.add('fade');
+        setTimeout(showNewLetter, 300);
+        break;
       case 'a':
         currentLetters = 'asdfghjkl';
         currentRowDiv.textContent = 'Middle Row';
@@ -143,6 +155,7 @@ document.addEventListener('keyup', (e) => {
 
 // Start the trainer
 showNewLetter();
+
 
 
 
