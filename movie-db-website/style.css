@@ -1,0 +1,526 @@
+/* Root colors */
+:root {
+    --bg-body: #11111b;
+    --text-primary: #ddd;
+    --text-secondary: #ccc;
+    --text-highlight: #f5c2e7;
+    --card-bg: #1e1e2e;
+    --modal-bg: #302d41;
+    --btn-primary-bg: #b4befe;
+    --btn-primary-text: #1e1e2e;
+    --btn-secondary-bg: #3c3836;
+    --btn-secondary-text: #b4befe;
+    --btn-delete-bg: #ff6e6e;
+    --btn-delete-text: #1e1e2e;
+    --shadow: rgba(0, 0, 0, 0.3);
+}
+
+/* Base nav */
+/* Sticky desktop nav bar */
+#top-nav {
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #11111b;
+    color: #ddd;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 50px;          /* fixed height */
+    padding: 0 1rem;       /* horizontal padding only */
+    box-sizing: border-box; 
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+}
+
+/* Desktop nav buttons */
+.nav-left, .nav-right {
+    display: flex;
+    gap: 0.5rem;
+    height: 100%;
+    align-items: center;   /* vertically center buttons */
+}
+
+/* Nav buttons */
+.nav-btn {
+    padding: 6px 12px;
+    font-size: 1rem;
+    background-color: var(--btn-secondary-bg);
+    color: var(--btn-secondary-text);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.nav-btn:hover {
+    background-color: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
+}
+
+/* Hamburger - hidden on desktop */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    gap: 5px;
+}
+
+.hamburger span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background: #ddd;
+    border-radius: 2px;
+}
+
+/* Mobile menu overlay */
+.mobile-menu {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: #11111b;
+    color: #ddd;
+    padding-top: 4rem;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.mobile-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+}
+
+.mobile-menu.open {
+    display: flex;
+}
+
+/* Global styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: var(--bg-body);
+    color: var(--text-primary);
+}
+
+/* Prevent body scroll when modal is open */
+body.no-scroll {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+}
+
+
+h1, h2 {
+    text-align: center;
+    color: #fff;
+}
+
+/* Container for movie cards */
+.container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 30px;
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+
+/* Movie Cards */
+.card {
+    background: var(--card-bg);
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px var(--shadow);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s;
+    cursor: pointer;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+}
+
+.card-content {
+    padding: 10px;
+}
+
+.card-content h3 {
+    margin: 0;
+    font-size: 1rem;
+    color: #fff;
+}
+
+.card-content p {
+    margin: 5px 0;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+/* Modal overlay */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(30, 30, 46, 0.95);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    z-index: 1000;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+/* Modal content */
+.modal-content {
+    background: var(--modal-bg);
+    color: var(--text-primary);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    width: 100%;
+    max-width: 1000px;
+    box-shadow: 0 4px 15px var(--shadow);
+    box-sizing: border-box;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+/* Modal top section: poster + info */
+.modal-top {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.modal-top img {
+    width: 250px;
+    height: auto;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.modal-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    flex: 1;
+}
+
+.modal-info h2 {
+    margin: 0 0 8px 0;
+    color: var(--text-highlight);
+}
+
+.modal-info p {
+    margin: 4px 0;
+    color: var(--text-primary);
+}
+
+/* Modal sections (Cast, Description, Tags) */
+.modal-section {
+    margin-top: 20px;
+}
+
+.modal-section h3 {
+    margin-bottom: 8px;
+    color: var(--text-highlight);
+}
+
+.modal-section p {
+    margin: 0 0 10px 0;
+    color: var(--text-primary);
+}
+
+/* Close modal button */
+.close-modal {
+    position: absolute;
+    top: 15px;
+    right: 120px;
+    font-size: 28px;
+    font-weight: bold;
+    color: var(--text-primary);
+    cursor: pointer;
+}
+
+.close-modal:hover {
+    color: var(--text-highlight);
+}
+
+/* Buttons */
+button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+/* Modal action buttons */
+.btn-cancel, .btn-search {
+    padding: 8px 16px;
+    font-size: 1.2rem;
+    margin: 5px;
+    background-color: var(--btn-secondary-bg);
+    color: var(--btn-secondary-text);
+}
+
+.btn-add {
+    padding: 8px 16px;
+    font-size: 1.2rem;
+    background-color: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
+}
+
+/* Modal buttons row */
+.modal-actions button {
+    padding: 8px 20px;
+}
+
+.modal-actions button.edit-save {
+    background-color: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
+}
+
+.modal-actions button.cancel {
+    background-color: var(--btn-secondary-bg);
+    color: var(--btn-secondary-text);
+}
+
+.modal-actions button.delete {
+    background-color: var(--btn-delete-bg);
+    color: var(--btn-delete-text);
+}
+
+/* Editable fields inside modal */
+.editable-field {
+    margin-bottom: 12px;
+    padding: 6px 8px;
+    border: 1px solid var(--btn-primary-bg);
+    border-radius: 6px;
+}
+
+.editable-field span.readonly {
+    cursor: text;
+}
+
+/* Multi-select options */
+.multi-select div button {
+    padding: 5px 12px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.multi-select div button.selected {
+    background-color: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
+}
+
+.multi-select div button:not(.selected) {
+    background-color: var(--btn-secondary-bg);
+    color: var(--text-secondary);
+}
+
+/* Dropdowns and modal inputs */
+.modal-select,
+.modal-input {
+    padding: 6px 10px;
+    margin: 6px 0;
+    border-radius: 6px;
+    border: 1px solid var(--btn-primary-bg);
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+}
+
+.modal-select option {
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+}
+
+/* Results container for Add Movie modal */
+.results-container {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.result-card {
+    display: flex;
+    align-items: center;
+    background: var(--card-bg);
+    border-radius: 6px;
+    padding: 6px;
+    cursor: pointer;
+    gap: 6px;
+    transition: transform 0.2s;
+}
+
+.result-card:hover {
+    transform: translateY(-2px);
+}
+
+.result-poster {
+    width: 50px;
+    height: 75px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.result-info {
+    color: var(--text-primary);
+    font-size: 0.9rem;
+}
+
+/* ---------------------------
+   Mobile / Small Screen Styles
+   --------------------------- */
+   @media (max-width: 768px) {
+
+    .nav-left, .nav-right {
+        display: none;
+    }
+    .hamburger {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        width: 25px;
+        height: 20px;
+        cursor: pointer;
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        z-index: 1000;
+    }
+
+    .hamburger span {
+        flex: 1;
+        background-color: var(--btn-secondary-text);
+        border-radius: 2px;
+    }
+
+    body {
+        padding: 0 1rem;
+    }
+
+    /* Landing Section */
+    .landing {
+        display: flex;
+        flex-direction: column; /* stack text & image */
+        align-items: center;
+        text-align: center;
+    }
+
+    .landing-text {
+        width: 100%;
+        margin-bottom: 1.5rem;
+    }
+
+    .landing-image {
+        width: 80%;
+        max-width: 300px;
+        position: static; /* remove fixed scroll effect */
+    }
+
+    /* Nav adjustments */
+    nav {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .nav-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    /* Movie cards / grid */
+    .movie-grid {
+        grid-template-columns: 1fr; /* stack cards vertically */
+        gap: 1rem;
+    }
+
+    h1, h2, h3 {
+        font-size: 1.2rem; /* smaller headings */
+    }
+
+    p {
+        font-size: 0.9rem;
+    }
+
+    .modal-content {
+        width: 95%;
+        max-width: 95%;
+        padding: 15px;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .modal-top {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .modal-top img.modal-poster {
+        width: 70%;
+        max-width: 250px;
+        height: auto;
+    }
+
+    .modal-info {
+        width: 100%;
+        text-align: center;
+    }
+
+    .modal-section {
+        text-align: center;
+        margin-top: 15px;
+    }
+
+    .modal-actions {
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .modal-actions button {
+        width: 80%;
+        font-size: 1rem;
+        padding: 10px 0;
+    }
+
+    .close-modal {
+        top: 10px;
+        right: 10px;
+        font-size: 24px;
+    }
+
+    .modal-input {
+        width: 90%;
+        margin: 0 auto 10px;
+    }
+}
