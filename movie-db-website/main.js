@@ -67,191 +67,180 @@ function addScanBarcodeButton(btnContainer) {
 
     scanBtn.addEventListener('click', async () => {
 
-        // Desktop / manual entry
+        // Desktop fallback: manual entry
         if (!isMobile()) {
             const barcode = prompt("Enter barcode manually:");
             if (!barcode) return;
-
-            try {
-                let movieTitle = await lookupBarcode(barcode);
-                if (!movieTitle) movieTitle = "Unscanable";
-                movieTitle = cleanTitle(movieTitle);
-                searchTmdbByTitle(movieTitle);
-            } catch (err) {
-                console.error("Manual barcode error:", err);
-                alert("Failed to fetch movie details.");
-            }
-            return;
+            return handleScannedBarcode(barcode);
         }
 
-        /// Mobile camera scanning
-        const overlay = document.createElement('div');
-        overlay.className = 'barcode-overlay';
-        overlay.innerHTML = '<p>Point your camera at the barcode</p>';
-        document.body.appendChild(overlay);
+        // MOBILE → Try native scanner first
+        const worked = await startNativeBarcodeScanner();
+        if (worked) return;
 
-        const videoContainer = document.createElement('div');
-        videoContainer.style.width = '100%';
-        videoContainer.style.height = '100%';
-        overlay.appendChild(videoContainer);
-
-        const initQuagga = () => {
-            Quagga.init({
-                inputStream: {
-                    type: "LiveStream",
-                    constraints: { facingMode: "environment" },
-                    target: videoContainer, // this must be a real element
-                },
-                decoder: {
-                    readers: ["upc_reader"] // UPC only
-                },
-                locate: true
-            }, err => {
-                if (err) {
-                    console.error("Quagga init error:", err);
-                    alert("Failed to start barcode scanner. Falling back to image upload.");
-                    overlay.remove();
-                    startCameraScan(); // fallback
-                    return;
-                }
-                Quagga.start();
-            });
-
-            const onDetected = async (result) => {
-                if (!result || !result.codeResult) return;
-                let code = result.codeResult.code;
-
-                // Ensure 12-digit UPC
-                if (code.length > 12) code = code.slice(-12);
-
-                console.log("Detected UPC:", code);
-
-                Quagga.stop();
-                Quagga.offDetected(onDetected);
-                overlay.remove();
-
-                try {
-                    let movieTitle = await lookupBarcode(code);
-                    if (!movieTitle) movieTitle = "Unscanable";
-                    const tmdbResults = await searchTmdbByTitle(movieTitle);
-
-                    if (tmdbResults && tmdbResults.length > 0) {
-                        // Pick the first result for preview
-                        const firstResult = tmdbResults[0];
-                        const detail = await getTmdbDetails(firstResult.id);
-                        const movieData = {
-                            title: detail.title || 'Unknown',
-                            desc: detail.overview || 'No description available.',
-                            rating: extractMpaa(detail) || 'NR',
-                            release_date: detail.release_date || '',
-                            genre: detail.genres ? detail.genres.map(g => g.name).join(', ') : 'Unknown',
-                            cast: detail.credits ? detail.credits.cast.slice(0, 5).map(c => c.name).join(', ') : 'Unknown',
-                            cover_img: detail.poster_path ? `https://image.tmdb.org/t/p/w500${detail.poster_path}` : '',
-                            tags: '',
-                            tmdb_id: detail.id
-                        };
-
-                        // Pass the movieData and the current modal reference if needed
-                        showPreviewModal(movieData, null);
-                    } else {
-                        alert("No movies found for this barcode.");
-                    }
-                } catch (err) {
-                    console.error("Barcode lookup failed:", err);
-                    alert("Failed to fetch movie details.");
-                }
-            };
-
-            Quagga.onDetected(onDetected);
-        };
-
-        initQuagga();
-
-
-        const startCameraScan = async () => {
-            try {
-                // Create video element
-                const video = document.createElement('video');
-                video.setAttribute('autoplay', '');
-                video.setAttribute('playsinline', '');
-                video.style.width = '100%';
-                video.style.maxWidth = '400px';
-                document.body.appendChild(video); // or append to a modal/container
-
-                // Access camera
-                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
-                video.srcObject = stream;
-
-                // Create canvas for processing frames
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-
-                const scanFrame = () => {
-                    if (video.readyState === video.HAVE_ENOUGH_DATA) {
-                        canvas.width = video.videoWidth;
-                        canvas.height = video.videoHeight;
-                        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-                        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                        const code = jsQR(imageData.data, imageData.width, imageData.height);
-
-                        if (code) {
-                            stopCamera(video, stream);
-                            handleScannedBarcode(code.data);
-                            return;
-                        }
-                    }
-                    requestAnimationFrame(scanFrame);
-                };
-
-                scanFrame();
-
-            } catch (err) {
-                console.error("Camera scan failed:", err);
-                alert("Failed to access camera.");
-            }
-        };
-
-        const stopCamera = (video, stream) => {
-            video.remove();
-            stream.getTracks().forEach(track => track.stop());
-        };
-
-        const handleScannedBarcode = async (barcode) => {
-            let movieTitle = await lookupBarcode(barcode);
-            if (!movieTitle) movieTitle = "Unscanable";
-            movieTitle = cleanTitle(movieTitle);
-
-            const tmdbResults = await searchTmdbByTitle(movieTitle);
-
-            if (tmdbResults && tmdbResults.length > 0) {
-                const firstResult = tmdbResults[0];
-                const detail = await getTmdbDetails(firstResult.id);
-                const movieData = {
-                    title: detail.title || 'Unknown',
-                    desc: detail.overview || 'No description available.',
-                    rating: extractMpaa(detail) || 'NR',
-                    release_date: detail.release_date || '',
-                    genre: detail.genres ? detail.genres.map(g => g.name).join(', ') : 'Unknown',
-                    cast: detail.credits ? detail.credits.cast.slice(0, 5).map(c => c.name).join(', ') : 'Unknown',
-                    cover_img: detail.poster_path ? `https://image.tmdb.org/t/p/w500${detail.poster_path}` : '',
-                    tags: '',
-                    tmdb_id: detail.id
-                };
-
-                showPreviewModal(movieData, null);
-            } else {
-                alert("No movies found for this barcode.");
-            }
-        };
-
-
-        // Try initializing Quagga, fallback handled inside init
-        initQuagga();
+        console.warn("Native scanner unavailable — falling back to camera scan.");
+        await startCameraScanFallback();
     });
 
     btnContainer.appendChild(scanBtn);
+
+    // ========================================================================
+    // NATIVE BARCODE SCANNER (iOS / Android modern browsers)
+    // ========================================================================
+    async function startNativeBarcodeScanner() {
+        if (!("BarcodeDetector" in window)) return false;
+
+        let supported = false;
+        try {
+            const formats = await BarcodeDetector.getSupportedFormats();
+            supported = formats.includes("ean_13") || formats.includes("upc_a");
+        } catch {
+            return false;
+        }
+        if (!supported) return false;
+
+        // Build overlay
+        const overlay = document.createElement("div");
+        overlay.className = "barcode-overlay";
+        overlay.innerHTML = "<p>Point your camera at the barcode</p>";
+        document.body.appendChild(overlay);
+
+        try {
+            const detector = new BarcodeDetector({
+                formats: ["ean_13", "upc_a"]
+            });
+
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: "environment" }
+            });
+
+            const video = document.createElement("video");
+            video.autoplay = true;
+            video.playsInline = true;
+            video.srcObject = stream;
+            overlay.appendChild(video);
+
+            await video.play();
+
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d");
+
+            const scan = async () => {
+                if (video.readyState === video.HAVE_ENOUGH_DATA) {
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                    const barcodes = await detector.detect(canvas);
+
+                    if (barcodes.length > 0) {
+                        const code = barcodes[0].rawValue;
+
+                        // Cleanup
+                        stream.getTracks().forEach(t => t.stop());
+                        overlay.remove();
+
+                        return handleScannedBarcode(code);
+                    }
+                }
+                requestAnimationFrame(scan);
+            };
+
+            scan();
+            return true;
+
+        } catch (err) {
+            console.error("Native scanner failed:", err);
+            overlay.remove();
+            return false;
+        }
+    }
+
+    // ========================================================================
+    // FALLBACK: camera + jsQR
+    // ========================================================================
+    async function startCameraScanFallback() {
+        const overlay = document.createElement("div");
+        overlay.className = "barcode-overlay";
+        overlay.innerHTML = "<p>Point your camera at the barcode</p>";
+        document.body.appendChild(overlay);
+
+        const video = document.createElement("video");
+        video.autoplay = true;
+        video.playsInline = true;
+        overlay.appendChild(video);
+
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: "environment" }
+            });
+
+            video.srcObject = stream;
+            await video.play();
+
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d");
+
+            const scan = () => {
+                if (video.readyState === video.HAVE_ENOUGH_DATA) {
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    const code = jsQR(imageData.data, canvas.width, canvas.height);
+
+                    if (code) {
+                        stream.getTracks().forEach(t => t.stop());
+                        overlay.remove();
+                        return handleScannedBarcode(code.data);
+                    }
+                }
+                requestAnimationFrame(scan);
+            };
+
+            scan();
+
+        } catch (err) {
+            console.error("Camera fallback failed:", err);
+            overlay.remove();
+            triggerImageUpload();
+        }
+    }
+
+    // ========================================================================
+    // Helper: Look up and show TMDB results
+    // ========================================================================
+    async function handleScannedBarcode(barcode) {
+        let movieTitle = await lookupBarcode(barcode);
+        if (!movieTitle) movieTitle = "Unscanable";
+        movieTitle = cleanTitle(movieTitle);
+
+        const tmdbResults = await searchTmdbByTitle(movieTitle);
+        if (!tmdbResults || tmdbResults.length === 0) {
+            alert("No movies found for this barcode.");
+            return;
+        }
+
+        const firstResult = tmdbResults[0];
+        const detail = await getTmdbDetails(firstResult.id);
+
+        const movieData = {
+            title: detail.title || 'Unknown',
+            desc: detail.overview || 'No description available.',
+            rating: extractMpaa(detail) || 'NR',
+            release_date: detail.release_date || '',
+            genre: detail.genres ? detail.genres.map(g => g.name).join(', ') : 'Unknown',
+            cast: detail.credits ? detail.credits.cast.slice(0, 5).map(c => c.name).join(', ') : 'Unknown',
+            cover_img: detail.poster_path ? `https://image.tmdb.org/t/p/w500${detail.poster_path}` : '',
+            tags: '',
+            tmdb_id: detail.id
+        };
+
+        showPreviewModal(movieData, null);
+    }
 }
+
 
 function cleanTitle(title) {
     if (!title) return "";
