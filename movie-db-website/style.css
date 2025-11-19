@@ -16,7 +16,6 @@
 }
 
 /* Base nav */
-/* Sticky desktop nav bar */
 #top-nav {
     position: sticky;
     top: 0;
@@ -28,21 +27,19 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 50px;          /* fixed height */
-    padding: 0 1rem;       /* horizontal padding only */
+    height: 50px;
+    padding: 0 1rem;
     box-sizing: border-box; 
     box-shadow: 0 2px 5px rgba(0,0,0,0.5);
 }
 
-/* Desktop nav buttons */
 .nav-left, .nav-right {
     display: flex;
     gap: 0.5rem;
     height: 100%;
-    align-items: center;   /* vertically center buttons */
+    align-items: center;
 }
 
-/* Nav buttons */
 .nav-btn {
     padding: 6px 12px;
     font-size: 1rem;
@@ -58,7 +55,6 @@
     color: var(--btn-primary-text);
 }
 
-/* Hamburger - hidden on desktop */
 .hamburger {
     display: none;
     flex-direction: column;
@@ -74,7 +70,6 @@
     border-radius: 2px;
 }
 
-/* Mobile menu overlay */
 .mobile-menu {
     display: none;
     position: fixed;
@@ -110,7 +105,6 @@ body {
     color: var(--text-primary);
 }
 
-/* Prevent body scroll when modal is open */
 body.no-scroll {
     overflow: hidden;
     position: fixed;
@@ -118,13 +112,11 @@ body.no-scroll {
     height: 100%;
 }
 
-
 h1, h2 {
     text-align: center;
     color: #fff;
 }
 
-/* Container for movie cards */
 .container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
@@ -134,8 +126,6 @@ h1, h2 {
     margin: 0 auto;
 }
 
-
-/* Movie Cards */
 .card {
     background: var(--card-bg);
     width: 100%;
@@ -191,7 +181,6 @@ h1, h2 {
     overflow-y: auto;
 }
 
-/* Modal content */
 .modal-content {
     background: var(--modal-bg);
     color: var(--text-primary);
@@ -207,7 +196,6 @@ h1, h2 {
     overflow-y: auto;
 }
 
-/* Modal top section: poster + info */
 .modal-top {
     display: flex;
     flex-wrap: wrap;
@@ -238,7 +226,6 @@ h1, h2 {
     color: var(--text-primary);
 }
 
-/* Modal sections (Cast, Description, Tags) */
 .modal-section {
     margin-top: 20px;
 }
@@ -253,7 +240,6 @@ h1, h2 {
     color: var(--text-primary);
 }
 
-/* Close modal button */
 .close-modal {
     position: absolute;
     top: 15px;
@@ -268,7 +254,6 @@ h1, h2 {
     color: var(--text-highlight);
 }
 
-/* Buttons */
 button {
     font-family: inherit;
     cursor: pointer;
@@ -278,7 +263,6 @@ button {
     transition: 0.2s;
 }
 
-/* Modal action buttons */
 .btn-cancel, .btn-search, .modal-btn {
     padding: 8px 16px;
     font-size: 1.2rem;
@@ -294,7 +278,6 @@ button {
     color: var(--btn-primary-text);
 }
 
-/* Modal buttons row */
 .modal-actions button {
     padding: 8px 20px;
 }
@@ -314,7 +297,6 @@ button {
     color: var(--btn-delete-text);
 }
 
-/* Editable fields inside modal */
 .editable-field {
     margin-bottom: 12px;
     padding: 6px 8px;
@@ -326,7 +308,6 @@ button {
     cursor: text;
 }
 
-/* Multi-select options */
 .multi-select div button {
     padding: 5px 12px;
     border-radius: 6px;
@@ -345,7 +326,6 @@ button {
     color: var(--text-secondary);
 }
 
-/* Dropdowns and modal inputs */
 .modal-select,
 .modal-input {
     padding: 6px 10px;
@@ -361,7 +341,6 @@ button {
     color: var(--text-primary);
 }
 
-/* Results container for Add Movie modal */
 .results-container {
     margin-top: 20px;
     display: flex;
@@ -399,128 +378,81 @@ button {
 /* ---------------------------
    Mobile / Small Screen Styles
    --------------------------- */
-   @media (max-width: 768px) {
+@media (max-width: 768px) {
 
-    .nav-left, .nav-right {
-        display: none;
-    }
-    .hamburger {
+    .nav-left, .nav-right { display: none; }
+    .hamburger { display: flex; flex-direction: column; gap: 4px; width: 25px; height: 20px; cursor: pointer; position: absolute; top: 1rem; right: 1rem; z-index: 1000; }
+    .hamburger span { flex: 1; background-color: var(--btn-secondary-text); border-radius: 2px; }
+
+    body { padding: 0 1rem; }
+
+    .landing { display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .landing-text { width: 100%; margin-bottom: 1.5rem; }
+    .landing-image { width: 80%; max-width: 300px; position: static; }
+
+    nav { flex-direction: column; gap: 0.5rem; }
+    .nav-btn { padding: 0.5rem 1rem; font-size: 0.9rem; }
+
+    h1, h2, h3 { font-size: 1.2rem; }
+    p { font-size: 0.9rem; }
+
+    /* Mobile card container */
+    .container {
         display: flex;
         flex-direction: column;
-        gap: 4px;
-        width: 25px;
-        height: 20px;
-        cursor: pointer;
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-        z-index: 1000;
-    }
-
-    .hamburger span {
-        flex: 1;
-        background-color: var(--btn-secondary-text);
-        border-radius: 2px;
-    }
-
-    body {
-        padding: 0 1rem;
-    }
-
-    /* Landing Section */
-    .landing {
-        display: flex;
-        flex-direction: column; /* stack text & image */
         align-items: center;
-        text-align: center;
-    }
-
-    .landing-text {
-        width: 100%;
-        margin-bottom: 1.5rem;
-    }
-
-    .landing-image {
-        width: 80%;
-        max-width: 300px;
-        position: static; /* remove fixed scroll effect */
-    }
-
-    /* Nav adjustments */
-    nav {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    .nav-btn {
-        padding: 0.5rem 1rem;
-        font-size: 0.9rem;
-    }
-
-    /* Movie cards / grid */
-    .movie-grid {
-        grid-template-columns: 1fr; /* stack cards vertically */
-        gap: 1rem;
-    }
-
-    h1, h2, h3 {
-        font-size: 1.2rem; /* smaller headings */
-    }
-
-    p {
-        font-size: 0.9rem;
-    }
-
-    .modal-content {
-        width: 95%;
-        max-width: 95%;
-        padding: 15px;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .modal-top {
-        flex-direction: column;
-        align-items: center;
-        gap: 15px;
-    }
-
-    .modal-top img.modal-poster {
-        width: 70%;
-        max-width: 250px;
-        height: auto;
-    }
-
-    .modal-info {
-        width: 100%;
-        text-align: center;
-    }
-
-    .modal-section {
-        text-align: center;
-        margin-top: 15px;
-    }
-
-    .modal-actions {
-        flex-direction: column;
         gap: 10px;
+        padding: 0;
+        margin: 0 auto;
+        width: 100%;
+        box-sizing: border-box;
+        overflow-y: auto;
+        max-height: 80vh;
+    }
+
+    .card {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+        justify-content: flex-start;
         align-items: center;
+        width: 95%;
+        max-width: 400px;
+        min-height: 80px;
+        padding: 10px;
+        border-radius: 12px;
+        box-shadow: 0 2px 6px var(--shadow);
+        cursor: pointer;
+        transition: none; /* remove animation */
     }
 
-    .modal-actions button {
-        width: 80%;
-        font-size: 1rem;
-        padding: 10px 0;
+    .card:hover {
+        transform: none; /* prevent hover movement */
     }
 
-    .close-modal {
-        top: 10px;
-        right: 10px;
-        font-size: 24px;
+    .card img {
+        width: 90px;
+        height: 135px;
+        object-fit: cover;
+        border-radius: 10px; /* slightly rounded image */
+        display: block;
     }
 
-    .modal-input {
-        width: 90%;
-        margin: 0 auto 10px;
-    }
+    .card-content { display: flex; flex-direction: column; justify-content: center; }
+    .card-content h3 { font-size: 1.05rem; margin: 0; color: var(--text-primary); }
+    .card-content p { font-size: 0.85rem; margin: 2px 0 0 0; color: var(--text-secondary); }
+
+    .card-more { font-size: 1.5rem; font-weight: bold; color: var(--text-primary); background: none; border: none; cursor: pointer; }
+    .card-more:hover { color: var(--text-highlight); }
+
+    .modal-content { width: 95%; max-width: 95%; padding: 15px; flex-direction: column; align-items: center; }
+    .modal-top { flex-direction: column; align-items: center; gap: 15px; }
+    .modal-top img.modal-poster { width: 70%; max-width: 250px; height: auto; }
+    .modal-info { width: 100%; text-align: center; }
+    .modal-section { text-align: center; margin-top: 15px; }
+    .modal-actions { flex-direction: column; gap: 10px; align-items: center; }
+    .modal-actions button { width: 80%; font-size: 1rem; padding: 10px 0; }
+    .close-modal { top: 10px; right: 10px; font-size: 24px; }
+    .modal-input { width: 90%; margin: 0 auto 10px; }
 }
+
