@@ -84,21 +84,26 @@ function addScanBarcodeButton(btnContainer) {
             return;
         }
 
-        // Mobile camera scanning
+        /// Mobile camera scanning
         const overlay = document.createElement('div');
         overlay.className = 'barcode-overlay';
         overlay.innerHTML = '<p>Point your camera at the barcode</p>';
         document.body.appendChild(overlay);
+
+        const videoContainer = document.createElement('div');
+        videoContainer.style.width = '100%';
+        videoContainer.style.height = '100%';
+        overlay.appendChild(videoContainer);
 
         const initQuagga = () => {
             Quagga.init({
                 inputStream: {
                     type: "LiveStream",
                     constraints: { facingMode: "environment" },
-                    target: overlay
+                    target: videoContainer, // this must be a real element
                 },
                 decoder: {
-                    readers: ["upc_reader"] // optimized for UPC
+                    readers: ["upc_reader"] // UPC only
                 },
                 locate: true
             }, err => {
@@ -112,29 +117,56 @@ function addScanBarcodeButton(btnContainer) {
                 Quagga.start();
             });
 
-            Quagga.onDetected(async result => {
+            const onDetected = async (result) => {
+                if (!result || !result.codeResult) return;
                 let code = result.codeResult.code;
 
-                // Ensure exactly 12 digits for UPC
+                // Ensure 12-digit UPC
                 if (code.length > 12) code = code.slice(-12);
 
                 console.log("Detected UPC:", code);
 
                 Quagga.stop();
+                Quagga.offDetected(onDetected);
                 overlay.remove();
-                Quagga.offDetected();
 
                 try {
                     let movieTitle = await lookupBarcode(code);
                     if (!movieTitle) movieTitle = "Unscanable";
-                    movieTitle = cleanTitle(movieTitle);
-                    searchTmdbByTitle(movieTitle);
+                    const tmdbResults = await searchTmdbByTitle(movieTitle);
+
+                    if (tmdbResults && tmdbResults.length > 0) {
+                        // Pick the first result for preview
+                        const firstResult = tmdbResults[0];
+                        const detail = await getTmdbDetails(firstResult.id);
+                        const movieData = {
+                            title: detail.title || 'Unknown',
+                            desc: detail.overview || 'No description available.',
+                            rating: extractMpaa(detail) || 'NR',
+                            release_date: detail.release_date || '',
+                            genre: detail.genres ? detail.genres.map(g => g.name).join(', ') : 'Unknown',
+                            cast: detail.credits ? detail.credits.cast.slice(0, 5).map(c => c.name).join(', ') : 'Unknown',
+                            cover_img: detail.poster_path ? `https://image.tmdb.org/t/p/w500${detail.poster_path}` : '',
+                            tags: '',
+                            tmdb_id: detail.id
+                        };
+
+                        // Pass the movieData and the current modal reference if needed
+                        showPreviewModal(movieData, null);
+                    } else {
+                        alert("No movies found for this barcode.");
+                    }
                 } catch (err) {
                     console.error("Barcode lookup failed:", err);
                     alert("Failed to fetch movie details.");
                 }
-            });
+            };
+
+            Quagga.onDetected(onDetected);
         };
+
+        initQuagga();
+
 
         const triggerImageUpload = () => {
             const input = document.createElement('input');
