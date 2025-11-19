@@ -33,91 +33,93 @@ function addScanBarcodeButton(btnContainer) {
     scanBtn.className = "modal-btn";
 
     scanBtn.addEventListener('click', async () => {
-        let movieTitle;
-
-        if (isMobile()) {
-            // Mobile: use iPhone camera
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/*';
-            input.capture = 'environment'; // back camera
-            input.style.display = 'none';
-
-            input.addEventListener('change', async (event) => {
-                const file = event.target.files[0];
-                if (!file) return;
-
-                const img = new Image();
-                img.src = URL.createObjectURL(file);
-
-                img.onload = async () => {
-                    const canvas = document.createElement('canvas');
-                    canvas.width = img.width;
-                    canvas.height = img.height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0);
-
-                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-
-                    const code = jsQR(imageData.data, imageData.width, imageData.height);
-                    if (!code) {
-                        alert("Barcode not detected. Try again.");
-                        return;
-                    }
-
-                    movieTitle = await lookupBarcode(code.data);
-                    if (!movieTitle) movieTitle = "Unscanable";
-
-                    const titleInput = document.querySelector('#movie-title-input');
-                    if (titleInput) titleInput.value = movieTitle;
-                };
-            });
-
-            document.body.appendChild(input);
-            input.click();
-            document.body.removeChild(input);
-
-        } else {
-            // Desktop manual entry
-            const barcode = prompt("Enter barcode manually:");
-            if (!barcode) return;
-            movieTitle = await lookupBarcode(barcode);
-            if (!movieTitle) movieTitle = "Unscanable";
-
-            // Use the TMDB search by title flow
-            try {
-                const tmdbResults = await searchTmdbByTitle(movieTitle);
-
-                if (!tmdbResults.length) {
-                    alert("No movies found on TMDB for: " + movieTitle);
-                    return;
-                }
-
-                // For simplicity, just take the first result to preview
-                const detail = await getTmdbDetails(tmdbResults[0].id);
-
-                const movieData = {
-                    title: detail.title || "Unknown",
-                    desc: detail.overview || "No description available.",
-                    rating: extractMpaa(detail) || "NR",
-                    release_date: detail.release_date || "",
-                    genre: detail.genres ? detail.genres.map(g => g.name).join(', ') : "Unknown",
-                    cast: detail.credits ? detail.credits.cast.slice(0, 5).map(c => c.name).join(', ') : "Unknown",
-                    cover_img: detail.poster_path ? `https://image.tmdb.org/t/p/w500${detail.poster_path}` : "",
-                    tags: "",
-                    tmdb_id: detail.id
-                };
-
-                showPreviewModal(movieData, document.querySelector('.modal'));
-            } catch (err) {
-                console.error("TMDB lookup error:", err);
-                alert("Failed to fetch movie details from TMDB.");
-            }
+        if (!isMobile()) {
+            alert("Barcode scanning only works on mobile with camera.");
+            return;
         }
+
+        // Create hidden file input for mobile camera
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.capture = 'environment'; // back camera
+        input.style.display = 'none';
+        document.body.appendChild(input);
+
+        input.addEventListener('change', async (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const resultSpan = document.createElement('span');
+            resultSpan.textContent = "Scanning barcode...";
+            btnContainer.appendChild(resultSpan);
+
+            // Read image as binary string
+            const reader = new FileReader();
+            reader.onload = async (ev) => {
+                try {
+                    // Use barcode-worker interface
+                    const barcodeInterface = new Interface('/barcode-worker.js');
+                    barcodeInterface.on_stdout = async (barcode) => {
+                        resultSpan.textContent = "Barcode: " + barcode;
+                        console.log("[Barcode] Result:", barcode);
+
+                        // Lookup via Supabase Edge Function
+                        let movieTitle = await lookupBarcode(barcode);
+                        if (!movieTitle) movieTitle = "Unscanable";
+
+                        // Populate title input
+                        const titleInput = document.querySelector('#movie-title-input');
+                        if (titleInput) titleInput.value = movieTitle;
+
+                        // TMDB search + preview modal
+                        try {
+                            const tmdbResults = await searchTmdbByTitle(movieTitle);
+                            if (!tmdbResults.length) {
+                                alert("No movies found on TMDB for: " + movieTitle);
+                                return;
+                            }
+
+                            const detail = await getTmdbDetails(tmdbResults[0].id);
+                            const movieData = {
+                                title: detail.title || "Unknown",
+                                desc: detail.overview || "No description available.",
+                                rating: extractMpaa(detail) || "NR",
+                                release_date: detail.release_date || "",
+                                genre: detail.genres ? detail.genres.map(g => g.name).join(', ') : "Unknown",
+                                cast: detail.credits ? detail.credits.cast.slice(0, 5).map(c => c.name).join(', ') : "Unknown",
+                                cover_img: detail.poster_path ? `https://image.tmdb.org/t/p/w500${detail.poster_path}` : "",
+                                tags: "",
+                                tmdb_id: detail.id
+                            };
+                            showPreviewModal(movieData, document.querySelector('.modal'));
+                        } catch (err) {
+                            console.error("TMDB lookup error:", err);
+                            alert("Failed to fetch movie details from TMDB.");
+                        }
+                    };
+
+                    barcodeInterface.on_stderr = console.error;
+
+                    await barcodeInterface.addData(ev.target.result, '/barcode.jpg');
+                    await barcodeInterface.run('/barcode.jpg');
+
+                } catch (err) {
+                    console.error("Barcode scanning error:", err);
+                    alert("Failed to scan barcode.");
+                }
+            };
+
+            reader.readAsBinaryString(file);
+            document.body.removeChild(input);
+        });
+
+        input.click();
     });
 
     btnContainer.appendChild(scanBtn);
 }
+
 
 function cleanTitle(title) {
     if (!title) return "";
