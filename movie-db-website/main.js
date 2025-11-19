@@ -23,6 +23,76 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchMovies();
 });
 
+function isMobile() {
+    return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+}
+
+function addScanBarcodeButton(btnContainer) {
+    const scanBtn = document.createElement('button');
+    scanBtn.textContent = "Scan from Barcode";
+    scanBtn.className = "modal-btn";
+
+    scanBtn.addEventListener('click', async () => {
+        let movieTitle;
+
+        if (isMobile()) {
+            // Mobile: use iPhone camera
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.capture = 'environment'; // back camera
+            input.style.display = 'none';
+
+            input.addEventListener('change', async (event) => {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const img = new Image();
+                img.src = URL.createObjectURL(file);
+
+                img.onload = async () => {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+                    const code = jsQR(imageData.data, imageData.width, imageData.height);
+                    if (!code) {
+                        alert("Barcode not detected. Try again.");
+                        return;
+                    }
+
+                    movieTitle = await lookupBarcode(code.data);
+                    if (!movieTitle) movieTitle = "Unscanable";
+
+                    const titleInput = document.querySelector('#movie-title-input');
+                    if (titleInput) titleInput.value = movieTitle;
+                };
+            });
+
+            document.body.appendChild(input);
+            input.click();
+            document.body.removeChild(input);
+
+        } else {
+            // Desktop manual entry
+            const barcode = prompt("Enter barcode manually:");
+            if (!barcode) return;
+            movieTitle = await lookupBarcode(barcode);
+            if (!movieTitle) movieTitle = "Unscanable";
+
+            const titleInput = document.querySelector('#movie-title-input');
+            if (titleInput) titleInput.value = movieTitle;
+        }
+    });
+
+    btnContainer.appendChild(scanBtn);
+}
+
+
 // -------------------------
 // Navigation Bar
 // -------------------------
@@ -703,6 +773,9 @@ async function showAddMovieModal() {
     searchBtn.className = 'btn-search';
     searchBtn.textContent = 'Search';
     btnContainer.appendChild(searchBtn);
+
+    addScanBarcodeButton(btnContainer); // add to the button container
+
 
     cancelBtn.addEventListener('click', () => {
         modal.remove();
