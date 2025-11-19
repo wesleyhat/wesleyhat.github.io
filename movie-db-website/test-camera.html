@@ -2,40 +2,71 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>iPhone Camera Test</title>
+  <title>iPhone Barcode Scanner Test</title>
   <style>
     body { background: #111; color: #fff; font-family: Arial; text-align: center; padding: 20px; }
     video { width: 100%; max-width: 400px; border: 2px solid #fff; margin-top: 20px; }
+    #barcodeOutput { margin-top: 20px; font-size: 18px; }
   </style>
 </head>
 <body>
 
-<h2>iPhone Camera Test</h2>
-<p>Tap the button to open your camera.</p>
+<h2>iPhone Barcode Scanner Test</h2>
+<p>Tap the button to open your camera and scan a barcode.</p>
 <button id="startBtn">Open Camera</button>
 <video id="video" autoplay muted playsinline></video>
-<pre id="log"></pre>
+<div id="barcodeOutput">Scanned barcode will appear here</div>
 
 <script>
 const video = document.getElementById('video');
-const log = document.getElementById('log');
+const output = document.getElementById('barcodeOutput');
+let scanning = false;
 
 document.getElementById('startBtn').addEventListener('click', async () => {
-    log.textContent = "Requesting camera...";
+    output.textContent = "Requesting camera...";
     try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: false });
-        log.textContent = "Camera stream started!";
-        // iOS Safari fixes
+        video.srcObject = stream;
         video.setAttribute('autoplay', '');
         video.setAttribute('muted', '');
         video.setAttribute('playsinline', '');
-        video.srcObject = stream;
         await video.play();
-        log.textContent += "\nVideo is playing!";
+        output.textContent = "Camera started! Scanning...";
+
+        scanning = true;
+
+        // Use BarcodeDetector if available
+        if ('BarcodeDetector' in window) {
+            const detector = new BarcodeDetector({ formats: ['ean_13', 'upc_a'] });
+            const scanFrame = async () => {
+                if (!scanning) return;
+                try {
+                    const barcodes = await detector.detect(video);
+                    if (barcodes.length > 0) {
+                        scanning = false;
+                        output.textContent = "Detected barcode: " + barcodes[0].rawValue;
+                        stopCamera(stream);
+                        return;
+                    }
+                } catch (err) {
+                    console.error("BarcodeDetector error:", err);
+                }
+                requestAnimationFrame(scanFrame);
+            };
+            scanFrame();
+        } else {
+            output.textContent += "\nBarcodeDetector not supported on this device.";
+        }
+
     } catch (err) {
-        log.textContent += "\nERROR: " + err.name + " - " + err.message;
+        output.textContent = "ERROR: " + err.name + " - " + err.message;
     }
 });
+
+function stopCamera(stream) {
+    stream.getTracks().forEach(track => track.stop());
+    video.srcObject = null;
+}
 </script>
 
 </body>
