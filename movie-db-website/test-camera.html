@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>iPhone Camera Test</title>
+  <style>
+    body { background: #111; color: #fff; font-family: Arial; text-align: center; padding: 20px; }
+    video { width: 100%; max-width: 400px; border: 2px solid #fff; margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+<h2>iPhone Camera Test</h2>
+<p>Tap the button to open your camera.</p>
+<button id="startBtn">Open Camera</button>
+<video id="video" autoplay muted playsinline></video>
+<pre id="log"></pre>
+
+<script>
+const video = document.getElementById('video');
+const log = document.getElementById('log');
+
+document.getElementById('startBtn').addEventListener('click', async () => {
+    log.textContent = "Requesting camera...";
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: false });
+        log.textContent = "Camera stream started!";
+        // iOS Safari fixes
+        video.setAttribute('autoplay', '');
+        video.setAttribute('muted', '');
+        video.setAttribute('playsinline', '');
+        video.srcObject = stream;
+        await video.play();
+        log.textContent += "\nVideo is playing!";
+    } catch (err) {
+        log.textContent += "\nERROR: " + err.name + " - " + err.message;
+    }
+});
+</script>
+
+</body>
+</html>
