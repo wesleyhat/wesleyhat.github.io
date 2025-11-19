@@ -99,7 +99,6 @@ function addScanBarcodeButton(btnContainer) {
         }
         if (!supported) return false;
 
-        // Build overlay
         const overlay = document.createElement("div");
         overlay.className = "barcode-overlay";
         overlay.innerHTML = "<p>Point your camera at the barcode</p>";
@@ -115,18 +114,27 @@ function addScanBarcodeButton(btnContainer) {
             });
 
             const video = document.createElement("video");
-            video.autoplay = true;
-            video.playsInline = true;
-            video.srcObject = stream;
-            overlay.appendChild(video);
 
-            await video.play();
+            // REQUIRED before setting srcObject
+            video.setAttribute("playsinline", "");
+            video.setAttribute("autoplay", "");
+            video.setAttribute("muted", ""); // Required for iOS
+            video.playsInline = true;
+            video.autoplay = true;
+            video.muted = true;
+
+            overlay.appendChild(video); // MUST BE IN DOM BEFORE PLAY
+
+            video.srcObject = stream;
+
+            // iOS requires an explicit play() and waits for it
+            await video.play().catch(err => console.error("Play failed:", err));
 
             const canvas = document.createElement("canvas");
             const ctx = canvas.getContext("2d");
 
             const scan = async () => {
-                if (video.readyState === video.HAVE_ENOUGH_DATA) {
+                if (video.readyState >= 2) {
                     canvas.width = video.videoWidth;
                     canvas.height = video.videoHeight;
                     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
@@ -135,11 +143,8 @@ function addScanBarcodeButton(btnContainer) {
 
                     if (barcodes.length > 0) {
                         const code = barcodes[0].rawValue;
-
-                        // Cleanup
                         stream.getTracks().forEach(t => t.stop());
                         overlay.remove();
-
                         return handleScannedBarcode(code);
                     }
                 }
@@ -155,6 +160,7 @@ function addScanBarcodeButton(btnContainer) {
             return false;
         }
     }
+
 
     // ========================================================================
     // FALLBACK: camera + jsQR
