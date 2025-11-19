@@ -1001,56 +1001,6 @@ async function showAddMovieModal() {
     modal.addEventListener('click', e => { if (e.target === modal) { modal.remove(); document.body.classList.remove('no-scroll'); } });
 }
 
-function renderMovieCards(movies) {
-    let container = document.getElementById('movie-container');
-    if (!container) {
-        container = document.createElement('div');
-        container.id = 'movie-container';
-        container.className = 'container';
-        document.body.appendChild(container);
-    }
-    container.innerHTML = '';
-
-    // Add mobile class if on mobile
-    if (isMobile()) container.classList.add('mobile-cards');
-    else container.classList.remove('mobile-cards');
-
-    if (!movies.length) {
-        const noMovies = document.createElement('p');
-        noMovies.textContent = 'No movies to display.';
-        container.appendChild(noMovies);
-        return;
-    }
-
-    movies.forEach(movie => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.dataset.id = movie.id;
-
-        const img = document.createElement('img');
-        img.src = movie.cover_img || '';
-        img.className = 'card-img';
-        card.appendChild(img);
-
-        const content = document.createElement('div');
-        content.className = 'card-content';
-
-        const title = document.createElement('h3');
-        title.textContent = movie.title;
-        content.appendChild(title);
-
-        const release = document.createElement('p');
-        release.textContent = movie.release_date?.substring(0, 4) || 'N/A';
-        content.appendChild(release);
-
-        card.appendChild(content);
-        container.appendChild(card);
-
-        card.addEventListener('click', () => showMovieDetails(movie));
-    });
-}
-
-
 // -------------------------
 // Preview Modal (mimics movie detail modal)
 // -------------------------
