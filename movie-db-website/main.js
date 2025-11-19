@@ -84,13 +84,101 @@ function addScanBarcodeButton(btnContainer) {
             movieTitle = await lookupBarcode(barcode);
             if (!movieTitle) movieTitle = "Unscanable";
 
-            const titleInput = document.querySelector('#movie-title-input');
-            if (titleInput) titleInput.value = movieTitle;
+            // Use the TMDB search by title flow
+            try {
+                const tmdbResults = await searchTmdbByTitle(movieTitle);
+
+                if (!tmdbResults.length) {
+                    alert("No movies found on TMDB for: " + movieTitle);
+                    return;
+                }
+
+                // For simplicity, just take the first result to preview
+                const detail = await getTmdbDetails(tmdbResults[0].id);
+
+                const movieData = {
+                    title: detail.title || "Unknown",
+                    desc: detail.overview || "No description available.",
+                    rating: extractMpaa(detail) || "NR",
+                    release_date: detail.release_date || "",
+                    genre: detail.genres ? detail.genres.map(g => g.name).join(', ') : "Unknown",
+                    cast: detail.credits ? detail.credits.cast.slice(0, 5).map(c => c.name).join(', ') : "Unknown",
+                    cover_img: detail.poster_path ? `https://image.tmdb.org/t/p/w500${detail.poster_path}` : "",
+                    tags: "",
+                    tmdb_id: detail.id
+                };
+
+                showPreviewModal(movieData, document.querySelector('.modal'));
+            } catch (err) {
+                console.error("TMDB lookup error:", err);
+                alert("Failed to fetch movie details from TMDB.");
+            }
         }
     });
 
     btnContainer.appendChild(scanBtn);
 }
+
+function cleanTitle(title) {
+    if (!title) return "";
+    // Remove everything after '(' or '['
+    title = title.split(/[\(\[]/)[0].trim();
+    // Remove 'VHS' and everything after
+    let vhsIndex = title.toUpperCase().indexOf("VHS");
+    if (vhsIndex !== -1) {
+        title = title.substring(0, vhsIndex).trim();
+    }
+    // Remove common suffixes
+    const suffixes = ["DVD", "Blu-ray"];
+    for (let suffix of suffixes) {
+        if (title.endsWith(suffix)) {
+            title = title.substring(0, title.length - suffix.length).trim();
+        }
+    }
+    console.log("[cleanTitle] Result:", title);
+    return title;
+}
+
+// Lookup barcode via Supabase Edge Function with auth token
+async function lookupBarcode(barcode) {
+    try {
+        // Get current session and token
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.access_token) {
+            throw new Error("User not logged in or token not available.");
+        }
+
+        console.log("[lookupBarcode] Barcode:", barcode);
+
+        const res = await fetch(
+            `https://acasxnbktmwcckfrvulm.supabase.co/functions/v1/barcode-lookup?barcode=${barcode}`,
+            {
+                headers: {
+                    'Authorization': `Bearer ${session.access_token}`,
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
+
+        if (!res.ok) {
+            const text = await res.text();
+            console.error(`[lookupBarcode] Failed: ${res.status}`, text);
+            return null;
+        }
+
+        const movieTitle = await res.text(); // Edge Function returns plain text
+        console.log('[lookupBarcode] Movie Title:', movieTitle);
+        let cleanName = cleanTitle(movieTitle)
+        return cleanName || null;
+
+    } catch (err) {
+        console.error('[lookupBarcode] Error:', err);
+        return null;
+    }
+}
+
+
+
 
 
 // -------------------------
