@@ -279,7 +279,7 @@ button {
 }
 
 /* Modal action buttons */
-.btn-cancel, .btn-search {
+.btn-cancel, .btn-search, .modal-btn {
     padding: 8px 16px;
     font-size: 1.2rem;
     margin: 5px;
