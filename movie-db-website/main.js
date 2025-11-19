@@ -34,91 +34,116 @@ function addScanBarcodeButton(btnContainer) {
 
     scanBtn.addEventListener('click', async () => {
         if (!isMobile()) {
-            alert("Barcode scanning only works on mobile with camera.");
+            // Desktop manual entry
+            const barcode = prompt("Enter barcode manually:");
+            if (!barcode) return;
+
+            let movieTitle = await lookupBarcode(barcode);
+            if (!movieTitle) movieTitle = "Unscanable";
+
+            // Use the TMDB search + preview modal flow
+            try {
+                const tmdbResults = await searchTmdbByTitle(movieTitle);
+                if (!tmdbResults.length) {
+                    alert("No movies found on TMDB for: " + movieTitle);
+                    return;
+                }
+
+                const detail = await getTmdbDetails(tmdbResults[0].id);
+
+                const movieData = {
+                    title: detail.title || "Unknown",
+                    desc: detail.overview || "No description available.",
+                    rating: extractMpaa(detail) || "NR",
+                    release_date: detail.release_date || "",
+                    genre: detail.genres ? detail.genres.map(g => g.name).join(', ') : "Unknown",
+                    cast: detail.credits ? detail.credits.cast.slice(0, 5).map(c => c.name).join(', ') : "Unknown",
+                    cover_img: detail.poster_path ? `https://image.tmdb.org/t/p/w500${detail.poster_path}` : "",
+                    tags: "",
+                    tmdb_id: detail.id
+                };
+
+                showPreviewModal(movieData, document.querySelector('.modal'));
+            } catch (err) {
+                console.error("TMDB lookup error:", err);
+                alert("Failed to fetch movie details from TMDB.");
+            }
+
             return;
         }
 
-        // Create hidden file input for mobile camera
+        // MOBILE: use camera + Unix Toolbox barcode scan
         const input = document.createElement('input');
         input.type = 'file';
         input.accept = 'image/*';
-        input.capture = 'environment'; // back camera
+        input.capture = 'environment';
         input.style.display = 'none';
-        document.body.appendChild(input);
 
         input.addEventListener('change', async (event) => {
             const file = event.target.files[0];
             if (!file) return;
 
-            const resultSpan = document.createElement('span');
-            resultSpan.textContent = "Scanning barcode...";
-            btnContainer.appendChild(resultSpan);
-
-            // Read image as binary string
             const reader = new FileReader();
             reader.onload = async (ev) => {
-                try {
-                    // Use barcode-worker interface
-                    const barcodeInterface = new Interface('/barcode-worker.js');
-                    barcodeInterface.on_stdout = async (barcode) => {
-                        resultSpan.textContent = "Barcode: " + barcode;
-                        console.log("[Barcode] Result:", barcode);
+                // Import the Interface class dynamically
+                const { Interface: BarcodeInterface } = await import('./interface.js');
+                const barcodeInterface = new BarcodeInterface('./bardecode-worker.js');
 
-                        // Lookup via Supabase Edge Function
-                        let movieTitle = await lookupBarcode(barcode);
-                        if (!movieTitle) movieTitle = "Unscanable";
+                barcodeInterface.on_stdout = async (barcode) => {
+                    console.log("Detected Barcode:", barcode);
+                    let movieTitle = await lookupBarcode(barcode);
+                    if (!movieTitle) movieTitle = "Unscanable";
 
-                        // Populate title input
-                        const titleInput = document.querySelector('#movie-title-input');
-                        if (titleInput) titleInput.value = movieTitle;
+                    // populate title input
+                    const titleInput = document.querySelector('#movie-title-input');
+                    if (titleInput) titleInput.value = movieTitle;
 
-                        // TMDB search + preview modal
-                        try {
-                            const tmdbResults = await searchTmdbByTitle(movieTitle);
-                            if (!tmdbResults.length) {
-                                alert("No movies found on TMDB for: " + movieTitle);
-                                return;
-                            }
-
-                            const detail = await getTmdbDetails(tmdbResults[0].id);
-                            const movieData = {
-                                title: detail.title || "Unknown",
-                                desc: detail.overview || "No description available.",
-                                rating: extractMpaa(detail) || "NR",
-                                release_date: detail.release_date || "",
-                                genre: detail.genres ? detail.genres.map(g => g.name).join(', ') : "Unknown",
-                                cast: detail.credits ? detail.credits.cast.slice(0, 5).map(c => c.name).join(', ') : "Unknown",
-                                cover_img: detail.poster_path ? `https://image.tmdb.org/t/p/w500${detail.poster_path}` : "",
-                                tags: "",
-                                tmdb_id: detail.id
-                            };
-                            showPreviewModal(movieData, document.querySelector('.modal'));
-                        } catch (err) {
-                            console.error("TMDB lookup error:", err);
-                            alert("Failed to fetch movie details from TMDB.");
+                    // TMDB search + preview modal
+                    try {
+                        const tmdbResults = await searchTmdbByTitle(movieTitle);
+                        if (!tmdbResults.length) {
+                            alert("No movies found on TMDB for: " + movieTitle);
+                            return;
                         }
-                    };
 
-                    barcodeInterface.on_stderr = console.error;
+                        const detail = await getTmdbDetails(tmdbResults[0].id);
 
-                    await barcodeInterface.addData(ev.target.result, '/barcode.jpg');
-                    await barcodeInterface.run('/barcode.jpg');
+                        const movieData = {
+                            title: detail.title || "Unknown",
+                            desc: detail.overview || "No description available.",
+                            rating: extractMpaa(detail) || "NR",
+                            release_date: detail.release_date || "",
+                            genre: detail.genres ? detail.genres.map(g => g.name).join(', ') : "Unknown",
+                            cast: detail.credits ? detail.credits.cast.slice(0, 5).map(c => c.name).join(', ') : "Unknown",
+                            cover_img: detail.poster_path ? `https://image.tmdb.org/t/p/w500${detail.poster_path}` : "",
+                            tags: "",
+                            tmdb_id: detail.id
+                        };
 
-                } catch (err) {
-                    console.error("Barcode scanning error:", err);
-                    alert("Failed to scan barcode.");
-                }
+                        showPreviewModal(movieData, document.querySelector('.modal'));
+                    } catch (err) {
+                        console.error("TMDB lookup error:", err);
+                        alert("Failed to fetch movie details from TMDB.");
+                    }
+                };
+
+                barcodeInterface.on_stderr = console.error;
+
+                await barcodeInterface.addData(ev.target.result, '/barcode.jpg');
+                await barcodeInterface.run('/barcode.jpg');
             };
 
             reader.readAsBinaryString(file);
-            document.body.removeChild(input);
         });
 
+        document.body.appendChild(input);
         input.click();
+        document.body.removeChild(input);
     });
 
     btnContainer.appendChild(scanBtn);
 }
+
 
 
 function cleanTitle(title) {
@@ -178,10 +203,6 @@ async function lookupBarcode(barcode) {
         return null;
     }
 }
-
-
-
-
 
 // -------------------------
 // Navigation Bar
