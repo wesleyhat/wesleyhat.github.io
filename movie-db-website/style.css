@@ -96,6 +96,20 @@
     display: flex;
 }
 
+body, html {
+    overflow-x: hidden; /* prevent horizontal movement globally */
+}
+
+.container {
+    overflow-x: hidden; /* ensure no horizontal scroll */
+    -webkit-overflow-scrolling: touch; /* smooth scroll on iOS */
+}
+
+.container::-webkit-scrollbar {
+    display: none; /* optional: hide scrollbars */
+}
+
+
 /* Global styles */
 body {
     font-family: Arial, sans-serif;
@@ -417,6 +431,7 @@ button {
         justify-content: flex-start;
         align-items: center;
         width: 95%;
+        box-sizing: border-box;
         max-width: 400px;
         min-height: 80px;
         padding: 10px;
