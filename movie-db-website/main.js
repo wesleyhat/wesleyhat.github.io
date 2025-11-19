@@ -1,6 +1,7 @@
 // main.js
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
+
 const SUPABASE_URL = 'https://acasxnbktmwcckfrvulm.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_8Bv_VRnpMGlBWaXA3UhNPA_ck3akiaF';
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -27,73 +28,167 @@ function isMobile() {
     return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 }
 
+// Utility: Scan barcode from an image file
+function scanBarcodeFromFile(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+            Quagga.decodeSingle({
+                src: reader.result,
+                numOfWorkers: 0, // Required for decodeSingle
+                decoder: {
+                    readers: ["upc_reader"] // UPC only
+                },
+                locate: true
+            }, result => {
+                if (result && result.codeResult) {
+                    let code = result.codeResult.code;
+
+                    // Ensure 12-digit UPC
+                    if (code.length > 12) code = code.slice(-12);
+
+                    resolve(code);
+                } else {
+                    reject(new Error("Barcode not detected in image."));
+                }
+            });
+        };
+
+        reader.onerror = err => reject(err);
+        reader.readAsDataURL(file);
+    });
+}
+
+
 function addScanBarcodeButton(btnContainer) {
     const scanBtn = document.createElement('button');
     scanBtn.textContent = "Scan from Barcode";
     scanBtn.className = "modal-btn";
 
     scanBtn.addEventListener('click', async () => {
-        let movieTitle;
 
-        if (isMobile()) {
-            // Mobile camera scan
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/*';
-            input.capture = 'environment';
-            input.style.display = 'none';
-
-            input.addEventListener('change', async (event) => {
-                const file = event.target.files[0];
-                if (!file) return;
-
-                const reader = new FileReader();
-                reader.onload = async (ev) => {
-                    try {
-                        const btInterface = new Interface('barcode-worker.js');
-                        btInterface.on_stdout = (result) => {
-                            movieTitle = result.trim();
-                            movieTitle = cleanTitle(movieTitle);
-                            searchTmdbByTitle(movieTitle)
-                        };
-                        btInterface.on_stderr = console.error;
-
-                        await btInterface.addData(ev.target.result, '/barcode.jpg');
-                        await btInterface.run('/barcode.jpg');
-                    } catch (err) {
-                        console.error("Barcode scan error:", err);
-                        alert("Failed to scan barcode.");
-                    }
-                };
-                reader.readAsBinaryString(file);
-            });
-
-            document.body.appendChild(input);
-            input.click();
-            document.body.removeChild(input);
-
-        } else {
-            // Desktop manual entry
+        // Desktop / manual entry
+        if (!isMobile()) {
             const barcode = prompt("Enter barcode manually:");
             if (!barcode) return;
 
             try {
-                movieTitle = await lookupBarcode(barcode);
+                let movieTitle = await lookupBarcode(barcode);
                 if (!movieTitle) movieTitle = "Unscanable";
                 movieTitle = cleanTitle(movieTitle);
-
-                searchTmdbByTitle(movieTitle)
-
+                searchTmdbByTitle(movieTitle);
             } catch (err) {
                 console.error("Manual barcode error:", err);
                 alert("Failed to fetch movie details.");
             }
+            return;
         }
+
+        // Mobile camera scanning
+        const overlay = document.createElement('div');
+        overlay.className = 'barcode-overlay';
+        overlay.innerHTML = '<p>Point your camera at the barcode</p>';
+        document.body.appendChild(overlay);
+
+        const initQuagga = () => {
+            Quagga.init({
+                inputStream: {
+                    type: "LiveStream",
+                    constraints: { facingMode: "environment" },
+                    target: overlay
+                },
+                decoder: {
+                    readers: ["upc_reader"] // optimized for UPC
+                },
+                locate: true
+            }, err => {
+                if (err) {
+                    console.error("Quagga init error:", err);
+                    alert("Failed to start barcode scanner. Falling back to image upload.");
+                    overlay.remove();
+                    triggerImageUpload(); // fallback
+                    return;
+                }
+                Quagga.start();
+            });
+
+            Quagga.onDetected(async result => {
+                let code = result.codeResult.code;
+
+                // Ensure exactly 12 digits for UPC
+                if (code.length > 12) code = code.slice(-12);
+
+                console.log("Detected UPC:", code);
+
+                Quagga.stop();
+                overlay.remove();
+                Quagga.offDetected();
+
+                try {
+                    let movieTitle = await lookupBarcode(code);
+                    if (!movieTitle) movieTitle = "Unscanable";
+                    movieTitle = cleanTitle(movieTitle);
+                    searchTmdbByTitle(movieTitle);
+                } catch (err) {
+                    console.error("Barcode lookup failed:", err);
+                    alert("Failed to fetch movie details.");
+                }
+            });
+        };
+
+        const triggerImageUpload = () => {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.addEventListener('change', async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                try {
+                    let code = await scanBarcodeFromFile(file); // you must define this
+                    if (!code) code = "Unknown";
+
+                    let movieTitle = await lookupBarcode(code);
+                    if (!movieTitle) movieTitle = "Unscanable";
+                    movieTitle = cleanTitle(movieTitle);
+
+                    const tmdbResults = await searchTmdbByTitle(movieTitle);
+
+                    if (tmdbResults && tmdbResults.length > 0) {
+                        // Pick the first result for preview
+                        const firstResult = tmdbResults[0];
+                        const detail = await getTmdbDetails(firstResult.id);
+                        const movieData = {
+                            title: detail.title || 'Unknown',
+                            desc: detail.overview || 'No description available.',
+                            rating: extractMpaa(detail) || 'NR',
+                            release_date: detail.release_date || '',
+                            genre: detail.genres ? detail.genres.map(g => g.name).join(', ') : 'Unknown',
+                            cast: detail.credits ? detail.credits.cast.slice(0, 5).map(c => c.name).join(', ') : 'Unknown',
+                            cover_img: detail.poster_path ? `https://image.tmdb.org/t/p/w500${detail.poster_path}` : '',
+                            tags: '',
+                            tmdb_id: detail.id
+                        };
+
+                        // Pass the movieData and the current modal reference if needed
+                        showPreviewModal(movieData, null);
+                    } else {
+                        alert("No movies found for this barcode.");
+                    }
+
+                } catch (err) {
+                    console.error("Image barcode scan failed:", err);
+                    alert("Failed to scan barcode from image.");
+                }
+            }, { once: true });
+            input.click();
+        };
+
+        // Try initializing Quagga, fallback handled inside init
+        initQuagga();
     });
 
     btnContainer.appendChild(scanBtn);
 }
-
 
 function cleanTitle(title) {
     if (!title) return "";
