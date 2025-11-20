@@ -59,56 +59,38 @@ function scanBarcodeFromFile(file) {
     });
 }
 
-
 function addScanBarcodeButton(btnContainer) {
     const scanBtn = document.createElement('button');
     scanBtn.textContent = "Scan from Barcode";
     scanBtn.className = "modal-btn";
 
+    let scanner; // Html5Qrcode instance
+    const readerDiv = document.getElementById('reader'); // ensure this div exists
+    const output = document.createElement('div'); // optional feedback
+    output.className = 'barcode-output';
+    btnContainer.appendChild(output);
+
     scanBtn.addEventListener('click', async () => {
-        // Desktop fallback: manual entry
+        // ---------- DESKTOP FALLBACK ----------
         if (!isMobile()) {
             const barcode = prompt("Enter barcode manually:");
             if (!barcode) return;
-            return handleScannedBarcode(barcode);
+            return handleScannedBarcode(barcode); // send to lookup + TMDB
         }
 
-        // MOBILE → Use exact HTML5-Qrcode behavior
-        await startHtml5QrCodeScanner();
-    });
-
-    btnContainer.appendChild(scanBtn);
-
-    // ========================================================================
-    async function startHtml5QrCodeScanner() {
-        // Ensure the reader div exists
-        let readerDiv = document.getElementById('reader');
+        // ---------- MOBILE / CAMERA ----------
         if (!readerDiv) {
-            readerDiv = document.createElement('div');
-            readerDiv.id = 'reader';
-            readerDiv.style.width = '100%';
-            readerDiv.style.maxWidth = '400px';
-            readerDiv.style.marginTop = '20px';
-            readerDiv.style.border = '2px solid #fff';
-            document.body.appendChild(readerDiv);
+            console.error("Reader div not found in DOM");
+            alert("Camera scanner cannot start: missing #reader element.");
+            return;
         }
 
-        // Load html5-qrcode if not loaded
-        if (typeof Html5Qrcode === "undefined") {
-            await new Promise((resolve, reject) => {
-                const script = document.createElement("script");
-                script.src = "https://unpkg.com/html5-qrcode";
-                script.onload = resolve;
-                script.onerror = reject;
-                document.head.appendChild(script);
-            });
-        }
-
-        const scanner = new Html5Qrcode("reader");
+        // Initialize Html5Qrcode
+        scanner = new Html5Qrcode("reader");
 
         const config = {
             fps: 10,
-            qrbox: { width: 300, height: 100 }, // exactly like your page
+            qrbox: { width: 300, height: 100 },
             formatsToSupport: [
                 Html5QrcodeSupportedFormats.EAN_13,
                 Html5QrcodeSupportedFormats.UPC_A,
@@ -120,21 +102,57 @@ function addScanBarcodeButton(btnContainer) {
             await scanner.start(
                 { facingMode: "environment" },
                 config,
-                (decodedText, decodedResult) => {
-                    // Barcode detected → stop scanner and remove feed
-                    scanner.stop().catch(console.warn);
+                async (decodedText, decodedResult) => {
+                    // Stop scanner once barcode detected
+                    await scanner.stop().catch(console.warn);
                     readerDiv.innerHTML = ""; // remove camera feed
-                    handleScannedBarcode(decodedText);
+                    output.textContent = "Detected barcode: " + decodedText;
+
+                    // Use the detected barcode for lookup
+                    let title = await lookupBarcode(decodedText); // fetch title from barcode
+                    if (!title) title = "Unscanable"; // fallback
+
+                    const cleanedTitle = cleanTitle(title); // clean up the title
+
+                    // Search TMDB by the cleaned title
+                    let tmdbResults = await searchTmdbByTitle(cleanedTitle);
+
+                    if (!tmdbResults || !tmdbResults.length) {
+                        alert("No movies found for this barcode.");
+                        return;
+                    }
+
+                    // Pick the first TMDB result (or you could let user choose)
+                    const firstResult = tmdbResults[0];
+                    const detail = await getTmdbDetails(firstResult.id);
+
+                    const movieData = {
+                        title: detail.title || 'Unknown',
+                        desc: detail.overview || 'No description available.',
+                        rating: extractMpaa(detail) || 'NR',
+                        release_date: detail.release_date || '',
+                        genre: detail.genres ? detail.genres.map(g => g.name).join(', ') : 'Unknown',
+                        cast: detail.credits ? detail.credits.cast.slice(0, 5).map(c => c.name).join(', ') : 'Unknown',
+                        cover_img: detail.poster_path ? `https://image.tmdb.org/t/p/w500${detail.poster_path}` : '',
+                        tags: '',
+                        tmdb_id: detail.id
+                    };
+
+                    // Show the preview modal for this movie
+                    showPreviewModal(movieData, null);
+
                 },
                 (errorMessage) => {
-                    console.log(errorMessage); // frame scan errors
+                    console.log("Scan error:", errorMessage);
                 }
             );
-        } catch(err) {
-            console.error("Camera scan failed:", err);
-            alert("Camera scan failed. Try manual entry.");
+        } catch (err) {
+            console.error("Failed to start scanner:", err);
+            output.textContent = "ERROR: " + err;
         }
-    }
+    });
+
+    btnContainer.appendChild(scanBtn);
 }
 
 
