@@ -1,122 +1,35 @@
-/* Root colors */
-:root {
-    --bg-body: #11111b;
-    --text-primary: #ddd;
-    --text-secondary: #ccc;
-    --text-highlight: #f5c2e7;
-    --card-bg: #1e1e2e;
-    --modal-bg: #302d41;
-    --btn-primary-bg: #b4befe;
-    --btn-primary-text: #1e1e2e;
-    --btn-secondary-bg: #3c3836;
-    --btn-secondary-text: #b4befe;
+/* -------------------------
+   Root colors - Unified Palette
+   ------------------------- */
+   :root {
+    /* Backgrounds */
+    --bg-nav: #f1f1f1;
+    --bg-body: #f8f8f8;
+    --card-bg: #ffffff;
+    --modal-bg: #fafafa;
+
+    /* Text */
+    --text-primary: #2b2b2b;
+    --text-secondary: #555555;
+    --text-highlight: #42c6d8;
+
+    /* Buttons */
+    --btn-primary-bg: #42c6d8;
+    --btn-primary-text: #ffffff;
+    --btn-secondary-bg: #e0e0e0;
+    --btn-secondary-text: #2b2b2b;
     --btn-delete-bg: #ff6e6e;
-    --btn-delete-text: #1e1e2e;
-    --shadow: rgba(0, 0, 0, 0.3);
+    --btn-delete-text: #ffffff;
+
+    /* Shadows */
+    --shadow: rgba(0, 0, 0, 0.1);
 }
 
-/* Base nav */
-#top-nav {
-    position: sticky;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background-color: #11111b;
-    color: #ddd;
-    z-index: 1000;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 50px;
-    padding: 0 1rem;
-    box-sizing: border-box; 
-    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-}
-
-#reader {
-    z-index: 10000;
-}
-
-.nav-left, .nav-right {
-    display: flex;
-    gap: 0.5rem;
-    height: 100%;
-    align-items: center;
-}
-
-.nav-btn {
-    padding: 6px 12px;
-    font-size: 1rem;
-    background-color: var(--btn-secondary-bg);
-    color: var(--btn-secondary-text);
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.nav-btn:hover {
-    background-color: var(--btn-primary-bg);
-    color: var(--btn-primary-text);
-}
-
-.hamburger {
-    display: none;
-    flex-direction: column;
-    cursor: pointer;
-    gap: 5px;
-}
-
-.hamburger span {
-    display: block;
-    width: 25px;
-    height: 3px;
-    background: #ddd;
-    border-radius: 2px;
-}
-
-.mobile-menu {
-    display: none;
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: #11111b;
-    color: #ddd;
-    padding-top: 4rem;
-    flex-direction: column;
-    align-items: center;
-    gap: 1.5rem;
-}
-
-.mobile-menu ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    align-items: center;
-}
-
-.mobile-menu.open {
-    display: flex;
-}
-
-body, html {
-    overflow-x: hidden; /* prevent horizontal movement globally */
-}
-
-.container {
-    overflow-x: hidden; /* ensure no horizontal scroll */
-    -webkit-overflow-scrolling: touch; /* smooth scroll on iOS */
-}
-
-.container::-webkit-scrollbar {
-    display: none; /* optional: hide scrollbars */
-}
-
-
-/* Global styles */
+/* -------------------------
+   Body & Layout
+   ------------------------- */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
     background: var(--bg-body);
@@ -130,9 +43,8 @@ body.no-scroll {
     height: 100%;
 }
 
-h1, h2 {
-    text-align: center;
-    color: #fff;
+html, body {
+    overflow-x: hidden;
 }
 
 .container {
@@ -142,11 +54,173 @@ h1, h2 {
     padding: 20px;
     max-width: 1400px;
     margin: 0 auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
 }
 
+.container::-webkit-scrollbar {
+    display: none;
+}
+
+/* -------------------------
+   Sidebar
+   ------------------------- */
+#sidebar-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 260px;
+    height: 100vh;
+    background: var(--bg-nav);
+    color: var(--text-primary);
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+    box-shadow: 2px 0 5px var(--shadow);
+    z-index: 2000;
+}
+
+.sidebar-logo {
+    font-size: 28px;
+    padding: 20px;
+    font-weight: 400;
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 0 20px;
+    margin: 0;
+    flex: 1; 
+}
+
+.sidebar-menu li {
+    padding: 10px 0;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.sidebar-menu li:hover {
+    color: var(--text-highlight);
+}
+
+.sidebar-menu hr {
+    border: none;
+    border-top: 1px solid #ddd;
+    margin: 20px 0;
+}
+
+.upgrade-btn {
+    background: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
+    border: none;
+    padding: 12px 0;
+    margin: 30px 20px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.upgrade-btn:hover {
+    opacity: 0.85;
+}
+
+/* Shift site content right */
+body {
+    margin-left: 260px !important;
+}
+
+.hero-cont{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.hero {
+    background-color: #eeeeef;
+    font-weight: 600;
+    font-size: 25px;
+    padding: 20px;
+    width: 70%;
+    margin: 20px;
+    border-radius: 7px;
+}
+
+/* Container itself is block, not a grid */
+#movie-container {
+    display: block;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Letter groups */
+.movie-group {
+    margin-bottom: 2rem;
+}
+
+.movie-group h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.25rem;
+}
+
+.movie-group hr {
+    border: none;
+    border-top: 2px solid #ccc;
+    margin-bottom: 1rem;
+    width: 100%;  /* horizontal full-width line */
+}
+
+/* Cards inside a group use grid */
+.movies-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: flex-start; /* align cards to left */
+}
+
+.az-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 1rem;
+    justify-content: center; /* center horizontally */
+}
+
+.az-item {
+    padding: 6px 10px;
+    color: var(--btn-secondary-text);
+    border-radius: 6px;
+    cursor: pointer;
+
+    transition: 0.2s;
+    user-select: none;
+}
+
+.az-item:hover {
+    background: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
+}
+
+.az-item.active {
+    background: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
+}
+
+
+
+/* -------------------------
+   Cards
+   ------------------------- */
 .card {
     background: var(--card-bg);
-    width: 100%;
+    color: var(--text-primary);
+    max-width: 175px;
+    width: 170px;       /* fixed width */
+    flex-shrink: 0;     /* prevent shrinking */
+    flex-grow: 0;       /* prevent growing */
     border-radius: 8px;
     box-shadow: 0 2px 6px var(--shadow);
     overflow: hidden;
@@ -162,7 +236,7 @@ h1, h2 {
 
 .card img {
     width: 100%;
-    height: 300px;
+    height: 210px;
     object-fit: cover;
 }
 
@@ -172,27 +246,29 @@ h1, h2 {
 
 .card-content h3 {
     margin: 0;
-    font-size: 1rem;
-    color: #fff;
+    font-size: 12px;
+    color: var(--text-primary);
 }
 
 .card-content p {
     margin: 5px 0;
-    font-size: 0.9rem;
+    font-size: 12px;
     color: var(--text-secondary);
 }
 
-/* Modal overlay */
+/* -------------------------
+   Modals
+   ------------------------- */
 .modal {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(30, 30, 46, 0.95);
+    background: rgba(0,0,0,0.1);
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
     z-index: 1000;
     padding: 20px;
     box-sizing: border-box;
@@ -272,6 +348,33 @@ h1, h2 {
     color: var(--text-highlight);
 }
 
+.login-modal{
+    background: var(--modal-bg);
+    border-radius: 12px;
+    padding: 20px;
+    width: 100%;
+    max-width: 500px;       /* smaller width for login modal */
+    min-height: 300px;      /* sets the minimum height */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* vertically center content inside modal */
+    align-items: center;     /* horizontally center content */
+    box-shadow: 0 4px 15px var(--shadow);
+    overflow-y: auto;
+}
+
+.login-modal .modal-input{
+    width: 75%;
+    padding: 10px 20px;
+}
+
+.field{
+    padding: 10px;
+}
+
+/* -------------------------
+   Buttons
+   ------------------------- */
 button {
     font-family: inherit;
     cursor: pointer;
@@ -282,9 +385,10 @@ button {
 }
 
 .btn-cancel, .btn-search, .modal-btn {
-    padding: 8px 16px;
+    padding: 10px 20px;
     font-size: 1.2rem;
     margin: 5px;
+    margin-top: 10px;
     background-color: var(--btn-secondary-bg);
     color: var(--btn-secondary-text);
 }
@@ -303,16 +407,22 @@ button {
 .modal-actions button.edit-save {
     background-color: var(--btn-primary-bg);
     color: var(--btn-primary-text);
+    margin-right: 7px;
+    margin-bottom: 7px;
 }
 
 .modal-actions button.cancel {
     background-color: var(--btn-secondary-bg);
     color: var(--btn-secondary-text);
+    margin-right: 7px;
+    margin-bottom: 7px;
 }
 
 .modal-actions button.delete {
     background-color: var(--btn-delete-bg);
     color: var(--btn-delete-text);
+    margin-right: 7px;
+    margin-bottom: 7px;
 }
 
 .editable-field {
@@ -332,6 +442,11 @@ button {
     border: none;
     cursor: pointer;
     transition: 0.2s;
+}
+
+.multi-option {
+    padding: 4px;
+    margin: 4px;
 }
 
 .multi-select div button.selected {
@@ -359,6 +474,7 @@ button {
     color: var(--text-primary);
 }
 
+/* Search results */
 .results-container {
     margin-top: 20px;
     display: flex;
@@ -393,78 +509,183 @@ button {
     font-size: 0.9rem;
 }
 
-/* ---------------------------
-   Mobile / Small Screen Styles
-   --------------------------- */
 @media (max-width: 768px) {
 
-    .nav-left, .nav-right { display: none; }
-    .hamburger { display: flex; flex-direction: column; gap: 4px; width: 25px; height: 20px; cursor: pointer; position: absolute; top: 1rem; right: 1rem; z-index: 1000; }
-    .hamburger span { flex: 1; background-color: var(--btn-secondary-text); border-radius: 2px; }
+    body {
+        overflow-x: hidden;   /* prevent horizontal scrolling */
+    }
 
-    body { padding: 0 1rem; }
 
-    .landing { display: flex; flex-direction: column; align-items: center; text-align: center; }
-    .landing-text { width: 100%; margin-bottom: 1.5rem; }
-    .landing-image { width: 80%; max-width: 300px; position: static; }
+    /* -----------------------------
+       Hide sidebar, show hamburger
+       ----------------------------- */
+    #sidebar-nav {
+        position: fixed;
+        left: -260px; /* hide off-screen */
+        top: 0;
+        width: 260px;
+        height: 100vh;
+        z-index: 2000;
+        transition: left 0.3s ease;
+    }
 
-    nav { flex-direction: column; gap: 0.5rem; }
-    .nav-btn { padding: 0.5rem 1rem; font-size: 0.9rem; }
+    #sidebar-nav.active {
+        left: 0;
+    }
 
-    h1, h2, h3 { font-size: 1.2rem; }
-    p { font-size: 0.9rem; }
+    .hamburger {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        width: 25px;
+        height: 20px;
+        cursor: pointer;
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 3000;
+        cursor: pointer;
+    }
 
-    /* Mobile card container */
-    .container {
+    .hamburger span {
+        flex: 1;
+        background-color: var(--btn-secondary-text);
+        border-radius: 2px;
+        transition: 0.3s;
+    }
+
+    .hamburger.active span:nth-child(1) {
+        transform: rotate(45deg) translate(6px, 5px);
+    }
+    .hamburger.active span:nth-child(2) {
+        opacity: 0;
+    }
+    .hamburger.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(6px, -5px);
+    }
+
+    /* Shift body margin to zero */
+    body {
+        margin-left: 0 !important;
+        padding: 0 1rem;
+    }
+
+    /* -----------------------------
+       Hero & Landing adjustments
+       ----------------------------- */
+    .landing {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 10px;
+        text-align: center;
+    }
+    .landing-text {
+        width: 100%;
+        margin-bottom: 1.5rem;
+    }
+    .landing-image {
+        width: 80%;
+        max-width: 300px;
+        position: static;
+    }
+
+    /* -----------------------------
+       Navigation buttons
+       ----------------------------- */
+    nav { 
+        flex-direction: column;
+        gap: 0.5rem; 
+    }
+    .nav-btn { padding: 0.5rem 1rem; font-size: 0.9rem; }
+
+    /* -----------------------------
+       Text & headings
+       ----------------------------- */
+    h1, h2, h3 { font-size: 1.2rem; }
+    p { font-size: 0.9rem; }
+
+    /* -----------------------------
+       Movie container adjustments
+       ----------------------------- */
+    #movie-container {
         padding: 0;
         margin: 0 auto;
         width: 100%;
-        box-sizing: border-box;
+        overflow-x: hidden;
         overflow-y: auto;
         max-height: 80vh;
+        display: block; /* keep headers/hr full width */
+    }
+
+    /* Cards */
+    .movies-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        justify-content: flex-start;
     }
 
     .card {
-        display: flex;
-        flex-direction: row;
+        width: 45%;          /* two cards per row */
+        min-width: 150px;
+        flex-shrink: 0;
+        flex-grow: 0;
+        max-width: 200px;
+        flex-direction: column;
         gap: 10px;
         justify-content: flex-start;
         align-items: center;
-        width: 95%;
-        box-sizing: border-box;
-        max-width: 400px;
-        min-height: 80px;
         padding: 10px;
         border-radius: 12px;
         box-shadow: 0 2px 6px var(--shadow);
-        cursor: pointer;
-        transition: none; /* remove animation */
+        transition: none;
     }
 
-    .card:hover {
-        transform: none; /* prevent hover movement */
-    }
+    .card:hover { transform: none; }
 
     .card img {
-        width: 90px;
-        height: 135px;
+        width: 100%;
+        height: auto;
         object-fit: cover;
-        border-radius: 10px; /* slightly rounded image */
-        display: block;
+        border-radius: 10px;
     }
 
-    .card-content { display: flex; flex-direction: column; justify-content: center; }
-    .card-content h3 { font-size: 1.05rem; margin: 0; color: var(--text-primary); }
-    .card-content p { font-size: 0.85rem; margin: 2px 0 0 0; color: var(--text-secondary); }
+    .card-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+    }
 
-    .card-more { font-size: 1.5rem; font-weight: bold; color: var(--text-primary); background: none; border: none; cursor: pointer; }
-    .card-more:hover { color: var(--text-highlight); }
+    .card-content h3 { font-size: 1rem; color: var(--text-primary); }
+    .card-content p { font-size: 0.8rem; color: var(--text-secondary); }
 
-    .modal-content { width: 95%; max-width: 95%; padding: 15px; flex-direction: column; align-items: center; }
+    /* -----------------------------
+       A-Z Bar adjustments
+       ----------------------------- */
+    .az-bar {
+        gap: 4px;
+        margin-bottom: 0.5rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .az-item {
+        padding: 3px 6px;
+        font-size: 0.75rem;
+    }
+
+    /* -----------------------------
+       Modal adjustments
+       ----------------------------- */
+    .modal-content { 
+        width: 95%; 
+        max-width: 95%; 
+        padding: 15px; 
+        flex-direction: column; 
+        align-items: center; 
+    }
+
     .modal-top { flex-direction: column; align-items: center; gap: 15px; }
     .modal-top img.modal-poster { width: 70%; max-width: 250px; height: auto; }
     .modal-info { width: 100%; text-align: center; }
@@ -474,5 +695,3 @@ button {
     .close-modal { top: 10px; right: 10px; font-size: 24px; }
     .modal-input { width: 90%; margin: 0 auto 10px; }
 }
-
-
