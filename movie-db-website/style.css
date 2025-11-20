@@ -33,6 +33,10 @@
     box-shadow: 0 2px 5px rgba(0,0,0,0.5);
 }
 
+#reader {
+    z-index: 1000;
+}
+
 .nav-left, .nav-right {
     display: flex;
     gap: 0.5rem;
