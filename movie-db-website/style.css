@@ -34,7 +34,7 @@
 }
 
 #reader {
-    z-index: 1000;
+    z-index: 10000;
 }
 
 .nav-left, .nav-right {
@@ -474,4 +474,5 @@ button {
     .close-modal { top: 10px; right: 10px; font-size: 24px; }
     .modal-input { width: 90%; margin: 0 auto 10px; }
 }
+
 
