@@ -541,7 +541,7 @@ button {
         height: 20px;
         cursor: pointer;
         position: fixed;
-        top: 20px;
+        top: 32px;
         right: 20px;
         z-index: 3000;
         cursor: pointer;
@@ -562,6 +562,16 @@ button {
     }
     .hamburger.active span:nth-child(3) {
         transform: rotate(-45deg) translate(6px, -5px);
+    }
+
+    .hero {
+        background-color: #eeeeef;
+        font-weight: 600;
+        font-size: 15px;
+        padding: 15px;
+        width: 70%;
+        margin: 20px;
+        border-radius: 7px;
     }
 
     /* Shift body margin to zero */
