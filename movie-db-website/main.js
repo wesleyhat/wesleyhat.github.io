@@ -84,7 +84,6 @@ function addScanBarcodeButton(btnContainer) {
     // MOBILE: html5-qrcode scanner
     // ========================================================================
     async function startHtml5QrCodeScanner() {
-        // Full-screen overlay
         const overlay = document.createElement("div");
         overlay.className = "barcode-overlay";
         Object.assign(overlay.style, {
@@ -104,10 +103,21 @@ function addScanBarcodeButton(btnContainer) {
         });
         overlay.innerHTML = `
             <p style="margin-bottom:10px;font-size:16px;">Point your camera at the barcode</p>
-            <div id="html5qr-reader" style="width:90%; max-width:400px; height:300px; border:2px solid #fff; position:relative;">
-                <div style="position:absolute;top:50%;left:50%;width:80%;height:40%;border:2px dashed lime;transform:translate(-50%,-50%);pointer-events:none;"></div>
+            <div id="html5qr-reader" style="width:100%; height:100%; position:relative;">
+                <div style="
+                    position:absolute;
+                    top:50%;
+                    left:50%;
+                    width:80%;
+                    height:30%;
+                    border:3px solid lime;
+                    box-sizing:border-box;
+                    transform:translate(-50%,-50%);
+                    pointer-events:none;
+                    border-radius:5px;
+                "></div>
             </div>
-            <button id="closeScannerBtn" style="margin-top:15px;padding:8px 16px;font-size:16px;">Cancel</button>
+            <button id="closeScannerBtn" style="margin-top:10px;padding:8px 16px;font-size:16px;">Cancel</button>
         `;
         document.body.appendChild(overlay);
 
@@ -117,7 +127,7 @@ function addScanBarcodeButton(btnContainer) {
             overlay.remove();
         });
 
-        // Include html5-qrcode library if not already loaded
+        // Load html5-qrcode if not loaded
         if (typeof Html5Qrcode === "undefined") {
             await new Promise((resolve, reject) => {
                 const script = document.createElement("script");
@@ -132,7 +142,7 @@ function addScanBarcodeButton(btnContainer) {
 
         const config = {
             fps: 10,
-            qrbox: { width: 300, height: 100 },
+            qrbox: false, // scan full camera area
             formatsToSupport: [
                 Html5QrcodeSupportedFormats.EAN_13,
                 Html5QrcodeSupportedFormats.UPC_A,
@@ -151,7 +161,7 @@ function addScanBarcodeButton(btnContainer) {
                     handleScannedBarcode(decodedText);
                 },
                 (errorMessage) => {
-                    // frame scan failed, normal while scanning
+                    // Frame scan failed, normal while scanning
                     console.log("Scan frame error:", errorMessage);
                 }
             );
@@ -194,6 +204,7 @@ function addScanBarcodeButton(btnContainer) {
         showPreviewModal(movieData, null);
     }
 }
+
 
 
 function cleanTitle(title) {
