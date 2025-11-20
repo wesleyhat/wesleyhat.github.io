@@ -84,21 +84,38 @@ function addScanBarcodeButton(btnContainer) {
     // MOBILE: html5-qrcode scanner
     // ========================================================================
     async function startHtml5QrCodeScanner() {
+        // Full-screen overlay
         const overlay = document.createElement("div");
         overlay.className = "barcode-overlay";
-        overlay.style.position = "fixed";
-        overlay.style.top = 0;
-        overlay.style.left = 0;
-        overlay.style.width = "100%";
-        overlay.style.height = "100%";
-        overlay.style.background = "rgba(0,0,0,0.9)";
-        overlay.style.display = "flex";
-        overlay.style.flexDirection = "column";
-        overlay.style.alignItems = "center";
-        overlay.style.justifyContent = "center";
-        overlay.style.zIndex = 9999;
-        overlay.innerHTML = "<p style='color:white;margin-bottom:10px;'>Point your camera at the barcode</p><div id='html5qr-reader'></div>";
+        Object.assign(overlay.style, {
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            background: "rgba(0,0,0,0.95)",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 9999,
+            color: "white",
+            textAlign: "center"
+        });
+        overlay.innerHTML = `
+            <p style="margin-bottom:10px;font-size:16px;">Point your camera at the barcode</p>
+            <div id="html5qr-reader" style="width:90%; max-width:400px; height:300px; border:2px solid #fff; position:relative;">
+                <div style="position:absolute;top:50%;left:50%;width:80%;height:40%;border:2px dashed lime;transform:translate(-50%,-50%);pointer-events:none;"></div>
+            </div>
+            <button id="closeScannerBtn" style="margin-top:15px;padding:8px 16px;font-size:16px;">Cancel</button>
+        `;
         document.body.appendChild(overlay);
+
+        const closeBtn = overlay.querySelector("#closeScannerBtn");
+        closeBtn.addEventListener("click", async () => {
+            if (scanner) await scanner.stop().catch(console.warn);
+            overlay.remove();
+        });
 
         // Include html5-qrcode library if not already loaded
         if (typeof Html5Qrcode === "undefined") {
@@ -111,7 +128,7 @@ function addScanBarcodeButton(btnContainer) {
             });
         }
 
-        const html5QrCode = new Html5Qrcode("html5qr-reader");
+        const scanner = new Html5Qrcode("html5qr-reader");
 
         const config = {
             fps: 10,
@@ -124,21 +141,21 @@ function addScanBarcodeButton(btnContainer) {
         };
 
         try {
-            await html5QrCode.start(
+            await scanner.start(
                 { facingMode: "environment" },
                 config,
                 (decodedText, decodedResult) => {
                     // Barcode detected
-                    html5QrCode.stop().catch(console.warn);
+                    scanner.stop().catch(console.warn);
                     overlay.remove();
                     handleScannedBarcode(decodedText);
                 },
                 (errorMessage) => {
-                    // optional: frame scan failed
+                    // frame scan failed, normal while scanning
                     console.log("Scan frame error:", errorMessage);
                 }
             );
-        } catch (err) {
+        } catch(err) {
             console.error("html5-qrcode failed:", err);
             overlay.remove();
             alert("Camera scan failed. Try manual entry.");
@@ -177,6 +194,7 @@ function addScanBarcodeButton(btnContainer) {
         showPreviewModal(movieData, null);
     }
 }
+
 
 function cleanTitle(title) {
     if (!title) return "";
