@@ -14,7 +14,7 @@ let activeSearch = '';
 let activeFilters = { genre: '', tag: '', cast: '' };
 let currentSort = { key: 'title', ascending: true };
 let userSession = null;
-
+let sorted_by_title = true; // updated automatically when sort key changes
 
 // -------------------------
 // Initialize App
@@ -264,106 +264,213 @@ function applyFiltersAndSort() {
         filtered = filtered.filter(m => m.title.toLowerCase().includes(searchLower));
     }
 
-    if (activeFilters.genre) filtered = filtered.filter(m => m.genre?.split(',').map(g => g.trim()).includes(activeFilters.genre));
-    if (activeFilters.tag) filtered = filtered.filter(m => m.tags?.split(',').map(t => t.trim()).includes(activeFilters.tag));
-    if (activeFilters.cast) filtered = filtered.filter(m => m.cast?.split(',').map(c => c.trim()).includes(activeFilters.cast));
+    if (activeFilters.genre) {
+        filtered = filtered.filter(m =>
+            m.genre?.split(',').map(g => g.trim()).includes(activeFilters.genre)
+        );
+    }
 
-    filtered.sort((a,b) => {
+    if (activeFilters.tag) {
+        filtered = filtered.filter(m =>
+            m.tags?.split(',').map(t => t.trim()).includes(activeFilters.tag)
+        );
+    }
+
+    if (activeFilters.cast) {
+        filtered = filtered.filter(m =>
+            m.cast?.split(',').map(c => c.trim()).includes(activeFilters.cast)
+        );
+    }
+
+    // -----------------------------
+    // SORT
+    // -----------------------------
+    filtered.sort((a, b) => {
         let valA = a[currentSort.key] || '';
         let valB = b[currentSort.key] || '';
-        if (currentSort.key === 'release_date') valA = valA || ''; valB = valB || '';
+
+        if (currentSort.key === 'release_date') {
+            valA = valA || '';
+            valB = valB || '';
+        }
+
         if (typeof valA === 'string') valA = valA.toLowerCase();
         if (typeof valB === 'string') valB = valB.toLowerCase();
+
         if (valA < valB) return currentSort.ascending ? -1 : 1;
         if (valA > valB) return currentSort.ascending ? 1 : -1;
         return 0;
     });
 
-    renderMovieCards(filtered);
+    // -----------------------------
+    // DETERMINE IF A–Z GROUPING SHOULD BE ENABLED
+    // -----------------------------
+    const isAlphaSort = currentSort.key === "title";
+
+
+    // -----------------------------
+    // RENDER MOVIES
+    // -----------------------------
+    renderMovieCards(filtered, isAlphaSort);
 }
 
-function renderMovieCards(movies) {
-    let container = document.getElementById('movie-container');
-    if (!container) {
-        container = document.createElement('div');
-        container.id = 'movie-container';
-        container.className = 'container';
-        document.body.appendChild(container);
-    }
-    container.innerHTML = '';
+function renderMovieCards(movies, sortedByTitle) {
 
-    if (!movies.length) {
-        const noMovies = document.createElement('p');
-        noMovies.textContent = 'No movies to display.';
-        container.appendChild(noMovies);
-        return;
-    }
+    if (sortedByTitle) {
+        let container = document.getElementById('movie-container');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'movie-container';
+            container.className = 'container';
+            document.body.appendChild(container);
+        }
+        container.innerHTML = '';
 
-    // Group movies by first character
-    const grouped = {};
-    movies.forEach(movie => {
-        let firstChar = movie.title.charAt(0).toUpperCase();
-        if (!/[A-Z]/.test(firstChar)) firstChar = '#';
-        if (!grouped[firstChar]) grouped[firstChar] = [];
-        grouped[firstChar].push(movie);
-    });
+        if (!movies.length) {
+            const noMovies = document.createElement('p');
+            noMovies.textContent = 'No movies to display.';
+            container.appendChild(noMovies);
+            return;
+        }
 
-    // All letters sorted A-Z, with '#' first
-    const letters = Object.keys(grouped).sort((a,b) => {
-        if (a === '#') return -1;
-        if (b === '#') return 1;
-        return a.localeCompare(b);
-    });
-
-    // --- Top A-Z bar ---
-    const bar = document.createElement('div');
-    bar.className = 'az-bar';
-    const allOption = document.createElement('span');
-    allOption.textContent = 'ALL';
-    allOption.className = 'az-item active';
-    allOption.addEventListener('click', () => {
-        // Show all sections
-        document.querySelectorAll('.movie-group').forEach(g => g.style.display = '');
-        document.querySelectorAll('.az-item').forEach(el => el.classList.remove('active'));
-        allOption.classList.add('active');
-    });
-    bar.appendChild(allOption);
-
-    letters.forEach(letter => {
-        const item = document.createElement('span');
-        item.textContent = letter;
-        item.className = 'az-item';
-        item.addEventListener('click', () => {
-            // Scroll to the letter section
-            document.querySelectorAll('.movie-group').forEach(g => {
-                g.style.display = g.dataset.letter === letter ? '' : 'none';
-            });
-            document.querySelectorAll('.az-item').forEach(el => el.classList.remove('active'));
-            item.classList.add('active');
+        // -----------------------------
+        // Group movies by first character
+        // -----------------------------
+        const grouped = {};
+        movies.forEach(movie => {
+            let firstChar = movie.title.charAt(0).toUpperCase();
+            if (!/[A-Z]/.test(firstChar)) firstChar = '#';
+            if (!grouped[firstChar]) grouped[firstChar] = [];
+            grouped[firstChar].push(movie);
         });
-        bar.appendChild(item);
-    });
 
-    container.appendChild(bar);
+        // -----------------------------
+        // Sort letters
+        // -----------------------------
+        let letters = Object.keys(grouped).filter(l => l !== '#').sort((a, b) => a.localeCompare(b));
 
-    // --- Render each letter group ---
-    letters.forEach(letter => {
+        if (currentSort.ascending) {
+            if (grouped['#']) letters.unshift('#'); // '#' first in A→Z
+        } else {
+            letters.reverse(); // Z→A
+            if (grouped['#']) letters.push('#'); // '#' last in Z→A
+        }
+
+
+
+        // -----------------------------
+        // Top A–Z bar
+        // -----------------------------
+        const bar = document.createElement('div');
+        bar.className = 'az-bar';
+
+        const allOption = document.createElement('span');
+        allOption.textContent = 'ALL';
+        allOption.className = 'az-item active';
+        allOption.addEventListener('click', () => {
+            document.querySelectorAll('.movie-group').forEach(g => g.style.display = '');
+            document.querySelectorAll('.az-item').forEach(el => el.classList.remove('active'));
+            allOption.classList.add('active');
+        });
+        bar.appendChild(allOption);
+
+        letters.forEach(letter => {
+            const item = document.createElement('span');
+            item.textContent = letter;
+            item.className = 'az-item';
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.movie-group').forEach(g => {
+                    g.style.display = g.dataset.letter === letter ? '' : 'none';
+                });
+                document.querySelectorAll('.az-item').forEach(el => el.classList.remove('active'));
+                item.classList.add('active');
+            });
+            bar.appendChild(item);
+        });
+
+        container.appendChild(bar);
+
+        // -----------------------------
+        // Render each letter group
+        // -----------------------------
+        letters.forEach(letter => {
+            const groupWrapper = document.createElement('div');
+            groupWrapper.className = 'movie-group';
+            groupWrapper.dataset.letter = letter;
+
+            const header = document.createElement('h2');
+            header.textContent = letter;
+            header.style.fontWeight = '200';
+            groupWrapper.appendChild(header);
+
+            const line = document.createElement('hr');
+            groupWrapper.appendChild(line);
+
+            const cardsWrapper = document.createElement('div');
+            cardsWrapper.className = 'movies-wrapper';
+
+            // Reverse movies in group if descending
+            const moviesInGroup = currentSort.ascending ? grouped[letter] : [...grouped[letter]].reverse();
+
+            moviesInGroup.forEach(movie => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.dataset.id = movie.id;
+
+                const img = document.createElement('img');
+                img.src = movie.cover_img || '';
+                card.appendChild(img);
+
+                const content = document.createElement('div');
+                content.className = 'card-content';
+
+                const title = document.createElement('h3');
+                title.textContent = movie.title;
+                title.setAttribute('title', movie.title);
+                content.appendChild(title);
+
+                const release = document.createElement('p');
+                release.textContent = movie.release_date?.substring(0, 4) || 'N/A';
+                content.appendChild(release);
+
+                card.appendChild(content);
+                cardsWrapper.appendChild(card);
+
+                card.addEventListener('click', () => showMovieDetails(movie));
+            });
+
+            groupWrapper.appendChild(cardsWrapper);
+            container.appendChild(groupWrapper);
+        });
+
+        
+    } 
+    else {
+        let container = document.getElementById('movie-container');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'movie-container';
+            container.className = 'container';
+            document.body.appendChild(container);
+        }
+        container.innerHTML = '';
+
+        if (!movies.length) {
+            const noMovies = document.createElement('p');
+            noMovies.textContent = 'No movies to display.';
+            container.appendChild(noMovies);
+            return;
+        }
+
+        // Create a single group wrapper (like a letter group but without headers)
         const groupWrapper = document.createElement('div');
         groupWrapper.className = 'movie-group';
-        groupWrapper.dataset.letter = letter;
-
-        const header = document.createElement('h2');
-        header.textContent = letter;
-        header.style.fontWeight = '200';
-        groupWrapper.appendChild(header);
-
-        const line = document.createElement('hr');
-        groupWrapper.appendChild(line);
+        groupWrapper.dataset.letter = 'all'; // dummy
 
         const cardsWrapper = document.createElement('div');
         cardsWrapper.className = 'movies-wrapper';
 
-        grouped[letter].forEach(movie => {
+        movies.forEach(movie => {
             const card = document.createElement('div');
             card.className = 'card';
             card.dataset.id = movie.id;
@@ -377,6 +484,7 @@ function renderMovieCards(movies) {
 
             const title = document.createElement('h3');
             title.textContent = movie.title;
+            title.setAttribute('title', movie.title); // tooltip for long titles
             content.appendChild(title);
 
             const release = document.createElement('p');
@@ -391,7 +499,9 @@ function renderMovieCards(movies) {
 
         groupWrapper.appendChild(cardsWrapper);
         container.appendChild(groupWrapper);
-    });
+
+    }
+    
 }
 
 // -------------------------
@@ -439,7 +549,7 @@ function showSearchModal() {
     const modal = document.createElement('div');
     modal.className = 'modal';
     document.body.appendChild(modal);
-    document.body.classList.add('no-scroll');
+    document.body.classList.add('modal-open');
 
     const content = document.createElement('div');
     content.className = 'modal-content search-modal';
@@ -493,7 +603,7 @@ function showSortModal() {
     const modal = document.createElement('div');
     modal.className = 'modal';
     document.body.appendChild(modal);
-    document.body.classList.add('no-scroll');
+    document.body.classList.add('modal-open');
 
     const content = document.createElement('div');
     content.className = 'modal-content sort-modal';
@@ -540,7 +650,7 @@ function showFilterModal() {
     const modal = document.createElement('div');
     modal.className = 'modal';
     document.body.appendChild(modal);
-    document.body.classList.add('no-scroll');
+    document.body.classList.add('modal-open');
 
     const content = document.createElement('div');
     content.className = 'modal-content filter-modal';
@@ -610,7 +720,7 @@ function showFilterModal() {
 
 function closeModal(modal) {
     modal.remove();
-    document.body.classList.remove('no-scroll');
+    document.body.classList.remove('modal-open');
 }
 
 // -------------------------
@@ -620,7 +730,7 @@ async function showMovieDetails(movie) {
     const modal = document.createElement('div');
     modal.className = 'modal';
     document.body.appendChild(modal);
-    document.body.classList.add('no-scroll');
+    document.body.classList.add('modal-open');
 
     const content = document.createElement('div');
     content.className = 'modal-content';
@@ -722,7 +832,7 @@ async function showMovieDetails(movie) {
 
     function close() {
         modal.remove();
-        document.body.classList.remove('no-scroll');
+        document.body.classList.remove('modal-open');
     }
 
     // ---- Edit mode ----
@@ -895,7 +1005,7 @@ async function showAddMovieModal() {
     const modal = document.createElement('div');
     modal.className = 'modal';
     document.body.appendChild(modal);
-    document.body.classList.add('no-scroll');
+    document.body.classList.add('modal-open');
 
     const content = document.createElement('div');
     content.className = 'modal-content add-modal';
@@ -948,7 +1058,7 @@ async function showAddMovieModal() {
 
     cancelBtn.addEventListener('click', () => {
         modal.remove();
-        document.body.classList.remove('no-scroll');
+        document.body.classList.remove('modal-open');
     });
 
     searchBtn.addEventListener('click', async () => {
@@ -1012,7 +1122,7 @@ async function showAddMovieModal() {
         }
     });
 
-    modal.addEventListener('click', e => { if (e.target === modal) { modal.remove(); document.body.classList.remove('no-scroll'); } });
+    modal.addEventListener('click', e => { if (e.target === modal) { modal.remove(); document.body.classList.remove('modal-open'); } });
 }
 
 // -------------------------
@@ -1022,7 +1132,7 @@ function showPreviewModal(movieData, parentModal) {
     const modal = document.createElement('div');
     modal.className = 'modal';
     document.body.appendChild(modal);
-    document.body.classList.add('no-scroll');
+    document.body.classList.add('modal-open');
 
     const content = document.createElement('div');
     content.className = 'modal-content preview-modal';
@@ -1070,7 +1180,7 @@ function showPreviewModal(movieData, parentModal) {
 
     cancelBtn.addEventListener('click', () => {
         modal.remove();
-        document.body.classList.remove('no-scroll');
+        document.body.classList.remove('modal-open');
     });
 
     addBtn.addEventListener('click', async () => {
@@ -1080,7 +1190,7 @@ function showPreviewModal(movieData, parentModal) {
 
             modal.remove();
             if (parentModal) parentModal.remove();
-            document.body.classList.remove('no-scroll');
+            document.body.classList.remove('modal-open');
             alert('Movie added successfully!');
             fetchMovies();
         } catch (err) {
@@ -1089,7 +1199,7 @@ function showPreviewModal(movieData, parentModal) {
         }
     });
 
-    modal.addEventListener('click', e => { if (e.target === modal) { modal.remove(); document.body.classList.remove('no-scroll'); } });
+    modal.addEventListener('click', e => { if (e.target === modal) { modal.remove(); document.body.classList.remove('modal-open'); } });
 }
 
 function showLoginModal() {
@@ -1106,7 +1216,7 @@ function showLoginModal() {
     const modal = document.createElement('div');
     modal.className = 'modal';
     document.body.appendChild(modal);
-    document.body.classList.add('no-scroll');
+    document.body.classList.add('modal-open');
 
     const content = document.createElement('div');
     content.className = 'modal-content login-modal';
