@@ -639,7 +639,7 @@ button {
     .movies-wrapper {
         display: flex;
         flex-wrap: wrap;
-        gap: 5px;
+        gap: 20px;
         justify-content: center;
     }
 
@@ -729,3 +729,4 @@ button {
     .close-modal { top: 10px; right: 10px; font-size: 24px; }
     .modal-input { width: 90%; margin: 0 auto 10px; }
 }
+
