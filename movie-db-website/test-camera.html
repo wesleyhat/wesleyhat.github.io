@@ -4,83 +4,83 @@
   <meta charset="UTF-8">
   <title>iPhone Barcode Scanner Test (html5-qrcode)</title>
   <style>
-    body { background: #111; color: #fff; font-family: Arial; text-align: center; padding: 20px; }
-    #reader { width: 100%; max-width: 600px; height: 80vh; margin: 20px auto; border: 2px solid #fff; position: relative; }
-    #barcodeOutput { margin-top: 20px; font-size: 18px; word-break: break-all; }
-    button { padding: 10px 20px; font-size: 16px; cursor: pointer; margin-top: 10px; }
-    .overlay-box {
-        position:absolute;
-        top:50%;
-        left:50%;
-        width:80%;
-        height:30%;
-        border:3px solid lime;
-        box-sizing:border-box;
-        transform:translate(-50%,-50%);
-        pointer-events:none;
-        border-radius:5px;
+    body {
+      background: #111;
+      color: #fff;
+      font-family: Arial;
+      text-align: center;
+      padding: 20px;
+    }
+    #reader {
+      width: 100%;
+      max-width: 400px;
+      margin-top: 20px;
+      border: 2px solid #fff;
+    }
+    #barcodeOutput {
+      margin-top: 20px;
+      font-size: 18px;
+      word-break: break-all;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
 
-<h2>iPhone Barcode Scanner Test</h2>
-<p>Tap the button to open your camera and scan a barcode.</p>
-<button id="startBtn">Open Camera</button>
-<div id="reader"></div>
-<div id="barcodeOutput">Scanned barcode will appear here</div>
+  <h2>iPhone Barcode Scanner Test</h2>
+  <p>Tap the button to open your camera and scan a barcode.</p>
+  <button id="startBtn">Open Camera</button>
 
-<!-- Include html5-qrcode -->
-<script src="https://unpkg.com/html5-qrcode"></script>
+  <div id="reader"></div>
+  <div id="barcodeOutput">Scanned barcode will appear here</div>
 
-<script>
-const output = document.getElementById('barcodeOutput');
-let scanner;
+  <!-- Include html5-qrcode -->
+  <script src="https://unpkg.com/html5-qrcode"></script>
 
-document.getElementById('startBtn').addEventListener('click', async () => {
-    output.textContent = "Opening camera...";
-
+  <script>
+    const output = document.getElementById('barcodeOutput');
     const readerDiv = document.getElementById('reader');
-    // Add green overlay rectangle
-    if (!readerDiv.querySelector('.overlay-box')) {
-        const box = document.createElement('div');
-        box.className = 'overlay-box';
-        readerDiv.appendChild(box);
-    }
+    let scanner;
 
-    scanner = new Html5Qrcode("reader");
+    document.getElementById('startBtn').addEventListener('click', async () => {
+      output.textContent = "Opening camera...";
 
-    const config = {
+      scanner = new Html5Qrcode("reader");
+
+      const config = {
         fps: 10,
-        qrbox: false, // scan full camera area
+        qrbox: { width: 300, height: 100 }, // rectangle for scanning
         formatsToSupport: [
-            Html5QrcodeSupportedFormats.EAN_13,
-            Html5QrcodeSupportedFormats.UPC_A,
-            Html5QrcodeSupportedFormats.UPC_E
+          Html5QrcodeSupportedFormats.EAN_13,
+          Html5QrcodeSupportedFormats.UPC_A,
+          Html5QrcodeSupportedFormats.UPC_E
         ]
-    };
+      };
 
-    try {
+      try {
         await scanner.start(
-            { facingMode: "environment" },
-            config,
-            (decodedText, decodedResult) => {
-                // Barcode detected → stop scanner and remove camera view
-                scanner.stop().catch(console.warn);
-                readerDiv.innerHTML = ""; // remove camera feed and overlay
-                output.textContent = "Detected barcode: " + decodedText;
-            },
-            (errorMessage) => {
-                // optional frame scan failure
-                console.log("Frame scan error:", errorMessage);
-            }
+          { facingMode: "environment" },
+          config,
+          (decodedText, decodedResult) => {
+            // Barcode detected → stop scanner and remove camera view
+            scanner.stop().catch(console.warn);
+            readerDiv.innerHTML = ""; // remove camera feed
+            output.textContent = "Detected barcode: " + decodedText;
+          },
+          (errorMessage) => {
+            console.log(errorMessage); // optional: frame scan errors
+          }
         );
-    } catch(err) {
-        console.error("html5-qrcode failed:", err);
-        output.textContent = "Camera scan failed: " + err;
-    }
-});
-</script>
+      } catch(err) {
+        output.textContent = "ERROR: " + err;
+      }
+    });
+  </script>
 
 </body>
 </html>
