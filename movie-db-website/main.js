@@ -28,37 +28,6 @@ function isMobile() {
     return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 }
 
-// Utility: Scan barcode from an image file
-function scanBarcodeFromFile(file) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-            Quagga.decodeSingle({
-                src: reader.result,
-                numOfWorkers: 0, // Required for decodeSingle
-                decoder: {
-                    readers: ["upc_reader"] // UPC only
-                },
-                locate: true
-            }, result => {
-                if (result && result.codeResult) {
-                    let code = result.codeResult.code;
-
-                    // Ensure 12-digit UPC
-                    if (code.length > 12) code = code.slice(-12);
-
-                    resolve(code);
-                } else {
-                    reject(new Error("Barcode not detected in image."));
-                }
-            });
-        };
-
-        reader.onerror = err => reject(err);
-        reader.readAsDataURL(file);
-    });
-}
-
 function addScanBarcodeButton(btnContainer) {
     const scanBtn = document.createElement('button');
     scanBtn.textContent = "Scan from Barcode";
@@ -152,7 +121,6 @@ function addScanBarcodeButton(btnContainer) {
     btnContainer.appendChild(scanBtn);
 }
 
-
 function cleanTitle(title) {
     if (!title) return "";
     // Remove everything after '(' or '['
@@ -212,15 +180,21 @@ async function lookupBarcode(barcode) {
 }
 
 // -------------------------
-// Navigation Bar
+// Sidebar Navigation
 // -------------------------
 function createNavBar() {
-    const nav = document.createElement('nav');
-    nav.id = 'top-nav';
+    const sidebar = document.createElement('nav');
+    sidebar.id = 'sidebar-nav';
 
-    // Left menu (desktop)
-    const leftMenu = document.createElement('div');
-    leftMenu.className = 'nav-left';
+    // --- Logo / Title ---
+    const logo = document.createElement('div');
+    logo.className = 'sidebar-logo';
+    logo.textContent = "RetroFlix";
+    sidebar.appendChild(logo);
+
+    // --- Menu list ---
+    const menu = document.createElement('ul');
+    menu.className = 'sidebar-menu';
 
     const desktopButtons = [
         { text: 'Add Movie', handler: showAddMovieModal },
@@ -230,69 +204,38 @@ function createNavBar() {
     ];
 
     desktopButtons.forEach(btnData => {
-        const btn = createNavButton(btnData.text, btnData.handler);
-        leftMenu.appendChild(btn);
-    });
-
-    // Right menu (login/logout)
-    const rightMenu = document.createElement('div');
-    rightMenu.className = 'nav-right';
-    const loginBtn = createNavButton(userSession ? 'Logout' : 'Login', () => {
-        if (userSession) handleLogout();
-        else showLoginModal();
-    });
-    loginBtn.id = 'login-btn';
-    rightMenu.appendChild(loginBtn);
-
-    // Hamburger for mobile
-    const hamburger = document.createElement('div');
-    hamburger.className = 'hamburger';
-    hamburger.innerHTML = '<span></span><span></span><span></span>';
-
-    // Mobile menu overlay
-    const mobileMenu = document.createElement('div');
-    mobileMenu.className = 'mobile-menu';
-    const mobileList = document.createElement('ul');
-
-    // Add mobile buttons with correct event listeners
-    desktopButtons.forEach(btnData => {
         const li = document.createElement('li');
-        const btn = createNavButton(btnData.text, () => {
-            btnData.handler();
-            mobileMenu.classList.remove('open'); // close menu after click
-        });
-        li.appendChild(btn);
-        mobileList.appendChild(li);
+        li.textContent = btnData.text;
+        li.addEventListener('click', btnData.handler);
+        menu.appendChild(li);
     });
 
-    // Mobile login button
-    const loginLi = document.createElement('li');
-    const mobileLoginBtn = createNavButton(userSession ? 'Logout' : 'Login', () => {
+    // Divider
+    const divider = document.createElement('hr');
+    menu.appendChild(divider);
+
+    // Login/Logout
+    const loginItem = document.createElement('li');
+    loginItem.id = 'login-btn';
+    loginItem.style.fontWeight = '600';
+    loginItem.textContent = userSession ? 'Logout' : 'Login';
+
+    loginItem.addEventListener('click', () => {
         if (userSession) handleLogout();
         else showLoginModal();
-        mobileMenu.classList.remove('open');
     });
-    loginLi.appendChild(mobileLoginBtn);
-    mobileList.appendChild(loginLi);
+    menu.appendChild(loginItem);
 
-    mobileMenu.appendChild(mobileList);
+    sidebar.appendChild(menu);
 
-    // Hamburger toggle
-    hamburger.addEventListener('click', () => {
-        mobileMenu.classList.toggle('open');
-    });
+    // --- Upgrade button (optional) ---
+    //const upgradeBtn = document.createElement('button');
+    //upgradeBtn.className = 'upgrade-btn';
+    //upgradeBtn.textContent = "Upgrade";
+    //sidebar.appendChild(upgradeBtn);
 
-    nav.append(leftMenu, rightMenu, hamburger);
-    document.body.prepend(nav);
-    document.body.appendChild(mobileMenu);
-}
-
-function createNavButton(text, onClick) {
-    const btn = document.createElement('button');
-    btn.textContent = text;
-    btn.addEventListener('click', onClick);
-    btn.className = 'nav-btn';
-    return btn;
+    // Add to document
+    document.body.prepend(sidebar);
 }
 
 
@@ -356,30 +299,98 @@ function renderMovieCards(movies) {
         return;
     }
 
+    // Group movies by first character
+    const grouped = {};
     movies.forEach(movie => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.dataset.id = movie.id;
+        let firstChar = movie.title.charAt(0).toUpperCase();
+        if (!/[A-Z]/.test(firstChar)) firstChar = '#';
+        if (!grouped[firstChar]) grouped[firstChar] = [];
+        grouped[firstChar].push(movie);
+    });
 
-        const img = document.createElement('img');
-        img.src = movie.cover_img || '';
-        card.appendChild(img);
+    // All letters sorted A-Z, with '#' first
+    const letters = Object.keys(grouped).sort((a,b) => {
+        if (a === '#') return -1;
+        if (b === '#') return 1;
+        return a.localeCompare(b);
+    });
 
-        const content = document.createElement('div');
-        content.className = 'card-content';
+    // --- Top A-Z bar ---
+    const bar = document.createElement('div');
+    bar.className = 'az-bar';
+    const allOption = document.createElement('span');
+    allOption.textContent = 'ALL';
+    allOption.className = 'az-item active';
+    allOption.addEventListener('click', () => {
+        // Show all sections
+        document.querySelectorAll('.movie-group').forEach(g => g.style.display = '');
+        document.querySelectorAll('.az-item').forEach(el => el.classList.remove('active'));
+        allOption.classList.add('active');
+    });
+    bar.appendChild(allOption);
 
-        const title = document.createElement('h3');
-        title.textContent = movie.title;
-        content.appendChild(title);
+    letters.forEach(letter => {
+        const item = document.createElement('span');
+        item.textContent = letter;
+        item.className = 'az-item';
+        item.addEventListener('click', () => {
+            // Scroll to the letter section
+            document.querySelectorAll('.movie-group').forEach(g => {
+                g.style.display = g.dataset.letter === letter ? '' : 'none';
+            });
+            document.querySelectorAll('.az-item').forEach(el => el.classList.remove('active'));
+            item.classList.add('active');
+        });
+        bar.appendChild(item);
+    });
 
-        const release = document.createElement('p');
-        release.textContent = movie.release_date?.substring(0,4) || 'N/A';
-        content.appendChild(release);
+    container.appendChild(bar);
 
-        card.appendChild(content);
-        container.appendChild(card);
+    // --- Render each letter group ---
+    letters.forEach(letter => {
+        const groupWrapper = document.createElement('div');
+        groupWrapper.className = 'movie-group';
+        groupWrapper.dataset.letter = letter;
 
-        card.addEventListener('click', () => showMovieDetails(movie));
+        const header = document.createElement('h2');
+        header.textContent = letter;
+        header.style.fontWeight = '200';
+        groupWrapper.appendChild(header);
+
+        const line = document.createElement('hr');
+        groupWrapper.appendChild(line);
+
+        const cardsWrapper = document.createElement('div');
+        cardsWrapper.className = 'movies-wrapper';
+
+        grouped[letter].forEach(movie => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.dataset.id = movie.id;
+
+            const img = document.createElement('img');
+            img.src = movie.cover_img || '';
+            card.appendChild(img);
+
+            const content = document.createElement('div');
+            content.className = 'card-content';
+
+            const title = document.createElement('h3');
+            title.textContent = movie.title;
+            content.appendChild(title);
+
+            const release = document.createElement('p');
+            release.textContent = movie.release_date?.substring(0, 4) || 'N/A';
+            content.appendChild(release);
+
+            card.appendChild(content);
+            cardsWrapper.appendChild(card);
+
+            card.addEventListener('click', () => showMovieDetails(movie));
+        });
+
+        groupWrapper.appendChild(cardsWrapper);
+        container.appendChild(groupWrapper);
     });
 }
 
@@ -415,6 +426,16 @@ function extractMpaa(detailJson) {
 // Modals
 // -------------------------
 function showSearchModal() {
+
+    const sidebar = document.getElementById('sidebar-nav');
+    const hamburger = document.querySelector('.hamburger');
+
+    // Hide sidebar if it’s open
+    if (sidebar.classList.contains('active')) {
+        sidebar.classList.remove('active');
+        hamburger.classList.remove('active');
+    }
+
     const modal = document.createElement('div');
     modal.className = 'modal';
     document.body.appendChild(modal);
@@ -459,6 +480,16 @@ function showSearchModal() {
 }
 
 function showSortModal() {
+
+    const sidebar = document.getElementById('sidebar-nav');
+    const hamburger = document.querySelector('.hamburger');
+
+    // Hide sidebar if it’s open
+    if (sidebar.classList.contains('active')) {
+        sidebar.classList.remove('active');
+        hamburger.classList.remove('active');
+    }
+
     const modal = document.createElement('div');
     modal.className = 'modal';
     document.body.appendChild(modal);
@@ -496,6 +527,16 @@ function showSortModal() {
 }
 
 function showFilterModal() {
+
+    const sidebar = document.getElementById('sidebar-nav');
+    const hamburger = document.querySelector('.hamburger');
+
+    // Hide sidebar if it’s open
+    if (sidebar.classList.contains('active')) {
+        sidebar.classList.remove('active');
+        hamburger.classList.remove('active');
+    }
+
     const modal = document.createElement('div');
     modal.className = 'modal';
     document.body.appendChild(modal);
@@ -841,6 +882,16 @@ async function showMovieDetails(movie) {
 // Add Movie Modal with multiple TMDB results
 // -------------------------
 async function showAddMovieModal() {
+
+    const sidebar = document.getElementById('sidebar-nav');
+    const hamburger = document.querySelector('.hamburger');
+
+    // Hide sidebar if it’s open
+    if (sidebar.classList.contains('active')) {
+        sidebar.classList.remove('active');
+        hamburger.classList.remove('active');
+    }
+
     const modal = document.createElement('div');
     modal.className = 'modal';
     document.body.appendChild(modal);
@@ -1160,9 +1211,20 @@ document.addEventListener('DOMContentLoaded', async () => {
             fetchMovies();
         }
     });
+
+    const hamburger = document.querySelector('.hamburger');
+    const sidebar = document.getElementById('sidebar-nav');
+
+    if (hamburger && sidebar) {
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            sidebar.classList.toggle('active');
+        });
+    }
 });
 
 
 document.getElementById("loginBtn").addEventListener("click", showLoginModal);
 document.getElementById("logoutBtn").addEventListener("click", logout);
+
 
