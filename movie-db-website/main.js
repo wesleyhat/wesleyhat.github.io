@@ -181,7 +181,7 @@ async function lookupBarcode(barcode) {
 }
 
 // -------------------------
-// Sidebar Navigation
+// Sidebar Navigation with Theme Toggle
 // -------------------------
 function createNavBar() {
     const sidebar = document.createElement('nav');
@@ -220,24 +220,42 @@ function createNavBar() {
     loginItem.id = 'login-btn';
     loginItem.style.fontWeight = '600';
     loginItem.textContent = userSession ? 'Logout' : 'Login';
-
     loginItem.addEventListener('click', () => {
         if (userSession) handleLogout();
         else showLoginModal();
     });
     menu.appendChild(loginItem);
 
-    sidebar.appendChild(menu);
+    // -----------------------------
+    // Theme Toggle
+    // -----------------------------
+    const themeItem = document.createElement('li');
+    themeItem.id = 'theme-toggle';
+    themeItem.style.fontWeight = '600';
+    themeItem.style.cursor = 'pointer';
+    
+    // Determine initial theme
+    let currentTheme = localStorage.getItem('theme') || 
+                       (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+    
+    document.documentElement.setAttribute('data-theme', currentTheme);
+    themeItem.textContent = currentTheme === 'dark' ? 'Light Mode' : 'Dark Mode';
 
-    // --- Upgrade button (optional) ---
-    //const upgradeBtn = document.createElement('button');
-    //upgradeBtn.className = 'upgrade-btn';
-    //upgradeBtn.textContent = "Upgrade";
-    //sidebar.appendChild(upgradeBtn);
+    themeItem.addEventListener('click', () => {
+        currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        localStorage.setItem('theme', currentTheme);
+        themeItem.textContent = currentTheme === 'dark' ? 'Light Mode' : 'Dark Mode';
+    });
+
+    menu.appendChild(themeItem);
+
+    sidebar.appendChild(menu);
 
     // Add to document
     document.body.prepend(sidebar);
 }
+
 
 function createSortControl() {
     const wrapper = document.getElementById('sort-control');
@@ -254,6 +272,7 @@ function createSortControl() {
         { value: 'title', label: 'Title' },
         { value: 'release_date', label: 'Release' },
         { value: 'rating', label: 'Rating' },
+        { value: 'genre', label: 'Genre' }, // <-- ADD THIS
     ];
 
     options.forEach(opt => {
@@ -288,6 +307,7 @@ function createSortControl() {
 
 
 
+
 // -------------------------
 // Fetch and Render Movies
 // -------------------------
@@ -308,11 +328,17 @@ async function fetchMovies() {
 function applyFiltersAndSort() {
     let filtered = [...moviesData];
 
+    // -----------------------------
+    // SEARCH FILTER
+    // -----------------------------
     if (activeSearch) {
         const searchLower = activeSearch.toLowerCase();
         filtered = filtered.filter(m => m.title.toLowerCase().includes(searchLower));
     }
 
+    // -----------------------------
+    // OTHER FILTERS
+    // -----------------------------
     if (activeFilters.genre) {
         filtered = filtered.filter(m =>
             m.genre?.split(',').map(g => g.trim()).includes(activeFilters.genre)
@@ -338,11 +364,6 @@ function applyFiltersAndSort() {
         let valA = a[currentSort.key] || '';
         let valB = b[currentSort.key] || '';
 
-        if (currentSort.key === 'release_date') {
-            valA = valA || '';
-            valB = valB || '';
-        }
-
         if (typeof valA === 'string') valA = valA.toLowerCase();
         if (typeof valB === 'string') valB = valB.toLowerCase();
 
@@ -352,19 +373,18 @@ function applyFiltersAndSort() {
     });
 
     // -----------------------------
-    // DETERMINE IF A–Z GROUPING SHOULD BE ENABLED
+    // DETERMINE GROUPING
     // -----------------------------
-    const isAlphaSort = currentSort.key === "title";
-
+    const isTitleSort = currentSort.key === "title";
+    const isGenreSort = currentSort.key === "genre";
 
     // -----------------------------
     // RENDER MOVIES
     // -----------------------------
-    renderMovieCards(filtered, isAlphaSort);
+    renderMovieCards(filtered, isTitleSort, isGenreSort);
 }
 
-function renderMovieCards(movies, sortedByTitle) {
-
+function renderMovieCards(movies, sortedByTitle, groupedByGenre) {
     let container = document.getElementById('movie-container');
     if (!container) {
         container = document.createElement('div');
@@ -374,6 +394,9 @@ function renderMovieCards(movies, sortedByTitle) {
     }
     container.innerHTML = '';
 
+    // -----------------------------
+    // HERO SECTION
+    // -----------------------------
     const heroCont = document.createElement('div');
     heroCont.className = 'hero-cont';
 
@@ -388,21 +411,19 @@ function renderMovieCards(movies, sortedByTitle) {
 
     container.appendChild(heroCont);
 
-    // Build the sort dropdown + arrow inside #sort-control
-    createSortControl();
+    createSortControl(); // existing function
 
+    if (!movies.length) {
+        const noMovies = document.createElement('p');
+        noMovies.textContent = 'No movies to display.';
+        container.appendChild(noMovies);
+        return;
+    }
+
+    // -----------------------------
+    // TITLE GROUPING (A–Z)
+    // -----------------------------
     if (sortedByTitle) {
-        
-        if (!movies.length) {
-            const noMovies = document.createElement('p');
-            noMovies.textContent = 'No movies to display.';
-            container.appendChild(noMovies);
-            return;
-        }
-
-        // -----------------------------
-        // Group movies by first character
-        // -----------------------------
         const grouped = {};
         movies.forEach(movie => {
             let firstChar = movie.title.charAt(0).toUpperCase();
@@ -411,55 +432,10 @@ function renderMovieCards(movies, sortedByTitle) {
             grouped[firstChar].push(movie);
         });
 
-        // -----------------------------
-        // Sort letters
-        // -----------------------------
-        let letters = Object.keys(grouped).filter(l => l !== '#').sort((a, b) => a.localeCompare(b));
+        let letters = Object.keys(grouped).filter(l => l !== '#').sort();
+        if (!currentSort.ascending) letters.reverse();
+        if (grouped['#']) currentSort.ascending ? letters.unshift('#') : letters.push('#');
 
-        if (currentSort.ascending) {
-            if (grouped['#']) letters.unshift('#'); // '#' first in A→Z
-        } else {
-            letters.reverse(); // Z→A
-            if (grouped['#']) letters.push('#'); // '#' last in Z→A
-        }
-
-
-
-        // -----------------------------
-        // Top A–Z bar
-        // -----------------------------
-        const bar = document.createElement('div');
-        bar.className = 'az-bar';
-
-        const allOption = document.createElement('span');
-        allOption.textContent = 'ALL';
-        allOption.className = 'az-item active';
-        allOption.addEventListener('click', () => {
-            document.querySelectorAll('.movie-group').forEach(g => g.style.display = '');
-            document.querySelectorAll('.az-item').forEach(el => el.classList.remove('active'));
-            allOption.classList.add('active');
-        });
-        bar.appendChild(allOption);
-
-        letters.forEach(letter => {
-            const item = document.createElement('span');
-            item.textContent = letter;
-            item.className = 'az-item';
-            item.addEventListener('click', () => {
-                document.querySelectorAll('.movie-group').forEach(g => {
-                    g.style.display = g.dataset.letter === letter ? '' : 'none';
-                });
-                document.querySelectorAll('.az-item').forEach(el => el.classList.remove('active'));
-                item.classList.add('active');
-            });
-            bar.appendChild(item);
-        });
-
-        container.appendChild(bar);
-
-        // -----------------------------
-        // Render each letter group
-        // -----------------------------
         letters.forEach(letter => {
             const groupWrapper = document.createElement('div');
             groupWrapper.className = 'movie-group';
@@ -476,55 +452,78 @@ function renderMovieCards(movies, sortedByTitle) {
             const cardsWrapper = document.createElement('div');
             cardsWrapper.className = 'movies-wrapper';
 
-            // Reverse movies in group if descending
             const moviesInGroup = currentSort.ascending ? grouped[letter] : [...grouped[letter]].reverse();
 
             moviesInGroup.forEach(movie => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.dataset.id = movie.id;
-
-                const img = document.createElement('img');
-                img.src = movie.cover_img || '';
-                card.appendChild(img);
-
-                const content = document.createElement('div');
-                content.className = 'card-content';
-
-                const title = document.createElement('h3');
-                title.textContent = movie.title;
-                title.setAttribute('title', movie.title);
-                content.appendChild(title);
-
-                const release = document.createElement('p');
-                release.textContent = movie.release_date?.substring(0, 4) || 'N/A';
-                content.appendChild(release);
-
-                card.appendChild(content);
+                const card = createMovieCard(movie);
                 cardsWrapper.appendChild(card);
-
-                card.addEventListener('click', () => showMovieDetails(movie));
             });
 
             groupWrapper.appendChild(cardsWrapper);
             container.appendChild(groupWrapper);
         });
-
-        
     } 
-    else {
-        
-        if (!movies.length) {
-            const noMovies = document.createElement('p');
-            noMovies.textContent = 'No movies to display.';
-            container.appendChild(noMovies);
-            return;
-        }
 
-        // Create a single group wrapper (like a letter group but without headers)
+    // -----------------------------
+    // GENRE GROUPING
+    // -----------------------------
+    else if (groupedByGenre) {
+        const grouped = {};
+        movies.forEach(movie => {
+            if (!movie.genre) return;
+            movie.genre.split(',').map(g => g.trim()).forEach(genre => {
+                if (!grouped[genre]) grouped[genre] = [];
+                grouped[genre].push(movie);
+            });
+        });
+
+        // Sort genres alphabetically
+        let genres = Object.keys(grouped).sort();
+        if (!currentSort.ascending) genres.reverse();
+
+        genres.forEach(genre => {
+            const groupWrapper = document.createElement('div');
+            groupWrapper.className = 'movie-group';
+            groupWrapper.dataset.letter = genre;
+
+            const header = document.createElement('h2');
+            header.textContent = genre;
+            header.style.fontWeight = '200';
+            groupWrapper.appendChild(header);
+
+            const line = document.createElement('hr');
+            groupWrapper.appendChild(line);
+
+            const cardsWrapper = document.createElement('div');
+            cardsWrapper.className = 'movies-wrapper';
+
+            // Sort movies within the genre alphabetically by title
+            let moviesInGroup = grouped[genre].sort((a, b) => {
+                let titleA = (a.title || '').toLowerCase();
+                let titleB = (b.title || '').toLowerCase();
+                if (titleA < titleB) return currentSort.ascending ? -1 : 1;
+                if (titleA > titleB) return currentSort.ascending ? 1 : -1;
+                return 0;
+            });
+
+            moviesInGroup.forEach(movie => {
+                const card = createMovieCard(movie);
+                cardsWrapper.appendChild(card);
+            });
+
+            groupWrapper.appendChild(cardsWrapper);
+            container.appendChild(groupWrapper);
+        });
+    }
+ 
+
+    // -----------------------------
+    // DEFAULT (no grouping)
+    // -----------------------------
+    else {
         const groupWrapper = document.createElement('div');
         groupWrapper.className = 'movie-group';
-        groupWrapper.dataset.letter = 'all'; // dummy
+        groupWrapper.dataset.letter = 'all';
 
         const line = document.createElement('hr');
         groupWrapper.appendChild(line);
@@ -533,38 +532,46 @@ function renderMovieCards(movies, sortedByTitle) {
         cardsWrapper.className = 'movies-wrapper';
 
         movies.forEach(movie => {
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.dataset.id = movie.id;
-
-            const img = document.createElement('img');
-            img.src = movie.cover_img || '';
-            card.appendChild(img);
-
-            const content = document.createElement('div');
-            content.className = 'card-content';
-
-            const title = document.createElement('h3');
-            title.textContent = movie.title;
-            title.setAttribute('title', movie.title); // tooltip for long titles
-            content.appendChild(title);
-
-            const release = document.createElement('p');
-            release.textContent = movie.release_date?.substring(0, 4) || 'N/A';
-            content.appendChild(release);
-
-            card.appendChild(content);
+            const card = createMovieCard(movie);
             cardsWrapper.appendChild(card);
-
-            card.addEventListener('click', () => showMovieDetails(movie));
         });
 
         groupWrapper.appendChild(cardsWrapper);
         container.appendChild(groupWrapper);
-
     }
-    
 }
+
+// -----------------------------
+// HELPER: create a movie card
+// -----------------------------
+function createMovieCard(movie) {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.dataset.id = movie.id;
+
+    const img = document.createElement('img');
+    img.src = movie.cover_img || '';
+    card.appendChild(img);
+
+    const content = document.createElement('div');
+    content.className = 'card-content';
+
+    const title = document.createElement('h3');
+    title.textContent = movie.title;
+    title.setAttribute('title', movie.title);
+    content.appendChild(title);
+
+    const release = document.createElement('p');
+    release.textContent = movie.release_date?.substring(0, 4) || 'N/A';
+    content.appendChild(release);
+
+    card.appendChild(content);
+
+    card.addEventListener('click', () => showMovieDetails(movie));
+
+    return card;
+}
+
 
 // -------------------------
 // TMDB helpers
@@ -1408,5 +1415,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 document.getElementById("loginBtn").addEventListener("click", showLoginModal);
 document.getElementById("logoutBtn").addEventListener("click", logout);
+
 
 
