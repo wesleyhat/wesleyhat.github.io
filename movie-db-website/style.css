@@ -180,6 +180,10 @@ body {
 
 /* Dropdown */
 .sort-select {
+   -webkit-appearance: none;  /* Safari/iOS */
+    -moz-appearance: none;     /* Firefox */
+    appearance: none;          /* modern browsers */
+   
     padding: 7px 10px;
     font-size: 15px;
     border: 1px solid #ccc;
@@ -188,6 +192,11 @@ body {
     background: #fff;
     outline: none;
     cursor: pointer;
+}
+
+/* Optional: remove inner padding on iOS */
+.sort-select::-ms-expand {
+    display: none; /* IE/Edge */
 }
 
 /* Arrow button */
@@ -208,6 +217,23 @@ body {
 .sort-toggle:hover {
     background: #ddd;
 }
+
+.sort-select-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.sort-select-wrapper::after {
+    content: '▾';               /* down arrow symbol */
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;       /* clicks pass through */
+    color: #555;
+    font-size: 14px;
+}
+
 
 /* Container itself is block, not a grid */
 #movie-container {
@@ -819,3 +845,4 @@ button {
     .close-modal { top: 10px; right: 10px; font-size: 24px; }
     .modal-input { width: 90%; margin: 0 auto 10px; }
 }
+
