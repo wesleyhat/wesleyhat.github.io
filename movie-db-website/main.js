@@ -22,6 +22,7 @@ let sorted_by_title = true; // updated automatically when sort key changes
 document.addEventListener('DOMContentLoaded', () => {
     createNavBar();
     fetchMovies();
+    createSortControl()
 });
 
 function isMobile() {
@@ -238,6 +239,54 @@ function createNavBar() {
     document.body.prepend(sidebar);
 }
 
+function createSortControl() {
+    const wrapper = document.getElementById('sort-control');
+    if (!wrapper) return;
+
+    wrapper.innerHTML = ''; // clear old content
+    wrapper.classList.add('sort-wrapper');
+
+    // --- Dropdown ---
+    const select = document.createElement('select');
+    select.className = 'sort-select';
+
+    const options = [
+        { value: 'title', label: 'Title' },
+        { value: 'release_date', label: 'Release' },
+        { value: 'rating', label: 'Rating' },
+    ];
+
+    options.forEach(opt => {
+        const optionEl = document.createElement('option');
+        optionEl.value = opt.value;
+        optionEl.textContent = opt.label;
+        select.appendChild(optionEl);
+    });
+
+    select.value = currentSort.key;
+    select.addEventListener('change', () => {
+        currentSort.key = select.value;
+        currentSort.ascending = true;
+        applyFiltersAndSort();
+    });
+
+    wrapper.appendChild(select);
+
+    // --- Arrow toggle ---
+    const toggleBtn = document.createElement('button');
+    toggleBtn.className = 'sort-toggle';
+    toggleBtn.textContent = currentSort.ascending ? '↑' : '↓';
+
+    toggleBtn.addEventListener('click', () => {
+        currentSort.ascending = !currentSort.ascending;
+        toggleBtn.textContent = currentSort.ascending ? '↑' : '↓';
+        applyFiltersAndSort();
+    });
+
+    wrapper.appendChild(toggleBtn);
+}
+
+
 
 // -------------------------
 // Fetch and Render Movies
@@ -447,6 +496,7 @@ function renderMovieCards(movies, sortedByTitle) {
     } 
     else {
         let container = document.getElementById('movie-container');
+
         if (!container) {
             container = document.createElement('div');
             container.id = 'movie-container';
@@ -466,6 +516,9 @@ function renderMovieCards(movies, sortedByTitle) {
         const groupWrapper = document.createElement('div');
         groupWrapper.className = 'movie-group';
         groupWrapper.dataset.letter = 'all'; // dummy
+
+        const line = document.createElement('hr');
+        groupWrapper.appendChild(line);
 
         const cardsWrapper = document.createElement('div');
         cardsWrapper.className = 'movies-wrapper';
