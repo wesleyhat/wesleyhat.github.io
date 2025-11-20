@@ -365,16 +365,34 @@ function applyFiltersAndSort() {
 
 function renderMovieCards(movies, sortedByTitle) {
 
-    if (sortedByTitle) {
-        let container = document.getElementById('movie-container');
-        if (!container) {
-            container = document.createElement('div');
-            container.id = 'movie-container';
-            container.className = 'container';
-            document.body.appendChild(container);
-        }
-        container.innerHTML = '';
+    let container = document.getElementById('movie-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'movie-container';
+        container.className = 'container';
+        document.body.appendChild(container);
+    }
+    container.innerHTML = '';
 
+    const heroCont = document.createElement('div');
+    heroCont.className = 'hero-cont';
+
+    const hero = document.createElement('div');
+    hero.className = 'hero';
+    hero.textContent = 'VHS Collection';
+    heroCont.appendChild(hero);
+
+    const sortControl = document.createElement('div');
+    sortControl.id = 'sort-control';
+    heroCont.appendChild(sortControl);
+
+    container.appendChild(heroCont);
+
+    // Build the sort dropdown + arrow inside #sort-control
+    createSortControl();
+
+    if (sortedByTitle) {
+        
         if (!movies.length) {
             const noMovies = document.createElement('p');
             noMovies.textContent = 'No movies to display.';
@@ -495,16 +513,7 @@ function renderMovieCards(movies, sortedByTitle) {
         
     } 
     else {
-        let container = document.getElementById('movie-container');
-
-        if (!container) {
-            container = document.createElement('div');
-            container.id = 'movie-container';
-            container.className = 'container';
-            document.body.appendChild(container);
-        }
-        container.innerHTML = '';
-
+        
         if (!movies.length) {
             const noMovies = document.createElement('p');
             noMovies.textContent = 'No movies to display.';
