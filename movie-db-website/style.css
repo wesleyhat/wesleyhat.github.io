@@ -36,6 +36,10 @@ body {
     color: var(--text-primary);
 }
 
+body.modal-open {
+    overflow-y: scroll;
+}
+
 body.no-scroll {
     overflow: hidden;
     position: fixed;
@@ -45,6 +49,10 @@ body.no-scroll {
 
 html, body {
     overflow-x: hidden;
+}
+
+html {
+    scrollbar-gutter: stable;
 }
 
 .container {
