@@ -85,6 +85,9 @@ function addScanBarcodeButton(btnContainer) {
             return;
         }
 
+        // Hide the modal while scanning
+        if (modal) modal.style.display = 'none';
+
         // Initialize Html5Qrcode
         scanner = new Html5Qrcode("reader");
 
@@ -119,6 +122,7 @@ function addScanBarcodeButton(btnContainer) {
 
                     if (!tmdbResults || !tmdbResults.length) {
                         alert("No movies found for this barcode.");
+                        if (modal) modal.style.display = 'block';
                         return;
                     }
 
@@ -138,8 +142,8 @@ function addScanBarcodeButton(btnContainer) {
                         tmdb_id: detail.id
                     };
 
-                    // Show the preview modal for this movie
-                    showPreviewModal(movieData, null);
+                    // Show the modal again now that scanning is done
+                    if (modal) modal.style.display = 'block';
 
                 },
                 (errorMessage) => {
@@ -154,9 +158,6 @@ function addScanBarcodeButton(btnContainer) {
 
     btnContainer.appendChild(scanBtn);
 }
-
-
-
 
 
 function cleanTitle(title) {
