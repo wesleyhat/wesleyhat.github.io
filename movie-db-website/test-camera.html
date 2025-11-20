@@ -2,36 +2,33 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>iPhone UPC/EAN Barcode Test</title>
+  <title>iPhone Barcode Scanner Test (UPC/EAN)</title>
   <style>
     body { background: #111; color: #fff; font-family: Arial; text-align: center; padding: 20px; }
     video { width: 100%; max-width: 400px; border: 2px solid #fff; margin-top: 20px; }
-    #barcodeOutput { margin-top: 20px; font-size: 18px; word-break: break-all; }
+    #barcodeOutput { margin-top: 20px; font-size: 18px; }
     button { padding: 10px 20px; font-size: 16px; cursor: pointer; margin-top: 10px; }
   </style>
 </head>
 <body>
 
-<h2>iPhone UPC/EAN Barcode Test</h2>
+<h2>iPhone Barcode Scanner Test</h2>
 <p>Tap the button to open your camera and scan a barcode.</p>
 <button id="startBtn">Open Camera</button>
 <video id="video" autoplay muted playsinline></video>
 <div id="barcodeOutput">Scanned barcode will appear here</div>
 
 <script type="module">
-// Import ZXing Barcode reader
 import { BrowserBarcodeReader } from 'https://cdn.jsdelivr.net/npm/@zxing/library@0.19.2/esm/index.js';
 
 const video = document.getElementById('video');
 const output = document.getElementById('barcodeOutput');
-const codeReader = new BrowserBarcodeReader();
-let stream;
+let scanning = false;
 
 document.getElementById('startBtn').addEventListener('click', async () => {
     output.textContent = "Requesting camera...";
     try {
-        // Open back camera
-        stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: false });
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: false });
         video.srcObject = stream;
         video.setAttribute('autoplay', '');
         video.setAttribute('muted', '');
@@ -39,27 +36,42 @@ document.getElementById('startBtn').addEventListener('click', async () => {
         await video.play();
         output.textContent = "Camera started! Scanning...";
 
-        // Start live barcode scanning
-        codeReader.decodeFromVideoDevice(null, video, (result, err) => {
-            if (result) {
-                output.textContent = "Detected barcode: " + result.getText();
-                codeReader.reset();
-                stopCamera();
+        scanning = true;
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+
+        const codeReader = new BrowserBarcodeReader();
+
+        const scanFrame = async () => {
+            if (!scanning) return;
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            try {
+                const result = await codeReader.decodeFromCanvas(canvas);
+                if (result) {
+                    scanning = false;
+                    output.textContent = "Detected barcode: " + result.getText();
+                    stopCamera(stream);
+                    return;
+                }
+            } catch (err) {
+                // NotFoundException is normal when no barcode in frame
             }
-            if (err && !(err.name === "NotFoundException")) {
-                console.error(err);
-            }
-        });
+
+            requestAnimationFrame(scanFrame);
+        };
+
+        scanFrame();
 
     } catch (err) {
         output.textContent = "ERROR: " + err.name + " - " + err.message;
     }
 });
 
-function stopCamera() {
-    if (stream) {
-        stream.getTracks().forEach(track => track.stop());
-    }
+function stopCamera(stream) {
+    stream.getTracks().forEach(track => track.stop());
     video.srcObject = null;
 }
 </script>
