@@ -66,7 +66,6 @@ function addScanBarcodeButton(btnContainer) {
     scanBtn.className = "modal-btn";
 
     scanBtn.addEventListener('click', async () => {
-
         // Desktop fallback: manual entry
         if (!isMobile()) {
             const barcode = prompt("Enter barcode manually:");
@@ -74,56 +73,27 @@ function addScanBarcodeButton(btnContainer) {
             return handleScannedBarcode(barcode);
         }
 
-        // MOBILE → Use html5-qrcode scanner
+        // MOBILE → Use exact HTML5-Qrcode behavior
         await startHtml5QrCodeScanner();
     });
 
     btnContainer.appendChild(scanBtn);
 
     // ========================================================================
-    // MOBILE: html5-qrcode scanner
-    // ========================================================================
     async function startHtml5QrCodeScanner() {
-        const overlay = document.createElement("div");
-        overlay.className = "barcode-overlay";
-        Object.assign(overlay.style, {
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            background: "rgba(0,0,0,0.95)",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 9999,
-            color: "white",
-            textAlign: "center"
-        });
-        overlay.innerHTML = `
-            <p style="margin-bottom:10px;font-size:16px;">Point your camera at the barcode</p>
-            <div id="html5qr-reader" style="width:100%; height:100%; position:relative;">
-                <div style="
-                    position:absolute;
-                    top:50%;
-                    left:50%;
-                    width:80%;
-                    height:30%;
-                    border:3px solid lime;
-                    box-sizing:border-box;
-                    transform:translate(-50%,-50%);
-                    pointer-events:none;
-                    border-radius:5px;
-                "></div>
-            </div>
-            <button id="closeScannerBtn" style="margin-top:10px;padding:8px 16px;font-size:16px;">Cancel</button>
-        `;
-        document.body.appendChild(overlay);
+        // Ensure the reader div exists
+        let readerDiv = document.getElementById('reader');
+        if (!readerDiv) {
+            readerDiv = document.createElement('div');
+            readerDiv.id = 'reader';
+            readerDiv.style.width = '100%';
+            readerDiv.style.maxWidth = '400px';
+            readerDiv.style.marginTop = '20px';
+            readerDiv.style.border = '2px solid #fff';
+            document.body.appendChild(readerDiv);
+        }
 
-        const closeBtn = overlay.querySelector("#closeScannerBtn");
-
-        // Load html5-qrcode if not already loaded
+        // Load html5-qrcode if not loaded
         if (typeof Html5Qrcode === "undefined") {
             await new Promise((resolve, reject) => {
                 const script = document.createElement("script");
@@ -134,16 +104,11 @@ function addScanBarcodeButton(btnContainer) {
             });
         }
 
-        const scanner = new Html5Qrcode("html5qr-reader");
-
-        closeBtn.addEventListener("click", async () => {
-            if (scanner) await scanner.stop().catch(console.warn);
-            overlay.remove();
-        });
+        const scanner = new Html5Qrcode("reader");
 
         const config = {
             fps: 10,
-            qrbox: false, // scan full camera area
+            qrbox: { width: 300, height: 100 }, // exactly like your page
             formatsToSupport: [
                 Html5QrcodeSupportedFormats.EAN_13,
                 Html5QrcodeSupportedFormats.UPC_A,
@@ -156,53 +121,22 @@ function addScanBarcodeButton(btnContainer) {
                 { facingMode: "environment" },
                 config,
                 (decodedText, decodedResult) => {
+                    // Barcode detected → stop scanner and remove feed
                     scanner.stop().catch(console.warn);
-                    overlay.remove();
+                    readerDiv.innerHTML = ""; // remove camera feed
                     handleScannedBarcode(decodedText);
                 },
                 (errorMessage) => {
-                    console.log("Scan frame error:", errorMessage);
+                    console.log(errorMessage); // frame scan errors
                 }
             );
         } catch(err) {
-            console.error("html5-qrcode failed:", err);
-            overlay.remove();
+            console.error("Camera scan failed:", err);
             alert("Camera scan failed. Try manual entry.");
         }
     }
-
-    // ========================================================================
-    // Handle scanned barcode and show movie
-    // ========================================================================
-    async function handleScannedBarcode(barcode) {
-        let movieTitle = await lookupBarcode(barcode);
-        if (!movieTitle) movieTitle = "Unscanable";
-        movieTitle = cleanTitle(movieTitle);
-
-        const tmdbResults = await searchTmdbByTitle(movieTitle);
-        if (!tmdbResults || tmdbResults.length === 0) {
-            alert("No movies found for this barcode.");
-            return;
-        }
-
-        const firstResult = tmdbResults[0];
-        const detail = await getTmdbDetails(firstResult.id);
-
-        const movieData = {
-            title: detail.title || 'Unknown',
-            desc: detail.overview || 'No description available.',
-            rating: extractMpaa(detail) || 'NR',
-            release_date: detail.release_date || '',
-            genre: detail.genres ? detail.genres.map(g => g.name).join(', ') : 'Unknown',
-            cast: detail.credits ? detail.credits.cast.slice(0, 5).map(c => c.name).join(', ') : 'Unknown',
-            cover_img: detail.poster_path ? `https://image.tmdb.org/t/p/w500${detail.poster_path}` : '',
-            tags: '',
-            tmdb_id: detail.id
-        };
-
-        showPreviewModal(movieData, null);
-    }
 }
+
 
 
 
