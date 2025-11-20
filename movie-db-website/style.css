@@ -214,12 +214,16 @@ body {
     display: block;
     max-width: 1400px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 40px 20px;      /* top/bottom gap */
+    min-height: calc(100vh - 100px); /* full viewport minus header/hero height */
+    box-sizing: border-box;
 }
+
 
 /* Letter groups */
 .movie-group {
     margin-bottom: 2rem;
+    display: block;
 }
 
 .movie-group h2 {
@@ -572,8 +576,22 @@ button {
 
 @media (max-width: 768px) {
 
+    .top-bar{
+        position: sticky;
+        height: 40px;
+        width: 100%;
+        display: flex;
+        width: 100%;
+        align-items: flex-end;
+        font-size: 23px;
+        top: 0; /* distance from top when it sticks */
+        background-color: #f8f8f8;
+    }
+
     body {
         overflow-x: hidden;   /* prevent horizontal scrolling */
+        margin-left: 0;
+        padding: 0;
     }
 
     .hero-cont{
@@ -593,7 +611,10 @@ button {
 
     .sort-wrapper{
         align-items: flex-start;
+        margin: 0;
+        padding: 0;
         padding-left: 15px;
+
     }
 
 
@@ -622,7 +643,7 @@ button {
         height: 20px;
         cursor: pointer;
         position: fixed;
-        top: 28px;
+        top: 17px;
         right: 22px;
         z-index: 3000;
         cursor: pointer;
@@ -651,6 +672,7 @@ button {
     body {
         margin-left: 0 !important;
         padding: 0 1rem;
+        overflow: visible;
     }
 
     
@@ -694,11 +716,11 @@ button {
        ----------------------------- */
     #movie-container {
         padding: 0;
-        margin: 0 auto;
+        margin: 20px auto;
         width: 100%;
         overflow-x: hidden;
         overflow-y: auto;
-        max-height: 80vh;
+        height: calc(100vh - 100px);
         display: block; /* keep headers/hr full width */
     }
 
@@ -707,7 +729,8 @@ button {
         display: flex;
         flex-wrap: wrap;
         gap: 17px;
-        justify-content: center;
+        justify-content: flex-start;
+        margin-top: 10px;
     }
 
     .card {
