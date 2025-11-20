@@ -25,6 +25,10 @@
     --shadow: rgba(0, 0, 0, 0.1);
 }
 
+.top-bar{
+    display: none;
+}
+
 /* -------------------------
    Body & Layout
    ------------------------- */
@@ -89,6 +93,20 @@ html {
     box-shadow: 2px 0 5px var(--shadow);
     z-index: 2000;
 }
+
+/* Tags / Genres display outside edit mode */
+.tag {
+    display: inline-block;
+    padding: 4px 10px;
+    margin: 2px 4px;
+    border-radius: 6px;
+    background-color: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
+    font-size: 0.85rem;
+    cursor: default;
+    user-select: none;
+}
+
 
 .sidebar-logo {
     font-size: 28px;
@@ -845,4 +863,5 @@ button {
     .close-modal { top: 10px; right: 10px; font-size: 24px; }
     .modal-input { width: 90%; margin: 0 auto 10px; }
 }
+
 
