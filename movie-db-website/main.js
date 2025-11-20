@@ -1093,6 +1093,16 @@ function showPreviewModal(movieData, parentModal) {
 }
 
 function showLoginModal() {
+
+    const sidebar = document.getElementById('sidebar-nav');
+    const hamburger = document.querySelector('.hamburger');
+
+    // Hide sidebar if it’s open
+    if (sidebar.classList.contains('active')) {
+        sidebar.classList.remove('active');
+        hamburger.classList.remove('active');
+    }
+
     const modal = document.createElement('div');
     modal.className = 'modal';
     document.body.appendChild(modal);
