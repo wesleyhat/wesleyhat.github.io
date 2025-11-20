@@ -2,10 +2,10 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>iPhone Barcode Scanner Test</title>
+  <title>iPhone Barcode Scanner Test (html5-qrcode)</title>
   <style>
     body { background: #111; color: #fff; font-family: Arial; text-align: center; padding: 20px; }
-    #reader { width: 100%; height: 80vh; margin-top: 20px; border: 2px solid #fff; position: relative; }
+    #reader { width: 100%; max-width: 600px; height: 80vh; margin: 20px auto; border: 2px solid #fff; position: relative; }
     #barcodeOutput { margin-top: 20px; font-size: 18px; word-break: break-all; }
     button { padding: 10px 20px; font-size: 16px; cursor: pointer; margin-top: 10px; }
     .overlay-box {
@@ -65,9 +65,10 @@ document.getElementById('startBtn').addEventListener('click', async () => {
             { facingMode: "environment" },
             config,
             (decodedText, decodedResult) => {
-                // Barcode detected → print to body
-                output.textContent = "Detected barcode: " + decodedText;
+                // Barcode detected → stop scanner and remove camera view
                 scanner.stop().catch(console.warn);
+                readerDiv.innerHTML = ""; // remove camera feed and overlay
+                output.textContent = "Detected barcode: " + decodedText;
             },
             (errorMessage) => {
                 // optional frame scan failure
