@@ -122,12 +122,8 @@ function addScanBarcodeButton(btnContainer) {
         document.body.appendChild(overlay);
 
         const closeBtn = overlay.querySelector("#closeScannerBtn");
-        closeBtn.addEventListener("click", async () => {
-            if (scanner) await scanner.stop().catch(console.warn);
-            overlay.remove();
-        });
 
-        // Load html5-qrcode if not loaded
+        // Load html5-qrcode if not already loaded
         if (typeof Html5Qrcode === "undefined") {
             await new Promise((resolve, reject) => {
                 const script = document.createElement("script");
@@ -139,6 +135,11 @@ function addScanBarcodeButton(btnContainer) {
         }
 
         const scanner = new Html5Qrcode("html5qr-reader");
+
+        closeBtn.addEventListener("click", async () => {
+            if (scanner) await scanner.stop().catch(console.warn);
+            overlay.remove();
+        });
 
         const config = {
             fps: 10,
@@ -155,13 +156,11 @@ function addScanBarcodeButton(btnContainer) {
                 { facingMode: "environment" },
                 config,
                 (decodedText, decodedResult) => {
-                    // Barcode detected
                     scanner.stop().catch(console.warn);
                     overlay.remove();
                     handleScannedBarcode(decodedText);
                 },
                 (errorMessage) => {
-                    // Frame scan failed, normal while scanning
                     console.log("Scan frame error:", errorMessage);
                 }
             );
@@ -173,7 +172,7 @@ function addScanBarcodeButton(btnContainer) {
     }
 
     // ========================================================================
-    // Helper: Look up and show TMDB results
+    // Handle scanned barcode and show movie
     // ========================================================================
     async function handleScannedBarcode(barcode) {
         let movieTitle = await lookupBarcode(barcode);
@@ -204,6 +203,7 @@ function addScanBarcodeButton(btnContainer) {
         showPreviewModal(movieData, null);
     }
 }
+
 
 
 
