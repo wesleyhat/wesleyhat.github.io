@@ -55,6 +55,8 @@ html {
     scrollbar-gutter: stable;
 }
 
+
+
 .container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
@@ -141,9 +143,9 @@ body {
 .hero-cont{
     width: 100%;
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
 }
 
 .hero {
@@ -153,7 +155,58 @@ body {
     padding: 20px;
     width: 70%;
     margin: 20px;
+    margin-left: 40px;
     border-radius: 7px;
+    display: flex;
+    justify-content: flex-start;
+}
+
+#sort-control {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin: 1rem 0;
+    width: fit-content;
+}
+
+/* Inner wrapper (optional, in case you need) */
+.sort-wrapper {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 60px;
+}
+
+/* Dropdown */
+.sort-select {
+    padding: 7px 10px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-right: 0;
+    border-radius: 6px 0 0 6px;
+    background: #fff;
+    outline: none;
+    cursor: pointer;
+}
+
+/* Arrow button */
+.sort-toggle {
+    padding: 7px 12px;
+    border: 1px solid #ccc;
+    border-left: 0;
+    border-radius: 0 6px 6px 0;
+    background: #eee;
+    cursor: pointer;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Hover effect */
+.sort-toggle:hover {
+    background: #ddd;
 }
 
 /* Container itself is block, not a grid */
@@ -523,6 +576,26 @@ button {
         overflow-x: hidden;   /* prevent horizontal scrolling */
     }
 
+    .hero-cont{
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .hero {
+        background-color: #eeeeef;
+        font-weight: 600;
+        font-size: 15px;
+        padding: 15px;
+        width: 70%;
+        margin: 15px;
+        border-radius: 7px;
+    }
+
+    .sort-wrapper{
+        align-items: flex-start;
+        padding-left: 15px;
+    }
+
 
     /* -----------------------------
        Hide sidebar, show hamburger
@@ -549,8 +622,8 @@ button {
         height: 20px;
         cursor: pointer;
         position: fixed;
-        top: 32px;
-        right: 20px;
+        top: 28px;
+        right: 22px;
         z-index: 3000;
         cursor: pointer;
     }
@@ -572,21 +645,15 @@ button {
         transform: rotate(-45deg) translate(6px, -5px);
     }
 
-    .hero {
-        background-color: #eeeeef;
-        font-weight: 600;
-        font-size: 15px;
-        padding: 15px;
-        width: 70%;
-        margin: 20px;
-        border-radius: 7px;
-    }
+    
 
     /* Shift body margin to zero */
     body {
         margin-left: 0 !important;
         padding: 0 1rem;
     }
+
+    
 
     /* -----------------------------
        Hero & Landing adjustments
@@ -729,5 +796,3 @@ button {
     .close-modal { top: 10px; right: 10px; font-size: 24px; }
     .modal-input { width: 90%; margin: 0 auto 10px; }
 }
-
-
