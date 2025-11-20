@@ -2,12 +2,24 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>iPhone Barcode Scanner Test (html5-qrcode)</title>
+  <title>iPhone Barcode Scanner Test</title>
   <style>
     body { background: #111; color: #fff; font-family: Arial; text-align: center; padding: 20px; }
-    #reader { width: 100%; max-width: 400px; margin-top: 20px; border: 2px solid #fff; }
+    #reader { width: 100%; height: 80vh; margin-top: 20px; border: 2px solid #fff; position: relative; }
     #barcodeOutput { margin-top: 20px; font-size: 18px; word-break: break-all; }
     button { padding: 10px 20px; font-size: 16px; cursor: pointer; margin-top: 10px; }
+    .overlay-box {
+        position:absolute;
+        top:50%;
+        left:50%;
+        width:80%;
+        height:30%;
+        border:3px solid lime;
+        box-sizing:border-box;
+        transform:translate(-50%,-50%);
+        pointer-events:none;
+        border-radius:5px;
+    }
   </style>
 </head>
 <body>
@@ -27,13 +39,25 @@ let scanner;
 
 document.getElementById('startBtn').addEventListener('click', async () => {
     output.textContent = "Opening camera...";
-    
+
+    const readerDiv = document.getElementById('reader');
+    // Add green overlay rectangle
+    if (!readerDiv.querySelector('.overlay-box')) {
+        const box = document.createElement('div');
+        box.className = 'overlay-box';
+        readerDiv.appendChild(box);
+    }
+
     scanner = new Html5Qrcode("reader");
 
     const config = {
         fps: 10,
-        qrbox: { width: 300, height: 100 }, // rectangle for scanning
-        formatsToSupport: [ Html5QrcodeSupportedFormats.EAN_13, Html5QrcodeSupportedFormats.UPC_A, Html5QrcodeSupportedFormats.UPC_E ]
+        qrbox: false, // scan full camera area
+        formatsToSupport: [
+            Html5QrcodeSupportedFormats.EAN_13,
+            Html5QrcodeSupportedFormats.UPC_A,
+            Html5QrcodeSupportedFormats.UPC_E
+        ]
     };
 
     try {
@@ -41,16 +65,18 @@ document.getElementById('startBtn').addEventListener('click', async () => {
             { facingMode: "environment" },
             config,
             (decodedText, decodedResult) => {
+                // Barcode detected → print to body
                 output.textContent = "Detected barcode: " + decodedText;
-                scanner.stop();
+                scanner.stop().catch(console.warn);
             },
             (errorMessage) => {
-                // optional: scanning failed for this frame
-                console.log(errorMessage);
+                // optional frame scan failure
+                console.log("Frame scan error:", errorMessage);
             }
         );
     } catch(err) {
-        output.textContent = "ERROR: " + err;
+        console.error("html5-qrcode failed:", err);
+        output.textContent = "Camera scan failed: " + err;
     }
 });
 </script>
