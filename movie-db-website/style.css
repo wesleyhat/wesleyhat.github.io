@@ -1,29 +1,70 @@
 /* -------------------------
-   Root colors - Unified Palette
+   Dark Mode (Default)
    ------------------------- */
-   :root {
+:root {
     /* Backgrounds */
-    --bg-nav: #f1f1f1;
-    --bg-body: #f8f8f8;
-    --card-bg: #ffffff;
-    --modal-bg: #fafafa;
+    --bg-nav: #181818;
+    --bg-body: #121212;
+    --card-bg: #1e1e1e;
+    --modal-bg: #1c1c1c;
 
     /* Text */
-    --text-primary: #2b2b2b;
-    --text-secondary: #555555;
-    --text-highlight: #42c6d8;
+    --text-primary: #e0e0e0;
+    --text-secondary: #a0a0a0;
+    --text-highlight: #4fc3f7;
 
     /* Buttons */
-    --btn-primary-bg: #42c6d8;
-    --btn-primary-text: #ffffff;
-    --btn-secondary-bg: #e0e0e0;
-    --btn-secondary-text: #2b2b2b;
-    --btn-delete-bg: #ff6e6e;
+    --btn-primary-bg: #4fc3f7;
+    --btn-primary-text: #121212;
+    --btn-secondary-bg: #2c2c2c;
+    --btn-secondary-text: #e0e0e0;
+    --btn-delete-bg: #ef5350;
     --btn-delete-text: #ffffff;
 
     /* Shadows */
+    --shadow: rgba(0, 0, 0, 0.5);
+}
+
+/* Light mode via data-theme attribute */
+html[data-theme="light"] {
+    --bg-nav: #f5f5f5;
+    --bg-body: #ffffff;
+    --card-bg: #fafafa;
+    --modal-bg: #ffffff;
+    --text-primary: #212121;
+    --text-secondary: #555555;
+    --text-highlight: #1976d2;
+    --btn-primary-bg: #1976d2;
+    --btn-primary-text: #ffffff;
+    --btn-secondary-bg: #e0e0e0;
+    --btn-secondary-text: #212121;
+    --btn-delete-bg: #d32f2f;
+    --btn-delete-text: #ffffff;
     --shadow: rgba(0, 0, 0, 0.1);
 }
+
+/* -------------------------
+   Smooth theme transition
+   ------------------------- */
+html {
+    transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+body,
+#sidebar-nav,
+.card,
+.modal,
+.modal-content,
+button,
+.sort-select,
+.sort-toggle,
+.login-modal,
+.hero,
+.az-item,
+.multi-select div button {
+    transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
+}
+
 
 .top-bar{
     display: none;
@@ -167,7 +208,8 @@ body {
 }
 
 .hero {
-    background-color: #eeeeef;
+    background-color: var(--btn-secondary-bg);
+    color: var(--btn-secondary-text);
     font-weight: 600;
     font-size: 25px;
     padding: 20px;
@@ -204,11 +246,11 @@ body {
    
     padding: 7px 10px;
     font-size: 15px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--btn-secondary-bg);
     border-right: 0;
     border-radius: 6px 0 0 6px;
-    background: #fff;
-    outline: none;
+    background: var(--bg-body);
+    color: var(--btn-secondary-text);
     cursor: pointer;
 }
 
@@ -220,10 +262,11 @@ body {
 /* Arrow button */
 .sort-toggle {
     padding: 7px 12px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--btn-secondary-bg);
     border-left: 0;
     border-radius: 0 6px 6px 0;
-    background: #eee;
+    background: var(--bg-body);
+    color: var(--btn-secondary-text);
     cursor: pointer;
     font-size: 15px;
     display: flex;
@@ -629,7 +672,7 @@ button {
         align-items: flex-end;
         font-size: 23px;
         top: 0; /* distance from top when it sticks */
-        background-color: #f8f8f8;
+        background-color: var(--bg-body);
     }
 
     body {
@@ -644,7 +687,6 @@ button {
     }
 
     .hero {
-        background-color: #eeeeef;
         font-weight: 600;
         font-size: 15px;
         padding: 15px;
