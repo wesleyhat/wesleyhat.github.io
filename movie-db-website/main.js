@@ -1561,11 +1561,19 @@ function showLoginModal() {
 
     cancelBtn.addEventListener('click', () => closeModal(modal));
 
+    // -----------------------------
+    // Auto-login control flag
+    // -----------------------------
+    let autoLoginTriggered = false;
+
     const attemptLogin = async () => {
         const email = emailInput.value.trim();
         const password = pwInput.value.trim();
 
         if (!email || !password) return;
+
+        // Prevent double auto-login
+        if (autoLoginTriggered) autoLoginTriggered = false;
 
         // Blur inputs to hide keyboard & reset zoom
         emailInput.blur();
@@ -1588,26 +1596,35 @@ function showLoginModal() {
         fetchMovies();
     };
 
-    // Trigger login when clicking the button
+    // -----------------------------
+    // Manual login triggers
+    // -----------------------------
     loginBtn.addEventListener('click', attemptLogin);
 
-    // Trigger login when pressing Enter on either field
     [emailInput, pwInput].forEach(input => {
         input.addEventListener('keydown', e => {
             if (e.key === 'Enter') attemptLogin();
         });
-
-        // Detect autofill (iOS Face ID / saved credentials)
-        input.addEventListener('input', () => {
-            if (emailInput.value && pwInput.value) {
-                // Give a tiny delay to let iOS autofill finish
-                setTimeout(attemptLogin, 50);
-            }
-        });
     });
 
-    modal.addEventListener('click', e => { if (e.target === modal) closeModal(modal); });
+    // -----------------------------
+    // Detect iOS / saved password autofill
+    // -----------------------------
+    requestAnimationFrame(() => {
+        if (emailInput.value && pwInput.value) {
+            autoLoginTriggered = true;
+            setTimeout(attemptLogin, 50);
+        }
+    });
+
+    // -----------------------------
+    // Close modal on background click
+    // -----------------------------
+    modal.addEventListener('click', e => {
+        if (e.target === modal) closeModal(modal);
+    });
 }
+
 
 
 
