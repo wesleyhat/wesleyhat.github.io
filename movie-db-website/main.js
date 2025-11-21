@@ -1563,28 +1563,33 @@ function showLoginModal() {
     loginBtn.addEventListener('click', async () => {
         const email = emailInput.value.trim();
         const password = pwInput.value.trim();
-
+    
         if (!email || !password) {
             alert("Fill out all fields.");
             return;
         }
-
+    
         const { data, error } = await supabase.auth.signInWithPassword({
             email,
             password
         });
-
+    
         if (error) {
             alert("Login failed: " + error.message);
             return;
         }
-
+    
+        // Blur inputs to hide iOS keyboard and reset zoom
+        emailInput.blur();
+        pwInput.blur();
+    
         userSession = data.session;
         localStorage.setItem('supabaseSession', JSON.stringify(userSession)); // cache
         updateLoginButton();
         closeModal(modal);
         fetchMovies();
     });
+    
 
     // Close modal if clicking outside content
     modal.addEventListener('click', e => {
