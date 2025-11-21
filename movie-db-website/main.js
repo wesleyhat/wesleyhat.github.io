@@ -52,33 +52,45 @@ document.addEventListener('DOMContentLoaded', () => {
 let scrollPosition = 0;
 
 function lockBackground() {
-    const mainContent = document.querySelector('main') || document.querySelector('#movie-container') || document.body;
-    
-    // Prevent scrolling of main content only
-    mainContent.style.overflow = 'hidden';
-    
-    // Optional: dim background
-    document.body.classList.add('modal-open');
-
-    // Close sidebar if open
-    const sidebar = document.getElementById('sidebar-nav');
+    const movieContainer = document.getElementById('movie-container');
     const hamburger = document.querySelector('.hamburger');
-    if (sidebar?.classList.contains('active')) {
-        sidebar.classList.remove('active');
-        hamburger?.classList.remove('active');
-    }
+
+    hamburger.style.zIndex = '0';
+
+
+    // Save current scroll position
+    scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+
+    // Lock scrolling
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollPosition}px`;
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    document.body.style.overflow = 'hidden';
+
+    // Disable clicks on movie container
+    if (movieContainer) movieContainer.style.pointerEvents = 'none';
 }
 
 function unlockBackground() {
-    const mainContent = document.querySelector('main') || document.querySelector('#movie-container') || document.body;
-    
-    // Restore scrolling
-    mainContent.style.overflow = '';
+    const movieContainer = document.getElementById('movie-container');
+    const hamburger = document.querySelector('.hamburger');
 
-    // Remove dim/background lock
-    document.body.classList.remove('modal-open');
+    hamburger.style.zIndex = '5000';
+
+    // Re-enable clicks
+    if (movieContainer) movieContainer.style.pointerEvents = '';
+
+    // Restore scroll
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
+    document.body.style.overflow = 'initial';
+
+    // Restore previous scroll position
+    window.scrollTo(0, scrollPosition);
 }
-
 
 // --- Helper to attach close listeners for any modal ---
 function setupModalClose(modalElement, closeCallback) {
