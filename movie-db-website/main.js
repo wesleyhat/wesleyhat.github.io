@@ -29,6 +29,10 @@ let scrollPosition = 0;
 
 function lockBackground() {
     const movieContainer = document.getElementById('movie-container');
+    const hamburger = document.querySelector('.hamburger');
+
+    hamburger.style.zIndex = '0';
+
 
     // Save current scroll position
     scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
@@ -46,6 +50,9 @@ function lockBackground() {
 
 function unlockBackground() {
     const movieContainer = document.getElementById('movie-container');
+    const hamburger = document.querySelector('.hamburger');
+
+    hamburger.style.zIndex = '5000';
 
     // Re-enable clicks
     if (movieContainer) movieContainer.style.pointerEvents = '';
