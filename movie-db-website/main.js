@@ -1561,29 +1561,39 @@ function showLoginModal() {
     const attemptLogin = async () => {
         const email = emailInput.value.trim();
         const password = pwInput.value.trim();
-
+    
         if (!email || !password) return;
-
-        // Blur inputs to hide keyboard & reset zoom
+    
+        // Blur inputs to hide keyboard
         emailInput.blur();
         pwInput.blur();
-
+    
+        // Force iOS Safari to reset zoom
+        const viewport = document.querySelector('meta[name=viewport]');
+        if (viewport) {
+            const originalContent = viewport.getAttribute('content');
+            viewport.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1');
+            setTimeout(() => {
+                viewport.setAttribute('content', originalContent);
+            }, 100); // small delay to ensure Safari recalculates
+        }
+    
         const { data, error } = await supabase.auth.signInWithPassword({
             email,
             password
         });
-
+    
         if (error) {
             alert("Login failed: " + error.message);
             return;
         }
-
+    
         userSession = data.session;
         localStorage.setItem('supabaseSession', JSON.stringify(userSession));
         updateLoginButton();
         closeModal(modal);
         fetchMovies();
-    };
+    };    
 
     // Trigger login when clicking the button
     loginBtn.addEventListener('click', attemptLogin);
@@ -1693,20 +1703,4 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
     }
-
-
-
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
