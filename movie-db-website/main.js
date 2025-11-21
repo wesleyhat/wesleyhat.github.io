@@ -488,22 +488,22 @@ function renderMovieCards(movies, sortedByTitle, groupedByGenre) {
         });
         bar.appendChild(allOption);
 
-    letters.forEach(letter => {
-        const item = document.createElement('span');
-        item.textContent = letter === '#' ? 'Other' : letter;
-        item.className = 'az-item';
-        item.addEventListener('click', () => {
-            // Scroll to the letter section
-            document.querySelectorAll('.movie-group').forEach(g => {
-                g.style.display = g.dataset.letter === letter ? '' : 'none';
+        letters.forEach(letter => {
+            const item = document.createElement('span');
+            item.textContent = letter === '#' ? 'Other' : letter;
+            item.className = 'az-item';
+            item.addEventListener('click', () => {
+                // Scroll to the letter section
+                document.querySelectorAll('.movie-group').forEach(g => {
+                    g.style.display = g.dataset.letter === letter ? '' : 'none';
+                });
+                document.querySelectorAll('.az-item').forEach(el => el.classList.remove('active'));
+                item.classList.add('active');
             });
-            document.querySelectorAll('.az-item').forEach(el => el.classList.remove('active'));
-            item.classList.add('active');
+            bar.appendChild(item);
         });
-        bar.appendChild(item);
-    });
 
-    container.appendChild(bar);
+        container.appendChild(bar);
 
 
         letters.forEach(letter => {
@@ -1527,6 +1527,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     
 });
+
 
 
 
