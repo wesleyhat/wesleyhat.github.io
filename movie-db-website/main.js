@@ -220,9 +220,12 @@ function createNavBar() {
     loginItem.id = 'login-btn';
     loginItem.style.fontWeight = '600';
     loginItem.textContent = userSession ? 'Logout' : 'Login';
-    loginItem.addEventListener('click', () => {
-        if (userSession) handleLogout();
-        else showLoginModal();
+    loginItem.addEventListener("click", () => {
+        if (userSession) {
+            handleLogout();
+        } else {
+            showLoginModal();
+        }
     });
     menu.appendChild(loginItem);
 
@@ -287,8 +290,13 @@ function createSortControl() {
         select.appendChild(optionEl);
     });
 
+    if (!userSession) {
+        select.disabled = true;
+    }
+
     select.value = currentSort.key;
     select.addEventListener('change', () => {
+
         currentSort.key = select.value;
         currentSort.ascending = true;
         applyFiltersAndSort();
@@ -301,7 +309,12 @@ function createSortControl() {
     toggleBtn.className = 'sort-toggle';
     toggleBtn.textContent = currentSort.ascending ? '↑' : '↓';
 
+    if (!userSession) {
+        toggleBtn.disabled = true;
+    }
+
     toggleBtn.addEventListener('click', () => {
+
         currentSort.ascending = !currentSort.ascending;
         toggleBtn.textContent = currentSort.ascending ? '↑' : '↓';
         applyFiltersAndSort();
@@ -419,9 +432,29 @@ function renderMovieCards(movies, sortedByTitle, groupedByGenre) {
     createSortControl(); // existing function
 
     if (!movies.length) {
-        const noMovies = document.createElement('p');
-        noMovies.textContent = 'No movies to display.';
-        container.appendChild(noMovies);
+        const noMoviesWrapper = document.createElement('div');
+        noMoviesWrapper.style.display = 'flex';
+        noMoviesWrapper.style.flexDirection = 'column';
+        noMoviesWrapper.style.alignItems = 'center';
+        noMoviesWrapper.style.justifyContent = 'flex-start';
+        noMoviesWrapper.style.height = '100%'; // adjust if you have header/footer
+        noMoviesWrapper.style.marginTop = '50px'
+        noMoviesWrapper.style.gap = '20px'; // spacing between SVG and optional text
+
+        // SVG
+        const svgWrapper = document.createElement('div');
+        svgWrapper.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" width="120" height="120" fill="var(--text-secondary)">
+            <path fill="text-primary" d="M96 160C96 124.7 124.7 96 160 96L480 96C515.3 96 544 124.7 544 160L544 480C544 515.3 515.3 544 480 544L160 544C124.7 544 96 515.3 96 480L96 160zM144 432L144 464C144 472.8 151.2 480 160 480L192 480C200.8 480 208 472.8 208 464L208 432C208 423.2 200.8 416 192 416L160 416C151.2 416 144 423.2 144 432zM448 416C439.2 416 432 423.2 432 432L432 464C432 472.8 439.2 480 448 480L480 480C488.8 480 496 472.8 496 464L496 432C496 423.2 488.8 416 480 416L448 416zM144 304L144 336C144 344.8 151.2 352 160 352L192 352C200.8 352 208 344.8 208 336L208 304C208 295.2 200.8 288 192 288L160 288C151.2 288 144 295.2 144 304zM448 288C439.2 288 432 295.2 432 304L432 336C432 344.8 439.2 352 448 352L480 352C488.8 352 496 344.8 496 336L496 304C496 295.2 488.8 288 480 288L448 288zM144 176L144 208C144 216.8 151.2 224 160 224L192 224C200.8 224 208 216.8 208 208L208 176C208 167.2 200.8 160 192 160L160 160C151.2 160 144 167.2 144 176zM448 160C439.2 160 432 167.2 432 176L432 208C432 216.8 439.2 224 448 224L480 224C488.8 224 496 216.8 496 208L496 176C496 167.2 488.8 160 480 160L448 160z"/>
+        </svg>`;
+        noMoviesWrapper.appendChild(svgWrapper);
+
+        // Optional text below SVG
+        const noMoviesText = document.createElement('p');
+        noMoviesText.textContent = 'No movies to display.';
+        noMoviesText.style.color = 'var(--text-secondary)';
+        noMoviesWrapper.appendChild(noMoviesText);
+
+        container.appendChild(noMoviesWrapper);
         return;
     }
 
@@ -545,17 +578,6 @@ function renderMovieCards(movies, sortedByTitle, groupedByGenre) {
         container.appendChild(groupWrapper);
     }
 
-    container.addEventListener('click', () => {
-        const sidebar = document.getElementById('sidebar-nav');
-        const hamburger = document.querySelector('.hamburger');
-
-        // Hide sidebar if it’s open
-        if (sidebar.classList.contains('active')) {
-            sidebar.classList.remove('active');
-            hamburger.classList.remove('active');
-        }
-    });
-
     
 }
 
@@ -624,6 +646,11 @@ function extractMpaa(detailJson) {
 // -------------------------
 function showSearchModal() {
 
+    if (!userSession) {
+        showLoginModal();
+        return; // ← stop execution here if not logged in
+    }
+
     const sidebar = document.getElementById('sidebar-nav');
     const hamburger = document.querySelector('.hamburger');
 
@@ -678,6 +705,11 @@ function showSearchModal() {
 
 function showSortModal() {
 
+    if (!userSession) {
+        showLoginModal();
+        return; // ← stop execution here if not logged in
+    }
+
     const sidebar = document.getElementById('sidebar-nav');
     const hamburger = document.querySelector('.hamburger');
 
@@ -724,6 +756,11 @@ function showSortModal() {
 }
 
 function showFilterModal() {
+
+    if (!userSession) {
+        showLoginModal();
+        return; // ← stop execution here if not logged in
+    }
 
     const sidebar = document.getElementById('sidebar-nav');
     const hamburger = document.querySelector('.hamburger');
@@ -814,6 +851,7 @@ function closeModal(modal) {
 // Movie Modal with Edit
 // -------------------------
 async function showMovieDetails(movie) {
+
     const modal = document.createElement('div');
     modal.className = 'modal';
     document.body.appendChild(modal);
@@ -1083,6 +1121,11 @@ async function showMovieDetails(movie) {
 // Add Movie Modal with multiple TMDB results
 // -------------------------
 async function showAddMovieModal() {
+
+    if (!userSession) {
+        showLoginModal();
+        return; // ← stop execution here if not logged in
+    }
 
     const sidebar = document.getElementById('sidebar-nav');
     const hamburger = document.querySelector('.hamburger');
@@ -1377,12 +1420,24 @@ function showLoginModal() {
 }
 
 async function handleLogout() {
-    await supabase.auth.signOut();
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+        console.error("Logout failed:", error.message);
+        return;
+    }
+
     userSession = null;
-    localStorage.removeItem('supabaseSession');
     updateLoginButton();
-    renderMovieCards([]);
-    alert("Logged out.");
+    renderMovieCards([]); // clear movies
+
+    const sidebar = document.getElementById('sidebar-nav');
+    const hamburger = document.querySelector('.hamburger');
+
+    // Hide sidebar if it’s open
+    if (sidebar.classList.contains('active')) {
+        sidebar.classList.remove('active');
+        hamburger.classList.remove('active');
+    }
 }
 
 function updateLoginButton() {
@@ -1396,28 +1451,20 @@ function updateLoginButton() {
 // Initialize App
 // -------------------------
 document.addEventListener('DOMContentLoaded', async () => {
-
-
-    // Restore cached session
+    // Get current session from Supabase
     const { data: { session } } = await supabase.auth.getSession();
-    if (session) {
-        userSession = session;
-    }
-
-    const cachedSession = localStorage.getItem('supabaseSession');
-    if (cachedSession) {
-        userSession = JSON.parse(cachedSession);
-    }
+    userSession = session; // null if not logged in
 
     updateLoginButton();
-    fetchMovies();
+    if (userSession) {
+        fetchMovies();
+    }
 
-    // Listen for changes in auth state (optional)
     supabase.auth.onAuthStateChange((_event, session) => {
         userSession = session;
         updateLoginButton();
         if (!userSession) {
-            renderMovieCards([]); // clear movies if logged out
+            renderMovieCards([]);
         } else {
             fetchMovies();
         }
@@ -1427,16 +1474,33 @@ document.addEventListener('DOMContentLoaded', async () => {
     const sidebar = document.getElementById('sidebar-nav');
 
     if (hamburger && sidebar) {
+        // --- Toggle sidebar on hamburger click ---
         hamburger.addEventListener('click', () => {
+            const isActive = sidebar.classList.toggle('active');
             hamburger.classList.toggle('active');
-            sidebar.classList.toggle('active');
+
+            if (isActive) {
+                // --- Close sidebar on outside click ---
+                const handleOutsideClick = (e) => {
+                    if (!sidebar.contains(e.target) && !hamburger.contains(e.target)) {
+                        sidebar.classList.remove('active');
+                        hamburger.classList.remove('active');
+                        document.removeEventListener('click', handleOutsideClick);
+                    }
+                };
+                document.addEventListener('click', handleOutsideClick);
+            }
         });
     }
+
+    
 });
 
 
-document.getElementById("loginBtn").addEventListener("click", showLoginModal);
-document.getElementById("logoutBtn").addEventListener("click", logout);
+
+
+
+
 
 
 
