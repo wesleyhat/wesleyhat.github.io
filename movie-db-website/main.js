@@ -246,6 +246,15 @@ function createNavBar() {
         document.documentElement.setAttribute('data-theme', currentTheme);
         localStorage.setItem('theme', currentTheme);
         themeItem.textContent = currentTheme === 'dark' ? 'Light Mode' : 'Dark Mode';
+
+        const sidebar = document.getElementById('sidebar-nav');
+        const hamburger = document.querySelector('.hamburger');
+
+        // Hide sidebar if it’s open
+        if (sidebar.classList.contains('active')) {
+            sidebar.classList.remove('active');
+            hamburger.classList.remove('active');
+        }
     });
 
     menu.appendChild(themeItem);
