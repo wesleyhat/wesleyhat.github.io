@@ -198,18 +198,36 @@ function createNavBar() {
     menu.className = 'sidebar-menu';
 
     const desktopButtons = [
-        { text: 'Add Movie', handler: showAddMovieModal },
-        { text: 'Search Movie', handler: showSearchModal },
-        { text: 'Sort By', handler: showSortModal },
-        { text: 'Filters', handler: showFilterModal }
-    ];
+        {
+            type: 'text',  // new property to distinguish type
+            text: 'Add Movie',
+            handler: showAddMovieModal
+        },
+        {
+            type: 'icon-text',
+            text: 'Search',
+            svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                    <path fill="currentColor" d="M480 272C480 317.9 465.1 360.3 440 394.7L566.6 521.4C579.1 533.9 579.1 554.2 566.6 566.7C554.1 579.2 533.8 579.2 521.3 566.7L394.7 440C360.3 465.1 317.9 480 272 480C157.1 480 64 386.9 64 272C64 157.1 157.1 64 272 64C386.9 64 480 157.1 480 272zM272 416C351.5 416 416 351.5 416 272C416 192.5 351.5 128 272 128C192.5 128 128 192.5 128 272C128 351.5 192.5 416 272 416z"/>
+                  </svg>`,
+            handler: showSearchModal
+        }
+    ];    
 
     desktopButtons.forEach(btnData => {
         const li = document.createElement('li');
-        li.textContent = btnData.text;
+        li.className = 'desktop-menu-item';
         li.addEventListener('click', btnData.handler);
+    
+        if (btnData.type === 'text') {
+            li.textContent = btnData.text;
+        } else if (btnData.type === 'icon-text') {
+            li.innerHTML = `${btnData.svg} <span>${btnData.text}</span>`;
+        }
+    
         menu.appendChild(li);
     });
+    
+    
 
     // Divider
     const divider = document.createElement('hr');
@@ -321,6 +339,19 @@ function createSortControl() {
     });
 
     wrapper.appendChild(toggleBtn);
+
+    const filterBtn = document.createElement('div');
+    filterBtn.className = 'filter-btn'
+    filterBtn.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path fill="btn-secondary-bg" d="M96 128C83.1 128 71.4 135.8 66.4 147.8C61.4 159.8 64.2 173.5 73.4 182.6L256 365.3L256 480C256 488.5 259.4 496.6 265.4 502.6L329.4 566.6C338.6 575.8 352.3 578.5 364.3 573.5C376.3 568.5 384 556.9 384 544L384 365.3L566.6 182.7C575.8 173.5 578.5 159.8 573.5 147.8C568.5 135.8 556.9 128 544 128L96 128z"/></svg>`
+
+    if (!userSession) {
+        toggleBtn.disabled = true;
+    }
+
+    filterBtn.addEventListener('click', showFilterModal);
+
+    wrapper.appendChild(filterBtn);
 }
 
 
@@ -463,37 +494,53 @@ function renderMovieCards(movies, sortedByTitle, groupedByGenre) {
     // -----------------------------
     if (sortedByTitle) {
         const grouped = {};
+    
+        // --- Build grouped object ---
         movies.forEach(movie => {
             let firstChar = movie.title.charAt(0).toUpperCase();
             if (!/[A-Z]/.test(firstChar)) firstChar = '#';
             if (!grouped[firstChar]) grouped[firstChar] = [];
             grouped[firstChar].push(movie);
         });
-
-        let letters = Object.keys(grouped).filter(l => l !== '#').sort();
-        if (!currentSort.ascending) letters.reverse();
-        if (grouped['#']) currentSort.ascending ? letters.unshift('#') : letters.push('#');
-
-        // --- Top A-Z bar ---
+    
+        // --- TOP BAR ORDER (always A → Z → #) ---
+        const barLetters = Object.keys(grouped).filter(l => l !== '#').sort();
+        if (grouped['#']) barLetters.push('#');
+    
+        // --- PAGE GROUP ORDER (changes with sort) ---
+        const azLetters = Object.keys(grouped).filter(l => l !== '#').sort();
+        let groupOrder;
+    
+        if (currentSort.ascending) {
+            // A → Z → #
+            groupOrder = [...azLetters];
+            if (grouped['#']) groupOrder.push('#');
+        } else {
+            // # → Z → A
+            groupOrder = [];
+            if (grouped['#']) groupOrder.push('#');
+            groupOrder = groupOrder.concat([...azLetters].reverse());
+        }
+    
+        // --- Top A–Z Bar ---
         const bar = document.createElement('div');
         bar.className = 'az-bar';
+    
         const allOption = document.createElement('span');
         allOption.textContent = 'ALL';
         allOption.className = 'az-item active';
         allOption.addEventListener('click', () => {
-            // Show all sections
             document.querySelectorAll('.movie-group').forEach(g => g.style.display = '');
             document.querySelectorAll('.az-item').forEach(el => el.classList.remove('active'));
             allOption.classList.add('active');
         });
         bar.appendChild(allOption);
-
-        letters.forEach(letter => {
+    
+        barLetters.forEach(letter => {
             const item = document.createElement('span');
             item.textContent = letter;
             item.className = 'az-item';
             item.addEventListener('click', () => {
-                // Scroll to the letter section
                 document.querySelectorAll('.movie-group').forEach(g => {
                     g.style.display = g.dataset.letter === letter ? '' : 'none';
                 });
@@ -502,37 +549,41 @@ function renderMovieCards(movies, sortedByTitle, groupedByGenre) {
             });
             bar.appendChild(item);
         });
-
+    
         container.appendChild(bar);
-
-
-        letters.forEach(letter => {
+    
+        // --- Render groups in final dynamic order ---
+        groupOrder.forEach(letter => {
             const groupWrapper = document.createElement('div');
             groupWrapper.className = 'movie-group';
             groupWrapper.dataset.letter = letter;
-
+    
             const header = document.createElement('h2');
             header.textContent = letter;
             header.style.fontWeight = '200';
             groupWrapper.appendChild(header);
-
+    
             const line = document.createElement('hr');
             groupWrapper.appendChild(line);
-
+    
             const cardsWrapper = document.createElement('div');
             cardsWrapper.className = 'movies-wrapper';
-
-            const moviesInGroup = currentSort.ascending ? grouped[letter] : [...grouped[letter]].reverse();
-
+    
+            // Reverse movies *inside* each group depending on sort
+            const moviesInGroup = currentSort.ascending
+                ? grouped[letter]
+                : [...grouped[letter]].reverse();
+    
             moviesInGroup.forEach(movie => {
                 const card = createMovieCard(movie);
                 cardsWrapper.appendChild(card);
             });
-
+    
             groupWrapper.appendChild(cardsWrapper);
             container.appendChild(groupWrapper);
         });
-    } 
+    }
+    
 
     // -----------------------------
     // GENRE GROUPING
@@ -851,8 +902,9 @@ function showFilterModal() {
     const allCast = Array.from(new Set(moviesData.flatMap(m => m.cast?.split(',').map(c => c.trim()) || [])));
 
     content.appendChild(createDropdown('Genre', 'genre', allGenres));
-    content.appendChild(createDropdown('Tag', 'tag', allTags));
-    content.appendChild(createDropdown('Cast', 'cast', allCast));
+    content.appendChild(createDropdown('\u00A0\u00A0\u00A0\u00A0Tag', 'tag', allTags));
+
+    //content.appendChild(createDropdown('Cast', 'cast', allCast));
 
     const btnContainer = document.createElement('div');
     btnContainer.className = 'modal-btn-container';
@@ -1527,6 +1579,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     
 });
+
 
 
 
