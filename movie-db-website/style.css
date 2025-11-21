@@ -419,7 +419,7 @@ body {
     color: var(--btn-secondary-text);
     border-radius: 6px;
     cursor: pointer;
-
+    font-size: .9rem;
     transition: 0.2s;
     user-select: none;
 }
@@ -1018,6 +1018,7 @@ button {
     }
 
 }
+
 
 
 
