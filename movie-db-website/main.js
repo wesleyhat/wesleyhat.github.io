@@ -25,19 +25,42 @@ document.addEventListener('DOMContentLoaded', () => {
     createSortControl()
 });
 
-// --- Enable modal / sidebar mode ---
+let scrollPosition = 0;
+
 function lockBackground() {
-    document.body.classList.add('no-scroll');
     const movieContainer = document.getElementById('movie-container');
+
+    // Save current scroll position
+    scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+
+    // Lock scrolling
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollPosition}px`;
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    document.body.style.overflow = 'hidden';
+
+    // Disable clicks on movie container
     if (movieContainer) movieContainer.style.pointerEvents = 'none';
 }
 
-// --- Disable modal / sidebar mode ---
 function unlockBackground() {
-    document.body.classList.remove('no-scroll');
     const movieContainer = document.getElementById('movie-container');
+
+    // Re-enable clicks
     if (movieContainer) movieContainer.style.pointerEvents = '';
+
+    // Restore scroll
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
+    document.body.style.overflow = '';
+
+    // Restore previous scroll position
+    window.scrollTo(0, scrollPosition);
 }
+
 
 // --- Helper to attach close listeners for any modal ---
 function setupModalClose(modalElement, closeCallback) {
@@ -1492,6 +1515,8 @@ function showLoginModal() {
         hamburger.classList.remove('active');
     }
 
+    lockBackground();
+
     const modal = document.createElement('div');
     modal.className = 'modal';
     document.body.appendChild(modal);
@@ -1533,6 +1558,8 @@ function showLoginModal() {
 
     cancelBtn.addEventListener('click', () => closeModal(modal));
 
+    const close = () => closeModal(modal);
+
     loginBtn.addEventListener('click', async () => {
         const email = emailInput.value.trim();
         const password = pwInput.value.trim();
@@ -1559,8 +1586,9 @@ function showLoginModal() {
         fetchMovies();
     });
 
+    // Close modal if clicking outside content
     modal.addEventListener('click', e => {
-        if (e.target === modal) closeModal(modal);
+        if (e.target === modal) close();
     });
 }
 
