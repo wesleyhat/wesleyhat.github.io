@@ -25,6 +25,35 @@ document.addEventListener('DOMContentLoaded', () => {
     createSortControl()
 });
 
+// --- Enable modal / sidebar mode ---
+function lockBackground() {
+    document.body.classList.add('no-scroll');
+    const movieContainer = document.getElementById('movie-container');
+    if (movieContainer) movieContainer.style.pointerEvents = 'none';
+}
+
+// --- Disable modal / sidebar mode ---
+function unlockBackground() {
+    document.body.classList.remove('no-scroll');
+    const movieContainer = document.getElementById('movie-container');
+    if (movieContainer) movieContainer.style.pointerEvents = '';
+}
+
+// --- Helper to attach close listeners for any modal ---
+function setupModalClose(modalElement, closeCallback) {
+    // Click outside closes modal
+    const handleOutsideClick = (e) => {
+        if (!modalElement.contains(e.target)) {
+            modalElement.remove();
+            unlockBackground();
+            document.removeEventListener('click', handleOutsideClick);
+            if (closeCallback) closeCallback();
+        }
+    };
+    document.addEventListener('click', handleOutsideClick);
+}
+
+
 function isMobile() {
     return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 }
@@ -748,6 +777,8 @@ function showSearchModal() {
     document.body.appendChild(modal);
     document.body.classList.add('modal-open');
 
+    lockBackground();
+
     const content = document.createElement('div');
     content.className = 'modal-content search-modal';
     modal.appendChild(content);
@@ -776,14 +807,23 @@ function showSearchModal() {
     searchBtn.textContent = 'Search';
     btnContainer.appendChild(searchBtn);
 
-    cancelBtn.addEventListener('click', () => closeModal(modal));
+    // -------------------------
+    // Close modal helper
+    // -------------------------
+    // Use a single close function so we unlock the background correctly
+    const close = () => closeModal(modal);
+
+    cancelBtn.addEventListener('click', close);
     searchBtn.addEventListener('click', () => {
         activeSearch = input.value.trim();
         applyFiltersAndSort();
-        closeModal(modal);
+        close(); // <-- ensures background is unlocked
     });
 
-    modal.addEventListener('click', e => { if (e.target === modal) closeModal(modal); });
+    // Close modal if clicking outside content
+    modal.addEventListener('click', e => {
+        if (e.target === modal) close();
+    });
 }
 
 function showSortModal() {
@@ -839,10 +879,9 @@ function showSortModal() {
 }
 
 function showFilterModal() {
-
     if (!userSession) {
         showLoginModal();
-        return; // ← stop execution here if not logged in
+        return; // stop execution if not logged in
     }
 
     const sidebar = document.getElementById('sidebar-nav');
@@ -857,7 +896,9 @@ function showFilterModal() {
     const modal = document.createElement('div');
     modal.className = 'modal';
     document.body.appendChild(modal);
-    document.body.classList.add('modal-open');
+
+    // --- Lock background scroll & clicks ---
+    lockBackground();
 
     const content = document.createElement('div');
     content.className = 'modal-content filter-modal';
@@ -899,12 +940,9 @@ function showFilterModal() {
 
     const allGenres = Array.from(new Set(moviesData.flatMap(m => m.genre?.split(',').map(g => g.trim()) || [])));
     const allTags = Array.from(new Set(moviesData.flatMap(m => m.tags?.split(',').map(t => t.trim()) || [])));
-    const allCast = Array.from(new Set(moviesData.flatMap(m => m.cast?.split(',').map(c => c.trim()) || [])));
 
     content.appendChild(createDropdown('Genre', 'genre', allGenres));
     content.appendChild(createDropdown('\u00A0\u00A0\u00A0\u00A0Tag', 'tag', allTags));
-
-    //content.appendChild(createDropdown('Cast', 'cast', allCast));
 
     const btnContainer = document.createElement('div');
     btnContainer.className = 'modal-btn-container';
@@ -920,21 +958,29 @@ function showFilterModal() {
     applyBtn.textContent = 'Apply';
     btnContainer.appendChild(applyBtn);
 
-    cancelBtn.addEventListener('click', () => closeModal(modal));
-    applyBtn.addEventListener('click', () => { applyFiltersAndSort(); closeModal(modal); });
+    // --- Close handlers ---
+    const close = () => closeModal(modal);
 
-    modal.addEventListener('click', e => { if (e.target === modal) closeModal(modal); });
+    cancelBtn.addEventListener('click', close);
+    applyBtn.addEventListener('click', () => { applyFiltersAndSort(); close(); });
+
+    // Close modal if clicked outside content
+    modal.addEventListener('click', e => { if (e.target === modal) close(); });
 }
 
+// Updated closeModal to unlock background
 function closeModal(modal) {
     modal.remove();
-    document.body.classList.remove('modal-open');
+    unlockBackground();
 }
+
 
 // -------------------------
 // Movie Modal with Edit
 // -------------------------
 async function showMovieDetails(movie) {
+
+    lockBackground();
 
     const modal = document.createElement('div');
     modal.className = 'modal';
@@ -1179,12 +1225,19 @@ async function showMovieDetails(movie) {
             }
         };
 
+        const close = () => closeModal(modal);
+
         // Cancel edits
         cancelBtn.onclick = () => {
             Object.assign(movie, originalMovie);
             close();
             showMovieDetails(movie);
         };
+
+        // Close modal if clicking outside content
+        modal.addEventListener('click', e => {
+            if (e.target === modal) close();
+        });
     });
 
     // Delete
@@ -1347,6 +1400,9 @@ async function showAddMovieModal() {
 // Preview Modal (mimics movie detail modal)
 // -------------------------
 function showPreviewModal(movieData, parentModal) {
+
+    lockBackground();
+
     const modal = document.createElement('div');
     modal.className = 'modal';
     document.body.appendChild(modal);
@@ -1396,6 +1452,8 @@ function showPreviewModal(movieData, parentModal) {
     addBtn.textContent = 'Add';
     btnContainer.appendChild(addBtn);
 
+    const close = () => closeModal(modal);
+
     cancelBtn.addEventListener('click', () => {
         modal.remove();
         document.body.classList.remove('modal-open');
@@ -1417,7 +1475,10 @@ function showPreviewModal(movieData, parentModal) {
         }
     });
 
-    modal.addEventListener('click', e => { if (e.target === modal) { modal.remove(); document.body.classList.remove('modal-open'); } });
+    // Close modal if clicking outside content
+    modal.addEventListener('click', e => {
+        if (e.target === modal) close();
+    });
 }
 
 function showLoginModal() {
@@ -1556,28 +1617,42 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const hamburger = document.querySelector('.hamburger');
     const sidebar = document.getElementById('sidebar-nav');
+    const movieContainer = document.getElementById('movie-container');
 
-    if (hamburger && sidebar) {
-        // --- Toggle sidebar on hamburger click ---
+    if (hamburger && sidebar && movieContainer) {
         hamburger.addEventListener('click', () => {
             const isActive = sidebar.classList.toggle('active');
             hamburger.classList.toggle('active');
 
             if (isActive) {
+                // --- Disable scrolling ---
+                document.body.classList.add('no-scroll');
+
+                // --- Disable clicks on movie container ---
+                movieContainer.style.pointerEvents = 'none';
+
                 // --- Close sidebar on outside click ---
                 const handleOutsideClick = (e) => {
                     if (!sidebar.contains(e.target) && !hamburger.contains(e.target)) {
                         sidebar.classList.remove('active');
                         hamburger.classList.remove('active');
+
+                        document.body.classList.remove('no-scroll');
+                        movieContainer.style.pointerEvents = '';
+
                         document.removeEventListener('click', handleOutsideClick);
                     }
                 };
                 document.addEventListener('click', handleOutsideClick);
+            } else {
+                document.body.classList.remove('no-scroll');
+                movieContainer.style.pointerEvents = '';
             }
         });
     }
 
-    
+
+
 });
 
 
