@@ -655,7 +655,7 @@ function renderMovieCards(movies, sortedByTitle, groupedByGenre) {
                 const card = createMovieCard(movie);
                 cardsWrapper.appendChild(card);
             });
-    
+
             groupWrapper.appendChild(cardsWrapper);
             container.appendChild(groupWrapper);
         });
