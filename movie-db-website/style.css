@@ -1,7 +1,7 @@
 /* -------------------------
    Dark Mode (Default)
    ------------------------- */
-:root {
+   :root {
     /* Backgrounds */
     --bg-nav: #181818;
     --bg-body: #121212;
@@ -46,7 +46,7 @@ html[data-theme="light"] {
 /* Sidebar theme toggle */
 #theme-toggle {
     position: absolute;
-    bottom: 150px;
+    bottom: 50px;
     right: 30px;
     width: 30px;
     height: 30px;
@@ -216,6 +216,25 @@ html {
     margin: 20px 0;
 }
 
+.desktop-menu-item {
+    display: flex;
+    align-items: center;   /* vertically center text and SVG */
+    gap: 6px;              /* space between icon and text */
+    cursor: pointer;
+}
+
+.desktop-menu-item svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;    /* inherits color from text */
+}
+
+.desktop-menu-item span {
+    display: inline-block;
+}
+
+
+
 .upgrade-btn {
     background: var(--btn-primary-bg);
     color: var(--btn-primary-text);
@@ -333,6 +352,22 @@ body {
     font-size: 14px;
 }
 
+.filter-btn {
+    
+    border: none;
+    padding: 6px 25px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;             /* center the SVG */
+    align-items: center;
+    justify-content: center;
+}
+
+.filter-btn svg {
+    width: 25px;
+    height: 25px;
+}
+
 
 /* Container itself is block, not a grid */
 #movie-container {
@@ -426,7 +461,7 @@ body {
 
 .card img {
     width: 100%;
-    height: 250px;
+    height: 225px;
     object-fit: cover;
 }
 
@@ -438,6 +473,11 @@ body {
     margin: 0;
     font-size: 12px;
     color: var(--text-primary);
+    /* Truncate long titles */
+    white-space: nowrap;       /* prevent wrapping */
+    overflow: hidden;          /* hide overflow */
+    text-overflow: ellipsis;   /* add "..." */
+
 }
 
 .card-content p {
@@ -478,6 +518,34 @@ body {
     box-sizing: border-box;
     max-height: 90vh;
     overflow-y: auto;
+}
+
+.filter-modal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;   /* centers each dropdown row */
+    gap: 12px;
+}
+
+.dropdown-wrapper {
+    display: flex;
+    flex-direction: row;   /* inline label + dropdown */
+    align-items: center;
+    justify-content: center;  /* center the inline pair */
+    gap: 10px;                /* spacing between label & dropdown */
+    width: 100%;
+}
+
+.dropdown-wrapper label {
+    font-size: 14px;
+    white-space: nowrap;   /* prevents wrapping */
+}
+
+.modal-select {
+    padding: 6px 10px;
+    border-radius: 6px;
+    text-align: center;    /* center text inside dropdown */
+    width: auto;           /* keep natural width */
 }
 
 .modal-top {
@@ -574,7 +642,7 @@ button {
     transition: 0.2s;
 }
 
-.btn-cancel, .btn-search, .modal-btn {
+.btn-cancel, .btn-search, .modal-btn, .btn-apply {
     padding: 10px 20px;
     font-size: 1.2rem;
     margin: 5px;
@@ -855,7 +923,7 @@ button {
     .movies-wrapper {
         display: flex;
         flex-wrap: wrap;
-        gap: 10px;
+        gap: 15px;
         justify-content: center;
     }
 
@@ -869,7 +937,6 @@ button {
         gap: 10px;
         justify-content: flex-start;
         align-items: center;
-        padding: 10px;
         border-radius: 12px;
         box-shadow: 0 2px 6px var(--shadow);
         transition: none;
@@ -881,7 +948,6 @@ button {
         width: 100%;
         height: auto;
         object-fit: cover;
-        border-radius: 10px;
     }
 
     .card-content {
@@ -898,11 +964,6 @@ button {
     .card-content h3 { 
         font-size: 12px; 
         color: var(--text-primary); 
-        /* Truncate long titles */
-        white-space: nowrap;       /* prevent wrapping */
-        overflow: hidden;          /* hide overflow */
-        text-overflow: ellipsis;   /* add "..." */
-
         display: block;       /* prevent flex-item weirdness */
         width: 100%;          /* take full card width */
         max-width: 100%;      /* prevent overflow to left/right */
@@ -952,7 +1013,12 @@ button {
     .modal-actions button { width: 80%; font-size: 1rem; padding: 10px 0; }
     .close-modal { top: 10px; right: 10px; font-size: 24px; }
     .modal-input { width: 90%; margin: 0 auto 10px; }
+    #theme-toggle {
+        bottom: 150px;
+    }
+
 }
+
 
 
 
