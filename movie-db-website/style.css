@@ -46,7 +46,7 @@ html[data-theme="light"] {
 /* Sidebar theme toggle */
 #theme-toggle {
     position: absolute;
-    bottom: 45px;
+    bottom: calc(45px + env(safe-area-inset-bottom)); /* 20px spacing + safe area */
     right: 30px;
     width: 30px;
     height: 30px;
