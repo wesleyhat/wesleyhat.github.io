@@ -858,7 +858,7 @@ button {
     }
 
     .hamburger span.middle {
-        background-color: var(--bg-nav);
+        background-color: transparent;
     }
 
     .hamburger.active span:nth-child(1) {
@@ -1002,7 +1002,7 @@ button {
     .modal-info { width: 100%; text-align: center;}
     .description-text {
         display: block;       /* ensure it behaves like a block element */
-        text-align: left;     /* left-align text */
+        /* text-align: left;      left-align text */
     }
 
     .modal-info .field span {
