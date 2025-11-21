@@ -91,7 +91,7 @@ body {
     background-image: url(images/RETRO1.png);
 }
 
-.projOne:hover, .projTwo:hover, .projThree:hover, .projFour:hover, .projFive:hover, .projSix:hover, .projSeven:hover, .projEight:hover, projNine:hover{
+.projOne:hover, .projTwo:hover, .projThree:hover, .projFour:hover, .projFive:hover, .projSix:hover, .projSeven:hover, .projEight:hover, .projNine:hover{
     transform: scale(1.02);
     background-color: #fff;
 }
@@ -146,6 +146,7 @@ body {
 
     
 }
+
 
 
 
