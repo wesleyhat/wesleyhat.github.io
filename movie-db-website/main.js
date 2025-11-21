@@ -1,1023 +1,1588 @@
-/* -------------------------
-   Dark Mode (Default)
-   ------------------------- */
-   :root {
-    /* Backgrounds */
-    --bg-nav: #181818;
-    --bg-body: #121212;
-    --card-bg: #1e1e1e;
-    --modal-bg: #1c1c1c;
-
-    /* Text */
-    --text-primary: #e0e0e0;
-    --text-secondary: #a0a0a0;
-    --text-highlight: #4fc3f7;
-
-    /* Buttons */
-    --btn-primary-bg: #4fc3f7;
-    --btn-primary-text: #121212;
-    --btn-secondary-bg: #2c2c2c;
-    --btn-secondary-text: #e0e0e0;
-    --btn-delete-bg: #ef5350;
-    --btn-delete-text: #ffffff;
-
-    /* Shadows */
-    --shadow: rgba(0, 0, 0, 0.5);
-}
-
-/* Light mode via data-theme attribute */
-html[data-theme="light"] {
-    --bg-nav: #f5f5f5;
-    --bg-body: #ffffff;
-    --card-bg: #fafafa;
-    --modal-bg: #ffffff;
-    --text-primary: #212121;
-    --text-secondary: #555555;
-    --text-highlight: #1976d2;
-    --btn-primary-bg: #1976d2;
-    --btn-primary-text: #ffffff;
-    --btn-secondary-bg: #e0e0e0;
-    --btn-secondary-text: #212121;
-    --btn-delete-bg: #d32f2f;
-    --btn-delete-text: #ffffff;
-    --shadow: rgba(0, 0, 0, 0.3);
-}
-
-/* Sidebar theme toggle */
-#theme-toggle {
-    position: absolute;
-    bottom: 50px;
-    right: 30px;
-    width: 30px;
-    height: 30px;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#theme-toggle .icon {
-    position: absolute;
-    font-size: 22px;
-    transition: opacity 0.25s ease;
-    opacity: 0;
-}
-
-#theme-toggle .sun {
-    transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
-}
-
-#theme-toggle .moon {
-    transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
-}
-
-/* Light mode = show sun */
-[data-theme='light'] #theme-toggle .sun {
-    opacity: 1;
-}
-
-/* Dark mode = show moon */
-[data-theme='dark'] #theme-toggle .moon {
-    opacity: 1;
-}
-
-/* -------------------------
-   Smooth theme transition
-   ------------------------- */
-html {
-    transition: background-color 0.5s ease, color 0.5s ease;
-}
-
-body,
-#sidebar-nav,
-.card,
-.modal,
-.modal-content,
-button,
-.sort-select,
-.sort-toggle,
-.login-modal,
-.hero,
-.az-item,
-.multi-select div button {
-    transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
-}
-
-
-.top-bar{
-    display: none;
-}
-
-/* -------------------------
-   Body & Layout
-   ------------------------- */
-body {
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 0;
-    background: var(--bg-body);
-    color: var(--text-primary);
-}
-
-body.modal-open {
-    overflow-y: scroll;
-}
-
-body.no-scroll {
-    overflow: hidden;
-    position: fixed;
-    width: 100%;
-    height: 100%;
-}
-
-html, body {
-    overflow-x: hidden;
-}
-
-html {
-    scrollbar-gutter: stable;
-}
-
-
-
-.container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-    gap: 30px;
-    padding: 20px;
-    max-width: 1400px;
-    margin: 0 auto;
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
-}
-
-.container::-webkit-scrollbar {
-    display: none;
-}
-
-/* -------------------------
-   Sidebar
-   ------------------------- */
-#sidebar-nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 260px;
-    height: 100vh;
-    background: var(--bg-nav);
-    color: var(--text-primary);
-    display: flex;
-    flex-direction: column;
-    padding-top: 20px;
-    box-shadow: 2px 0 5px var(--shadow);
-    z-index: 2000;
-}
-
-/* Tags / Genres display outside edit mode */
-.tag {
-    display: inline-block;
-    padding: 4px 10px;
-    margin: 2px 4px;
-    border-radius: 6px;
-    background-color: var(--btn-primary-bg);
-    color: var(--btn-primary-text);
-    font-size: 0.85rem;
-    cursor: default;
-    user-select: none;
-}
-
-
-.sidebar-logo {
-    font-size: 28px;
-    padding: 20px;
-    font-weight: 400;
-}
-
-.sidebar-menu {
-    list-style: none;
-    padding: 0 20px;
-    margin: 0;
-    flex: 1; 
-}
-
-.sidebar-menu li {
-    padding: 10px 0;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-.sidebar-menu li:hover {
-    color: var(--text-highlight);
-}
-
-.sidebar-menu hr {
-    border: none;
-    border-top: 1px solid #ddd;
-    margin: 20px 0;
-}
-
-.desktop-menu-item {
-    display: flex;
-    align-items: center;   /* vertically center text and SVG */
-    gap: 6px;              /* space between icon and text */
-    cursor: pointer;
-}
-
-.desktop-menu-item svg {
-    width: 18px;
-    height: 18px;
-    fill: currentColor;    /* inherits color from text */
-}
-
-.desktop-menu-item span {
-    display: inline-block;
-}
-
-
-
-.upgrade-btn {
-    background: var(--btn-primary-bg);
-    color: var(--btn-primary-text);
-    border: none;
-    padding: 12px 0;
-    margin: 30px 20px;
-    border-radius: 6px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.upgrade-btn:hover {
-    opacity: 0.85;
-}
-
-/* Shift site content right */
-body {
-    margin-left: 260px !important;
-}
-
-.hero-cont{
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-}
-
-.hero {
-    background-color: var(--btn-secondary-bg);
-    color: var(--btn-secondary-text);
-    font-weight: 600;
-    font-size: 25px;
-    padding: 20px;
-    width: 70%;
-    margin: 20px;
-    margin-left: 40px;
-    border-radius: 7px;
-    display: flex;
-    justify-content: flex-start;
-}
-
-#sort-control {
-    display: flex;
-    align-items: center;
-    gap: 0;
-    margin: 1rem 0;
-    width: fit-content;
-}
-
-/* Inner wrapper (optional, in case you need) */
-.sort-wrapper {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    padding-left: 60px;
-}
-
-/* Dropdown */
-.sort-select {
-   -webkit-appearance: none;  /* Safari/iOS */
-    -moz-appearance: none;     /* Firefox */
-    appearance: none;          /* modern browsers */
-   
-    padding: 7px 10px;
-    font-size: 15px;
-    border: 1px solid var(--btn-secondary-bg);
-    border-right: 0;
-    border-radius: 6px 0 0 6px;
-    background: var(--bg-body);
-    color: var(--btn-secondary-text);
-    cursor: pointer;
-}
-
-/* Optional: remove inner padding on iOS */
-.sort-select::-ms-expand {
-    display: none; /* IE/Edge */
-}
-
-/* Arrow button */
-.sort-toggle {
-    padding: 7px 12px;
-    border: 1px solid var(--btn-secondary-bg);
-    border-left: 0;
-    border-radius: 0 6px 6px 0;
-    background: var(--bg-body);
-    color: var(--btn-secondary-text);
-    cursor: pointer;
-    font-size: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Hover effect */
-.sort-toggle:hover {
-    background: #ddd;
-}
-
-.sort-select-wrapper {
-    position: relative;
-    display: inline-block;
-}
-
-.sort-select-wrapper::after {
-    content: '▾';               /* down arrow symbol */
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    pointer-events: none;       /* clicks pass through */
-    color: #555;
-    font-size: 14px;
-}
-
-.filter-btn {
-    color: var(--btn-primary-bg);
-    border: none;
-    padding: 6px 25px;
-    border-radius: 6px;
-    cursor: pointer;
-    display: flex;             /* center the SVG */
-    align-items: center;
-    justify-content: center;
-}
-
-.filter-btn svg {
-    width: 23px;
-    height: 23px;
-}
-
-
-/* Container itself is block, not a grid */
-#movie-container {
-    display: block;
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 40px 20px;      /* top/bottom gap */
-    min-height: calc(100vh - 100px); /* full viewport minus header/hero height */
-    box-sizing: border-box;
-}
-
-
-/* Letter groups */
-.movie-group {
-    margin-bottom: 2rem;
-    display: block;
-}
-
-.movie-group h2 {
-    font-size: 1.5rem;
-    margin-bottom: 0.25rem;
-}
-
-.movie-group hr {
-    border: none;
-    border-top: 2px solid #ccc;
-    margin-bottom: 1rem;
-    width: 100%;  /* horizontal full-width line */
-}
-
-/* Cards inside a group use grid */
-.movies-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: flex-start; /* align cards to left */
-}
-
-.az-bar {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 1rem;
-    justify-content: center; /* center horizontally */
-}
-
-.az-item {
-    padding: 6px 10px;
-    color: var(--btn-secondary-text);
-    border-radius: 6px;
-    cursor: pointer;
-
-    transition: 0.2s;
-    user-select: none;
-}
-
-.az-item:hover {
-    background: var(--btn-primary-bg);
-    color: var(--btn-primary-text);
-}
-
-.az-item.active {
-    background: var(--btn-primary-bg);
-    color: var(--btn-primary-text);
-}
-
-
-
-/* -------------------------
-   Cards
-   ------------------------- */
-.card {
-    background: var(--card-bg);
-    color: var(--text-primary);
-    max-width: 175px;
-    width: 160px;       /* fixed width */
-    flex-shrink: 0;     /* prevent shrinking */
-    flex-grow: 0;       /* prevent growing */
-    border-radius: 8px;
-    box-shadow: 0 2px 6px var(--shadow);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    transition: transform 0.2s;
-    cursor: pointer;
-}
-
-.card:hover {
-    transform: translateY(-5px);
-}
-
-.card img {
-    width: 100%;
-    height: 225px;
-    object-fit: cover;
-}
-
-.card-content {
-    padding: 10px;
-}
-
-.card-content h3 {
-    margin: 0;
-    font-size: 12px;
-    color: var(--text-primary);
-    /* Truncate long titles */
-    white-space: nowrap;       /* prevent wrapping */
-    overflow: hidden;          /* hide overflow */
-    text-overflow: ellipsis;   /* add "..." */
-
-}
-
-.card-content p {
-    margin: 5px 0;
-    font-size: 12px;
-    color: var(--text-secondary);
-}
-
-/* -------------------------
-   Modals
-   ------------------------- */
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.1);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    padding: 20px;
-    box-sizing: border-box;
-    overflow-y: auto;
-}
-
-.modal-content {
-    background: var(--modal-bg);
-    color: var(--text-primary);
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-    width: 100%;
-    max-width: 1000px;
-    box-shadow: 0 4px 15px var(--shadow);
-    box-sizing: border-box;
-    max-height: 90vh;
-    overflow-y: auto;
-}
-
-.filter-modal {
-    display: flex;
-    flex-direction: column;
-    align-items: center;   /* centers each dropdown row */
-    gap: 12px;
-}
-
-.dropdown-wrapper {
-    display: flex;
-    flex-direction: row;   /* inline label + dropdown */
-    align-items: center;
-    justify-content: center;  /* center the inline pair */
-    gap: 10px;                /* spacing between label & dropdown */
-    width: 100%;
-}
-
-.dropdown-wrapper label {
-    font-size: 14px;
-    white-space: nowrap;   /* prevents wrapping */
-}
-
-.modal-select {
-    padding: 6px 10px;
-    border-radius: 6px;
-    text-align: center;    /* center text inside dropdown */
-    width: auto;           /* keep natural width */
-}
-
-.modal-top {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-}
-
-.modal-top img {
-    width: 250px;
-    height: auto;
-    border-radius: 8px;
-    flex-shrink: 0;
-}
-
-.modal-info {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    flex: 1;
-}
-
-.modal-info h2 {
-    margin: 0 0 8px 0;
-    color: var(--text-highlight);
-}
-
-.modal-info p {
-    margin: 4px 0;
-    color: var(--text-primary);
-}
-
-.modal-section {
-    margin-top: 20px;
-}
-
-.modal-section h3 {
-    margin-bottom: 8px;
-    color: var(--text-highlight);
-}
-
-.modal-section p {
-    margin: 0 0 10px 0;
-    color: var(--text-primary);
-}
-
-.close-modal {
-    position: absolute;
-    top: 15px;
-    right: 120px;
-    font-size: 28px;
-    font-weight: bold;
-    color: var(--text-primary);
-    cursor: pointer;
-}
-
-.close-modal:hover {
-    color: var(--text-highlight);
-}
-
-.login-modal{
-    background: var(--modal-bg);
-    border-radius: 12px;
-    padding: 20px;
-    width: 100%;
-    max-width: 500px;       /* smaller width for login modal */
-    min-height: 300px;      /* sets the minimum height */
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* vertically center content inside modal */
-    align-items: center;     /* horizontally center content */
-    box-shadow: 0 4px 15px var(--shadow);
-    overflow-y: auto;
-}
-
-.login-modal .modal-input{
-    width: 75%;
-    padding: 10px 20px;
-}
-
-.field{
-    padding: 10px;
-}
-
-/* -------------------------
-   Buttons
-   ------------------------- */
-button {
-    font-family: inherit;
-    cursor: pointer;
-    border: none;
-    border-radius: 6px;
-    font-weight: bold;
-    transition: 0.2s;
-}
-
-.btn-cancel, .btn-search, .modal-btn, .btn-apply {
-    padding: 10px 20px;
-    font-size: 1.2rem;
-    margin: 5px;
-    margin-top: 10px;
-    background-color: var(--btn-secondary-bg);
-    color: var(--btn-secondary-text);
-}
-
-.btn-add {
-    padding: 8px 16px;
-    font-size: 1.2rem;
-    background-color: var(--btn-primary-bg);
-    color: var(--btn-primary-text);
-}
-
-.modal-actions button {
-    padding: 8px 20px;
-}
-
-.modal-actions button.edit-save {
-    background-color: var(--btn-primary-bg);
-    color: var(--btn-primary-text);
-    margin-right: 7px;
-    margin-bottom: 7px;
-}
-
-.modal-actions button.cancel {
-    background-color: var(--btn-secondary-bg);
-    color: var(--btn-secondary-text);
-    margin-right: 7px;
-    margin-bottom: 7px;
-}
-
-.modal-actions button.delete {
-    background-color: var(--btn-delete-bg);
-    color: var(--btn-delete-text);
-    margin-right: 7px;
-    margin-bottom: 7px;
-}
-
-.editable-field {
-    margin-bottom: 12px;
-    padding: 6px 8px;
-    border: 1px solid var(--btn-primary-bg);
-    border-radius: 6px;
-}
-
-.editable-field span.readonly {
-    cursor: text;
-}
-
-.multi-select div button {
-    padding: 5px 12px;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.multi-option {
-    padding: 4px;
-    margin: 4px;
-}
-
-.multi-select div button.selected {
-    background-color: var(--btn-primary-bg);
-    color: var(--btn-primary-text);
-}
-
-.multi-select div button:not(.selected) {
-    background-color: var(--btn-secondary-bg);
-    color: var(--text-secondary);
-}
-
-.modal-select,
-.modal-input {
-    padding: 6px 10px;
-    margin: 6px 0;
-    border-radius: 6px;
-    border: 1px solid var(--btn-primary-bg);
-    background-color: var(--card-bg);
-    color: var(--text-primary);
-}
-
-.modal-select option {
-    background-color: var(--card-bg);
-    color: var(--text-primary);
-}
-
-/* Search results */
-.results-container {
-    margin-top: 20px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-}
-
-.result-card {
-    display: flex;
-    align-items: center;
-    background: var(--card-bg);
-    border-radius: 6px;
-    padding: 6px;
-    cursor: pointer;
-    gap: 6px;
-    transition: transform 0.2s;
-}
-
-.result-card:hover {
-    transform: translateY(-2px);
-}
-
-.result-poster {
-    width: 50px;
-    height: 75px;
-    object-fit: cover;
-    border-radius: 4px;
-}
-
-.result-info {
-    color: var(--text-primary);
-    font-size: 0.9rem;
-}
-
-@media (max-width: 768px) {
-
-    body {
-        margin-left: 0 !important;
-        padding: 0;          /* remove padding */
-        overflow: visible;
+// main.js
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+
+const SUPABASE_URL = 'https://acasxnbktmwcckfrvulm.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_8Bv_VRnpMGlBWaXA3UhNPA_ck3akiaF';
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const TMDB_API_KEY = "a60b5cafc7b6b2fbc0626df055ae2d62";
+const TMDB_BASE_URL = "https://api.themoviedb.org/3";
+
+let moviesData = [];
+let activeSearch = '';
+let activeFilters = { genre: '', tag: '', cast: '' };
+let currentSort = { key: 'title', ascending: true };
+let userSession = null;
+let sorted_by_title = true; // updated automatically when sort key changes
+
+// -------------------------
+// Initialize App
+// -------------------------
+document.addEventListener('DOMContentLoaded', () => {
+    createNavBar();
+    fetchMovies();
+    createSortControl()
+});
+
+function isMobile() {
+    return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+}
+
+function addScanBarcodeButton(btnContainer) {
+    const scanBtn = document.createElement('button');
+    scanBtn.textContent = "Scan from Barcode";
+    scanBtn.className = "modal-btn";
+
+    let scanner; // Html5Qrcode instance
+    const readerDiv = document.getElementById('reader'); // ensure this div exists
+    const output = document.createElement('div'); // optional feedback
+    output.className = 'barcode-output';
+    btnContainer.appendChild(output);
+
+    scanBtn.addEventListener('click', async () => {
+        // ---------- DESKTOP FALLBACK ----------
+        if (!isMobile()) {
+            const barcode = prompt("Enter barcode manually:");
+            if (!barcode) return;
+            return handleScannedBarcode(barcode); // send to lookup + TMDB
+        }
+
+        // ---------- MOBILE / CAMERA ----------
+        if (!readerDiv) {
+            console.error("Reader div not found in DOM");
+            alert("Camera scanner cannot start: missing #reader element.");
+            return;
+        }
+
+        // Initialize Html5Qrcode
+        scanner = new Html5Qrcode("reader");
+
+        const config = {
+            fps: 10,
+            qrbox: { width: 300, height: 100 },
+            formatsToSupport: [
+                Html5QrcodeSupportedFormats.EAN_13,
+                Html5QrcodeSupportedFormats.UPC_A,
+                Html5QrcodeSupportedFormats.UPC_E
+            ]
+        };
+
+        try {
+            await scanner.start(
+                { facingMode: "environment" },
+                config,
+                async (decodedText, decodedResult) => {
+                    // Stop scanner once barcode detected
+                    await scanner.stop().catch(console.warn);
+                    readerDiv.innerHTML = ""; // remove camera feed
+                    output.textContent = "Detected barcode: " + decodedText;
+
+                    // Use the detected barcode for lookup
+                    let title = await lookupBarcode(decodedText); // fetch title from barcode
+                    if (!title) title = "Unscanable"; // fallback
+
+                    const cleanedTitle = cleanTitle(title); // clean up the title
+
+                    // Search TMDB by the cleaned title
+                    let tmdbResults = await searchTmdbByTitle(cleanedTitle);
+
+                    if (!tmdbResults || !tmdbResults.length) {
+                        alert("No movies found for this barcode.");
+                        return;
+                    }
+
+                    // Pick the first TMDB result (or you could let user choose)
+                    const firstResult = tmdbResults[0];
+                    const detail = await getTmdbDetails(firstResult.id);
+
+                    const movieData = {
+                        title: detail.title || 'Unknown',
+                        desc: detail.overview || 'No description available.',
+                        rating: extractMpaa(detail) || 'NR',
+                        release_date: detail.release_date || '',
+                        genre: detail.genres ? detail.genres.map(g => g.name).join(', ') : 'Unknown',
+                        cast: detail.credits ? detail.credits.cast.slice(0, 5).map(c => c.name).join(', ') : 'Unknown',
+                        cover_img: detail.poster_path ? `https://image.tmdb.org/t/p/w500${detail.poster_path}` : '',
+                        tags: '',
+                        tmdb_id: detail.id
+                    };
+
+                },
+                (errorMessage) => {
+                    console.log("Scan error:", errorMessage);
+                }
+            );
+        } catch (err) {
+            console.error("Failed to start scanner:", err);
+            output.textContent = "ERROR: " + err;
+        }
+    });
+
+    btnContainer.appendChild(scanBtn);
+}
+
+function cleanTitle(title) {
+    if (!title) return "";
+    // Remove everything after '(' or '['
+    title = title.split(/[\(\[]/)[0].trim();
+    // Remove 'VHS' and everything after
+    let vhsIndex = title.toUpperCase().indexOf("VHS");
+    if (vhsIndex !== -1) {
+        title = title.substring(0, vhsIndex).trim();
+    }
+    // Remove common suffixes
+    const suffixes = ["DVD", "Blu-ray"];
+    for (let suffix of suffixes) {
+        if (title.endsWith(suffix)) {
+            title = title.substring(0, title.length - suffix.length).trim();
+        }
+    }
+    console.log("[cleanTitle] Result:", title);
+    return title;
+}
+
+// Lookup barcode via Supabase Edge Function with auth token
+async function lookupBarcode(barcode) {
+    try {
+        // Get current session and token
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.access_token) {
+            throw new Error("User not logged in or token not available.");
+        }
+
+        console.log("[lookupBarcode] Barcode:", barcode);
+
+        const res = await fetch(
+            `https://acasxnbktmwcckfrvulm.supabase.co/functions/v1/barcode-lookup?barcode=${barcode}`,
+            {
+                headers: {
+                    'Authorization': `Bearer ${session.access_token}`,
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
+
+        if (!res.ok) {
+            const text = await res.text();
+            console.error(`[lookupBarcode] Failed: ${res.status}`, text);
+            return null;
+        }
+
+        const movieTitle = await res.text(); // Edge Function returns plain text
+        console.log('[lookupBarcode] Movie Title:', movieTitle);
+        let cleanName = cleanTitle(movieTitle)
+        return cleanName || null;
+
+    } catch (err) {
+        console.error('[lookupBarcode] Error:', err);
+        return null;
+    }
+}
+
+// -------------------------
+// Sidebar Navigation with Theme Toggle
+// -------------------------
+function createNavBar() {
+    const sidebar = document.createElement('nav');
+    sidebar.id = 'sidebar-nav';
+
+    // --- Logo / Title ---
+    const logo = document.createElement('div');
+    logo.className = 'sidebar-logo';
+    logo.textContent = "RetroFlix";
+    sidebar.appendChild(logo);
+
+    // --- Menu list ---
+    const menu = document.createElement('ul');
+    menu.className = 'sidebar-menu';
+
+    const desktopButtons = [
+        {
+            type: 'text',  // new property to distinguish type
+            text: 'Add Movie',
+            handler: showAddMovieModal
+        },
+        {
+            type: 'icon-text',
+            text: 'Search',
+            svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                    <path fill="currentColor" d="M480 272C480 317.9 465.1 360.3 440 394.7L566.6 521.4C579.1 533.9 579.1 554.2 566.6 566.7C554.1 579.2 533.8 579.2 521.3 566.7L394.7 440C360.3 465.1 317.9 480 272 480C157.1 480 64 386.9 64 272C64 157.1 157.1 64 272 64C386.9 64 480 157.1 480 272zM272 416C351.5 416 416 351.5 416 272C416 192.5 351.5 128 272 128C192.5 128 128 192.5 128 272C128 351.5 192.5 416 272 416z"/>
+                  </svg>`,
+            handler: showSearchModal
+        }
+    ];    
+
+    desktopButtons.forEach(btnData => {
+        const li = document.createElement('li');
+        li.className = 'desktop-menu-item';
+        li.addEventListener('click', btnData.handler);
+    
+        if (btnData.type === 'text') {
+            li.textContent = btnData.text;
+        } else if (btnData.type === 'icon-text') {
+            li.innerHTML = `${btnData.svg} <span>${btnData.text}</span>`;
+        }
+    
+        menu.appendChild(li);
+    });
+    
+    
+
+    // Divider
+    const divider = document.createElement('hr');
+    menu.appendChild(divider);
+
+    // Login/Logout
+    const loginItem = document.createElement('li');
+    loginItem.id = 'login-btn';
+    loginItem.style.fontWeight = '600';
+    loginItem.textContent = userSession ? 'Logout' : 'Login';
+    loginItem.addEventListener("click", () => {
+        if (userSession) {
+            handleLogout();
+        } else {
+            showLoginModal();
+        }
+    });
+    menu.appendChild(loginItem);
+
+    // Attach menu to sidebar
+    sidebar.appendChild(menu);
+
+    // ---------------------------------
+    // SLEEK ICON-ONLY THEME TOGGLE
+    // ---------------------------------
+    const themeToggle = document.createElement('div');
+    themeToggle.id = "theme-toggle";
+
+    // Sun & Moon Icons
+    themeToggle.innerHTML = `
+        <svg class="icon moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path fill="#ffffff" d="M320 64C178.6 64 64 178.6 64 320C64 461.4 178.6 576 320 576C388.8 576 451.3 548.8 497.3 504.6C504.6 497.6 506.7 486.7 502.6 477.5C498.5 468.3 488.9 462.6 478.8 463.4C473.9 463.8 469 464 464 464C362.4 464 280 381.6 280 280C280 207.9 321.5 145.4 382.1 115.2C391.2 110.7 396.4 100.9 395.2 90.8C394 80.7 386.6 72.5 376.7 70.3C358.4 66.2 339.4 64 320 64z"/></svg>
+        <svg class="icon sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path fill="#121212" d="M303.3 112.7C196.2 121.2 112 210.8 112 320C112 434.9 205.1 528 320 528C353.3 528 384.7 520.2 412.6 506.3C309.2 482.9 232 390.5 232 280C232 214.2 259.4 154.9 303.3 112.7zM64 320C64 178.6 178.6 64 320 64C339.4 64 358.4 66.2 376.7 70.3C386.6 72.5 394 80.8 395.2 90.8C396.4 100.8 391.2 110.6 382.1 115.2C321.5 145.4 280 207.9 280 280C280 381.6 362.4 464 464 464C469 464 473.9 463.8 478.8 463.4C488.9 462.6 498.4 468.2 502.6 477.5C506.8 486.8 504.6 497.6 497.3 504.6C451.3 548.8 388.8 576 320 576C178.6 576 64 461.4 64 320z"/></svg>    `;
+
+    // Initial theme
+    let currentTheme =
+        localStorage.getItem('theme') ||
+        (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+
+    document.documentElement.setAttribute('data-theme', currentTheme);
+
+    // Click handler
+    themeToggle.addEventListener('click', () => {
+        currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        localStorage.setItem('theme', currentTheme);
+    });
+
+    sidebar.appendChild(themeToggle);
+
+    // Add to document
+    document.body.prepend(sidebar);
+}
+
+
+
+function createSortControl() {
+    const wrapper = document.getElementById('sort-control');
+    if (!wrapper) return;
+
+    wrapper.innerHTML = ''; // clear old content
+    wrapper.classList.add('sort-wrapper');
+
+    // --- Dropdown ---
+    const select = document.createElement('select');
+    select.className = 'sort-select';
+
+    const options = [
+        { value: 'title', label: 'Title' },
+        { value: 'release_date', label: 'Release' },
+        { value: 'rating', label: 'Rating' },
+        { value: 'genre', label: 'Genre' }, // <-- ADD THIS
+    ];
+
+    options.forEach(opt => {
+        const optionEl = document.createElement('option');
+        optionEl.value = opt.value;
+        optionEl.textContent = opt.label;
+        select.appendChild(optionEl);
+    });
+
+    if (!userSession) {
+        select.disabled = true;
     }
 
-    .top-bar {
-        position: sticky;
-        top: 0;
-        left: 0;             /* ensure full width */
-        right: 0;            /* ensure full width */
-        width: 100%;         /* full width */
-        height: 65px;
-        display: flex;
-        align-items: center; /* use center instead of flex-end to remove gap */
-        font-size: 23px;
-        background-color: var(--bg-body);
-        z-index: 1000;       /* above everything else */
-        box-shadow: 0 2px 5px var(--shadow);
+    select.value = currentSort.key;
+    select.addEventListener('change', () => {
 
+        currentSort.key = select.value;
+        currentSort.ascending = true;
+        applyFiltersAndSort();
+    });
+
+    wrapper.appendChild(select);
+
+    // --- Arrow toggle ---
+    const toggleBtn = document.createElement('button');
+    toggleBtn.className = 'sort-toggle';
+    toggleBtn.textContent = currentSort.ascending ? '↑' : '↓';
+
+    if (!userSession) {
+        toggleBtn.disabled = true;
     }
 
-    .top-bar h2 {
-        margin-left: 25px;
-        font-size: 20px;
+    toggleBtn.addEventListener('click', () => {
+
+        currentSort.ascending = !currentSort.ascending;
+        toggleBtn.textContent = currentSort.ascending ? '↑' : '↓';
+        applyFiltersAndSort();
+    });
+
+    wrapper.appendChild(toggleBtn);
+
+    const filterBtn = document.createElement('div');
+    filterBtn.className = 'filter-btn'
+    filterBtn.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M96 128C83.1 128 71.4 135.8 66.4 147.8C61.4 159.8 64.2 173.5 73.4 182.6L256 365.3L256 480C256 488.5 259.4 496.6 265.4 502.6L329.4 566.6C338.6 575.8 352.3 578.5 364.3 573.5C376.3 568.5 384 556.9 384 544L384 365.3L566.6 182.7C575.8 173.5 578.5 159.8 573.5 147.8C568.5 135.8 556.9 128 544 128L96 128z"/></svg>`
+
+    if (!userSession) {
+        toggleBtn.disabled = true;
     }
 
-    .hero-cont{
-        flex-direction: column;
-        align-items: flex-start;
-    }
+    filterBtn.addEventListener('click', showFilterModal);
 
-    .hero {
-        font-weight: 600;
-        font-size: 15px;
-        padding: 15px;
-        width: 70%;
-        margin: 15px;
-        border-radius: 7px;
-    }
-
-    .sort-wrapper{
-        align-items: flex-start;
-        margin: 0;
-        padding: 0;
-        padding-left: 15px;
-
-    }
-
-
-    /* -----------------------------
-       Hide sidebar, show hamburger
-       ----------------------------- */
-    #sidebar-nav {
-        position: fixed;
-        left: -260px; /* hide off-screen */
-        top: 0;
-        width: 260px;
-        height: 100vh;
-        z-index: 2000;
-        transition: left 0.3s ease;
-    }
-
-    #sidebar-nav.active {
-        left: 0;
-    }
-
-    .hamburger {
-        display: flex;
-        flex-direction: column;
-        gap: 3px;
-        width: 30px;
-        height: 16px;
-        cursor: pointer;
-        position: fixed;
-        top: 21px;
-        right: 22px;
-        z-index: 5000;
-        cursor: pointer;
-    }
-
-    .hamburger span {
-        flex: 1;
-        background-color: var(--btn-secondary-text);
-        border-radius: 2px;
-        transition: 0.3s;
-    }
-
-    .hamburger span.middle {
-        background-color: var(--bg-nav);
-    }
-
-    .hamburger.active span:nth-child(1) {
-        transform: rotate(45deg) translate(5px, 4px);
-    }
-    .hamburger.active span:nth-child(2) {
-        opacity: 0;
-    }
-    .hamburger.active span:nth-child(3) {
-        transform: rotate(-45deg) translate(5px, -4px);
-    }
-
-    /* -----------------------------
-       Hero & Landing adjustments
-       ----------------------------- */
-    .landing {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
-    .landing-text {
-        width: 100%;
-        margin-bottom: 1.5rem;
-    }
-    .landing-image {
-        width: 80%;
-        max-width: 300px;
-        position: static;
-    }
-
-    /* -----------------------------
-       Navigation buttons
-       ----------------------------- */
-    nav { 
-        flex-direction: column;
-        gap: 0.5rem; 
-    }
-    .nav-btn { padding: 0.5rem 1rem; font-size: 0.9rem; }
-
-    /* -----------------------------
-       Text & headings
-       ----------------------------- */
-    h1, h2, h3 { font-size: 1.2rem; }
-    p { font-size: 0.9rem; }
-
-    /* -----------------------------
-       Movie container adjustments
-       ----------------------------- */
-    #movie-container {
-        padding: 0 10px;
-        padding-bottom: 60px;
-        margin: 0 auto;
-        width: 100%;
-        overflow-x: hidden;
-        overflow-y: auto;
-        display: block; /* keep headers/hr full width */
-        margin-bottom: 40px;
-    }
-
-    /* Cards */
-    .movies-wrapper {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 15px;
-        justify-content: center;
-    }
-
-    .card {
-        width: 40%;          /* two cards per row */
-        min-width: 145px;
-        flex-shrink: 0;
-        flex-grow: 0;
-        max-width: 200px;
-        flex-direction: column;
-        gap: 10px;
-        justify-content: flex-start;
-        align-items: center;
-        border-radius: 12px;
-        box-shadow: 0 2px 6px var(--shadow);
-        transition: none;
-    }
-
-    .card:hover { transform: none; }
-
-    .card img {
-        width: 100%;
-        height: auto;
-        object-fit: cover;
-    }
-
-    .card-content {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        text-align: center;
-        min-width: 0;
-        width: 100%;
-        box-sizing: border-box;
-        padding: 0;
-    }
-
-    .card-content h3 { 
-        font-size: 12px; 
-        color: var(--text-primary); 
-        display: block;       /* prevent flex-item weirdness */
-        width: 100%;          /* take full card width */
-        max-width: 100%;      /* prevent overflow to left/right */
-        box-sizing: border-box;
-    }
-    .card-content p { font-size: 12px; color: var(--text-secondary); }
-
-    /* -----------------------------
-       A-Z Bar adjustments
-       ----------------------------- */
-    .az-bar {
-        gap: 4px;
-        margin-bottom: 0.5rem;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-
-    .az-item {
-        padding: 3px 6px;
-        font-size: 0.75rem;
-    }
-
-    /* -----------------------------
-       Modal adjustments
-       ----------------------------- */
-    .modal-content { 
-        width: 95%; 
-        max-width: 95%; 
-        padding: 15px; 
-        flex-direction: column; 
-        align-items: center; 
-    }
-
-    .modal-top { flex-direction: column; align-items: center; gap: 15px; }
-    .modal-top img.modal-poster { width: 70%; max-width: 250px; height: auto; }
-    .modal-info { width: 100%; text-align: center;}
-    .description-text {
-        display: block;       /* ensure it behaves like a block element */
-        text-align: left;     /* left-align text */
-    }
-
-    .modal-info .field span {
-        padding: 5px;
-    }
-    .modal-section { text-align: center; margin-top: 15px; }
-    .modal-actions { flex-direction: column; gap: 10px; align-items: center; }
-    .modal-actions button { width: 80%; font-size: 1rem; padding: 10px 0; }
-    .close-modal { top: 10px; right: 10px; font-size: 24px; }
-    .modal-input { width: 90%; margin: 0 auto 10px; }
-    #theme-toggle {
-        bottom: 150px;
-    }
-
+    wrapper.appendChild(filterBtn);
 }
+
+
+
+
+// -------------------------
+// Fetch and Render Movies
+// -------------------------
+async function fetchMovies() {
+
+    if (!userSession) {
+        renderMovieCards([]);
+        return;
+    }
+
+    const { data, error } = await supabase.from('Movies').select('*');
+    if (error) return console.error('Error fetching movies:', error);
+
+    moviesData = data;
+    applyFiltersAndSort();
+}
+
+function applyFiltersAndSort() {
+    let filtered = [...moviesData];
+
+    // -----------------------------
+    // SEARCH FILTER
+    // -----------------------------
+    if (activeSearch) {
+        const searchLower = activeSearch.toLowerCase();
+        filtered = filtered.filter(m => m.title.toLowerCase().includes(searchLower));
+    }
+
+    // -----------------------------
+    // OTHER FILTERS
+    // -----------------------------
+    if (activeFilters.genre) {
+        filtered = filtered.filter(m =>
+            m.genre?.split(',').map(g => g.trim()).includes(activeFilters.genre)
+        );
+    }
+
+    if (activeFilters.tag) {
+        filtered = filtered.filter(m =>
+            m.tags?.split(',').map(t => t.trim()).includes(activeFilters.tag)
+        );
+    }
+
+    if (activeFilters.cast) {
+        filtered = filtered.filter(m =>
+            m.cast?.split(',').map(c => c.trim()).includes(activeFilters.cast)
+        );
+    }
+
+    // -----------------------------
+    // SORT
+    // -----------------------------
+    filtered.sort((a, b) => {
+        let valA = a[currentSort.key] || '';
+        let valB = b[currentSort.key] || '';
+
+        if (typeof valA === 'string') valA = valA.toLowerCase();
+        if (typeof valB === 'string') valB = valB.toLowerCase();
+
+        if (valA < valB) return currentSort.ascending ? -1 : 1;
+        if (valA > valB) return currentSort.ascending ? 1 : -1;
+        return 0;
+    });
+
+    // -----------------------------
+    // DETERMINE GROUPING
+    // -----------------------------
+    const isTitleSort = currentSort.key === "title";
+    const isGenreSort = currentSort.key === "genre";
+
+    // -----------------------------
+    // RENDER MOVIES
+    // -----------------------------
+    renderMovieCards(filtered, isTitleSort, isGenreSort);
+}
+
+function renderMovieCards(movies, sortedByTitle, groupedByGenre) {
+    let container = document.getElementById('movie-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'movie-container';
+        container.className = 'container';
+        document.body.appendChild(container);
+    }
+    container.innerHTML = '';
+
+    // -----------------------------
+    // HERO SECTION
+    // -----------------------------
+    const heroCont = document.createElement('div');
+    heroCont.className = 'hero-cont';
+
+    const hero = document.createElement('div');
+    hero.className = 'hero';
+    hero.textContent = 'VHS Collection';
+    heroCont.appendChild(hero);
+
+    const sortControl = document.createElement('div');
+    sortControl.id = 'sort-control';
+    heroCont.appendChild(sortControl);
+
+    container.appendChild(heroCont);
+
+    createSortControl(); // existing function
+
+    if (!movies.length) {
+        const noMoviesWrapper = document.createElement('div');
+        noMoviesWrapper.style.display = 'flex';
+        noMoviesWrapper.style.flexDirection = 'column';
+        noMoviesWrapper.style.alignItems = 'center';
+        noMoviesWrapper.style.justifyContent = 'flex-start';
+        noMoviesWrapper.style.height = '100%'; // adjust if you have header/footer
+        noMoviesWrapper.style.marginTop = '50px'
+        noMoviesWrapper.style.gap = '20px'; // spacing between SVG and optional text
+
+        // SVG
+        const svgWrapper = document.createElement('div');
+        svgWrapper.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" width="120" height="120" fill="var(--text-secondary)">
+            <path fill="text-primary" d="M96 160C96 124.7 124.7 96 160 96L480 96C515.3 96 544 124.7 544 160L544 480C544 515.3 515.3 544 480 544L160 544C124.7 544 96 515.3 96 480L96 160zM144 432L144 464C144 472.8 151.2 480 160 480L192 480C200.8 480 208 472.8 208 464L208 432C208 423.2 200.8 416 192 416L160 416C151.2 416 144 423.2 144 432zM448 416C439.2 416 432 423.2 432 432L432 464C432 472.8 439.2 480 448 480L480 480C488.8 480 496 472.8 496 464L496 432C496 423.2 488.8 416 480 416L448 416zM144 304L144 336C144 344.8 151.2 352 160 352L192 352C200.8 352 208 344.8 208 336L208 304C208 295.2 200.8 288 192 288L160 288C151.2 288 144 295.2 144 304zM448 288C439.2 288 432 295.2 432 304L432 336C432 344.8 439.2 352 448 352L480 352C488.8 352 496 344.8 496 336L496 304C496 295.2 488.8 288 480 288L448 288zM144 176L144 208C144 216.8 151.2 224 160 224L192 224C200.8 224 208 216.8 208 208L208 176C208 167.2 200.8 160 192 160L160 160C151.2 160 144 167.2 144 176zM448 160C439.2 160 432 167.2 432 176L432 208C432 216.8 439.2 224 448 224L480 224C488.8 224 496 216.8 496 208L496 176C496 167.2 488.8 160 480 160L448 160z"/>
+        </svg>`;
+        noMoviesWrapper.appendChild(svgWrapper);
+
+        // Optional text below SVG
+        const noMoviesText = document.createElement('p');
+        noMoviesText.textContent = 'No movies to display.';
+        noMoviesText.style.color = 'var(--text-secondary)';
+        noMoviesWrapper.appendChild(noMoviesText);
+
+        container.appendChild(noMoviesWrapper);
+        return;
+    }
+
+    // -----------------------------
+    // TITLE GROUPING (A–Z)
+    // -----------------------------
+    if (sortedByTitle) {
+        const grouped = {};
+    
+        // --- Build grouped object ---
+        movies.forEach(movie => {
+            let firstChar = movie.title.charAt(0).toUpperCase();
+            if (!/[A-Z]/.test(firstChar)) firstChar = '#';
+            if (!grouped[firstChar]) grouped[firstChar] = [];
+            grouped[firstChar].push(movie);
+        });
+    
+        // --- TOP BAR ORDER (always A → Z → #) ---
+        const barLetters = Object.keys(grouped).filter(l => l !== '#').sort();
+        if (grouped['#']) barLetters.push('#');
+    
+        // --- PAGE GROUP ORDER (changes with sort) ---
+        const azLetters = Object.keys(grouped).filter(l => l !== '#').sort();
+        let groupOrder;
+    
+        if (currentSort.ascending) {
+            // A → Z → #
+            groupOrder = [...azLetters];
+            if (grouped['#']) groupOrder.push('#');
+        } else {
+            // # → Z → A
+            groupOrder = [];
+            if (grouped['#']) groupOrder.push('#');
+            groupOrder = groupOrder.concat([...azLetters].reverse());
+        }
+    
+        // --- Top A–Z Bar ---
+        const bar = document.createElement('div');
+        bar.className = 'az-bar';
+    
+        const allOption = document.createElement('span');
+        allOption.textContent = 'ALL';
+        allOption.className = 'az-item active';
+        allOption.addEventListener('click', () => {
+            document.querySelectorAll('.movie-group').forEach(g => g.style.display = '');
+            document.querySelectorAll('.az-item').forEach(el => el.classList.remove('active'));
+            allOption.classList.add('active');
+        });
+        bar.appendChild(allOption);
+    
+        barLetters.forEach(letter => {
+            const item = document.createElement('span');
+            item.textContent = letter;
+            item.className = 'az-item';
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.movie-group').forEach(g => {
+                    g.style.display = g.dataset.letter === letter ? '' : 'none';
+                });
+                document.querySelectorAll('.az-item').forEach(el => el.classList.remove('active'));
+                item.classList.add('active');
+            });
+            bar.appendChild(item);
+        });
+    
+        container.appendChild(bar);
+    
+        // --- Render groups in final dynamic order ---
+        groupOrder.forEach(letter => {
+            const groupWrapper = document.createElement('div');
+            groupWrapper.className = 'movie-group';
+            groupWrapper.dataset.letter = letter;
+    
+            const header = document.createElement('h2');
+            header.textContent = letter;
+            header.style.fontWeight = '200';
+            groupWrapper.appendChild(header);
+    
+            const line = document.createElement('hr');
+            groupWrapper.appendChild(line);
+    
+            const cardsWrapper = document.createElement('div');
+            cardsWrapper.className = 'movies-wrapper';
+    
+            // Reverse movies *inside* each group depending on sort
+            const moviesInGroup = currentSort.ascending
+                ? grouped[letter]
+                : [...grouped[letter]].reverse();
+    
+            moviesInGroup.forEach(movie => {
+                const card = createMovieCard(movie);
+                cardsWrapper.appendChild(card);
+            });
+    
+            groupWrapper.appendChild(cardsWrapper);
+            container.appendChild(groupWrapper);
+        });
+    }
+    
+
+    // -----------------------------
+    // GENRE GROUPING
+    // -----------------------------
+    else if (groupedByGenre) {
+        const grouped = {};
+        movies.forEach(movie => {
+            if (!movie.genre) return;
+            movie.genre.split(',').map(g => g.trim()).forEach(genre => {
+                if (!grouped[genre]) grouped[genre] = [];
+                grouped[genre].push(movie);
+            });
+        });
+
+        // Sort genres alphabetically
+        let genres = Object.keys(grouped).sort();
+        if (!currentSort.ascending) genres.reverse();
+
+        genres.forEach(genre => {
+            const groupWrapper = document.createElement('div');
+            groupWrapper.className = 'movie-group';
+            groupWrapper.dataset.letter = genre;
+
+            const header = document.createElement('h2');
+            header.textContent = genre;
+            header.style.fontWeight = '200';
+            groupWrapper.appendChild(header);
+
+            const line = document.createElement('hr');
+            groupWrapper.appendChild(line);
+
+            const cardsWrapper = document.createElement('div');
+            cardsWrapper.className = 'movies-wrapper';
+
+            // Sort movies within the genre alphabetically by title
+            let moviesInGroup = grouped[genre].sort((a, b) => {
+                let titleA = (a.title || '').toLowerCase();
+                let titleB = (b.title || '').toLowerCase();
+                if (titleA < titleB) return currentSort.ascending ? -1 : 1;
+                if (titleA > titleB) return currentSort.ascending ? 1 : -1;
+                return 0;
+            });
+
+            moviesInGroup.forEach(movie => {
+                const card = createMovieCard(movie);
+                cardsWrapper.appendChild(card);
+            });
+
+            groupWrapper.appendChild(cardsWrapper);
+            container.appendChild(groupWrapper);
+        });
+    }
+ 
+
+    // -----------------------------
+    // DEFAULT (no grouping)
+    // -----------------------------
+    else {
+        const groupWrapper = document.createElement('div');
+        groupWrapper.className = 'movie-group';
+        groupWrapper.dataset.letter = 'all';
+
+        const line = document.createElement('hr');
+        groupWrapper.appendChild(line);
+
+        const cardsWrapper = document.createElement('div');
+        cardsWrapper.className = 'movies-wrapper';
+
+        movies.forEach(movie => {
+            const card = createMovieCard(movie);
+            cardsWrapper.appendChild(card);
+        });
+
+        groupWrapper.appendChild(cardsWrapper);
+        container.appendChild(groupWrapper);
+    }
+
+    
+}
+
+// -----------------------------
+// HELPER: create a movie card
+// -----------------------------
+function createMovieCard(movie) {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.dataset.id = movie.id;
+
+    const img = document.createElement('img');
+    img.src = movie.cover_img || '';
+    card.appendChild(img);
+
+    const content = document.createElement('div');
+    content.className = 'card-content';
+
+    const title = document.createElement('h3');
+    title.textContent = movie.title;
+    title.setAttribute('title', movie.title);
+    content.appendChild(title);
+
+    const release = document.createElement('p');
+    release.textContent = movie.release_date?.substring(0, 4) || 'N/A';
+    content.appendChild(release);
+
+    card.appendChild(content);
+
+    card.addEventListener('click', () => showMovieDetails(movie));
+
+    return card;
+}
+
+
+// -------------------------
+// TMDB helpers
+// -------------------------
+async function searchTmdbByTitle(title) {
+    const res = await fetch(`${TMDB_BASE_URL}/search/movie?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(title)}`);
+    if (!res.ok) throw new Error('TMDB search error');
+    const data = await res.json();
+    return data.results || [];
+}
+
+async function getTmdbDetails(tmdbId) {
+    const res = await fetch(`${TMDB_BASE_URL}/movie/${tmdbId}?api_key=${TMDB_API_KEY}&append_to_response=credits,release_dates`);
+    if (!res.ok) throw new Error('TMDB details error');
+    return res.json();
+}
+
+function extractMpaa(detailJson) {
+    const releases = detailJson.release_dates?.results || [];
+    for (const entry of releases) {
+        if (entry.iso_3166_1 === 'US') {
+            for (const r of entry.release_dates) {
+                if (r.certification) return r.certification;
+            }
+        }
+    }
+    return 'NR';
+}
+
+// -------------------------
+// Modals
+// -------------------------
+function showSearchModal() {
+
+    if (!userSession) {
+        showLoginModal();
+        return; // ← stop execution here if not logged in
+    }
+
+    const sidebar = document.getElementById('sidebar-nav');
+    const hamburger = document.querySelector('.hamburger');
+
+    // Hide sidebar if it’s open
+    if (sidebar.classList.contains('active')) {
+        sidebar.classList.remove('active');
+        hamburger.classList.remove('active');
+    }
+
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    document.body.appendChild(modal);
+    document.body.classList.add('modal-open');
+
+    const content = document.createElement('div');
+    content.className = 'modal-content search-modal';
+    modal.appendChild(content);
+
+    const header = document.createElement('h2');
+    header.textContent = 'Search Movie';
+    content.appendChild(header);
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.placeholder = 'Enter movie title...';
+    input.className = 'modal-input';
+    content.appendChild(input);
+
+    const btnContainer = document.createElement('div');
+    btnContainer.className = 'modal-btn-container';
+    content.appendChild(btnContainer);
+
+    const cancelBtn = document.createElement('button');
+    cancelBtn.className = 'btn-cancel';
+    cancelBtn.textContent = 'Cancel';
+    btnContainer.appendChild(cancelBtn);
+
+    const searchBtn = document.createElement('button');
+    searchBtn.className = 'btn-search';
+    searchBtn.textContent = 'Search';
+    btnContainer.appendChild(searchBtn);
+
+    cancelBtn.addEventListener('click', () => closeModal(modal));
+    searchBtn.addEventListener('click', () => {
+        activeSearch = input.value.trim();
+        applyFiltersAndSort();
+        closeModal(modal);
+    });
+
+    modal.addEventListener('click', e => { if (e.target === modal) closeModal(modal); });
+}
+
+function showSortModal() {
+
+    if (!userSession) {
+        showLoginModal();
+        return; // ← stop execution here if not logged in
+    }
+
+    const sidebar = document.getElementById('sidebar-nav');
+    const hamburger = document.querySelector('.hamburger');
+
+    // Hide sidebar if it’s open
+    if (sidebar.classList.contains('active')) {
+        sidebar.classList.remove('active');
+        hamburger.classList.remove('active');
+    }
+
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    document.body.appendChild(modal);
+    document.body.classList.add('modal-open');
+
+    const content = document.createElement('div');
+    content.className = 'modal-content sort-modal';
+    modal.appendChild(content);
+
+    const header = document.createElement('h2');
+    header.textContent = 'Sort Movies';
+    content.appendChild(header);
+
+    const sortKeys = ['title', 'release_date', 'rating'];
+    sortKeys.forEach(key => {
+        const btn = document.createElement('button');
+        btn.className = 'modal-btn';
+        btn.textContent = key.charAt(0).toUpperCase() + key.slice(1);
+        btn.addEventListener('click', () => {
+            if (currentSort.key === key) currentSort.ascending = !currentSort.ascending;
+            else { currentSort.key = key; currentSort.ascending = true; }
+            applyFiltersAndSort();
+            closeModal(modal);
+        });
+        content.appendChild(btn);
+    });
+
+    const cancelBtn = document.createElement('button');
+    cancelBtn.className = 'btn-cancel modal-bottom-btn';
+    cancelBtn.textContent = 'Cancel';
+    cancelBtn.addEventListener('click', () => closeModal(modal));
+    content.appendChild(cancelBtn);
+
+    modal.addEventListener('click', e => { if (e.target === modal) closeModal(modal); });
+}
+
+function showFilterModal() {
+
+    if (!userSession) {
+        showLoginModal();
+        return; // ← stop execution here if not logged in
+    }
+
+    const sidebar = document.getElementById('sidebar-nav');
+    const hamburger = document.querySelector('.hamburger');
+
+    // Hide sidebar if it’s open
+    if (sidebar.classList.contains('active')) {
+        sidebar.classList.remove('active');
+        hamburger.classList.remove('active');
+    }
+
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    document.body.appendChild(modal);
+    document.body.classList.add('modal-open');
+
+    const content = document.createElement('div');
+    content.className = 'modal-content filter-modal';
+    modal.appendChild(content);
+
+    const header = document.createElement('h2');
+    header.textContent = 'Filter Movies';
+    content.appendChild(header);
+
+    function createDropdown(labelText, key, options) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'dropdown-wrapper';
+        const label = document.createElement('label');
+        label.textContent = labelText + ': ';
+        wrapper.appendChild(label);
+
+        const select = document.createElement('select');
+        select.className = 'modal-select';
+
+        const emptyOpt = document.createElement('option');
+        emptyOpt.value = '';
+        emptyOpt.textContent = 'Any';
+        select.appendChild(emptyOpt);
+
+        options.forEach(opt => {
+            if (!opt) return;
+            const option = document.createElement('option');
+            option.value = opt;
+            option.textContent = opt;
+            select.appendChild(option);
+        });
+
+        select.value = activeFilters[key];
+        select.addEventListener('change', () => { activeFilters[key] = select.value; });
+
+        wrapper.appendChild(select);
+        return wrapper;
+    }
+
+    const allGenres = Array.from(new Set(moviesData.flatMap(m => m.genre?.split(',').map(g => g.trim()) || [])));
+    const allTags = Array.from(new Set(moviesData.flatMap(m => m.tags?.split(',').map(t => t.trim()) || [])));
+    const allCast = Array.from(new Set(moviesData.flatMap(m => m.cast?.split(',').map(c => c.trim()) || [])));
+
+    content.appendChild(createDropdown('Genre', 'genre', allGenres));
+    content.appendChild(createDropdown('\u00A0\u00A0\u00A0\u00A0Tag', 'tag', allTags));
+
+    //content.appendChild(createDropdown('Cast', 'cast', allCast));
+
+    const btnContainer = document.createElement('div');
+    btnContainer.className = 'modal-btn-container';
+    content.appendChild(btnContainer);
+
+    const cancelBtn = document.createElement('button');
+    cancelBtn.className = 'btn-cancel';
+    cancelBtn.textContent = 'Cancel';
+    btnContainer.appendChild(cancelBtn);
+
+    const applyBtn = document.createElement('button');
+    applyBtn.className = 'btn-apply';
+    applyBtn.textContent = 'Apply';
+    btnContainer.appendChild(applyBtn);
+
+    cancelBtn.addEventListener('click', () => closeModal(modal));
+    applyBtn.addEventListener('click', () => { applyFiltersAndSort(); closeModal(modal); });
+
+    modal.addEventListener('click', e => { if (e.target === modal) closeModal(modal); });
+}
+
+function closeModal(modal) {
+    modal.remove();
+    document.body.classList.remove('modal-open');
+}
+
+// -------------------------
+// Movie Modal with Edit
+// -------------------------
+async function showMovieDetails(movie) {
+
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    document.body.appendChild(modal);
+    document.body.classList.add('modal-open');
+
+    const content = document.createElement('div');
+    content.className = 'modal-content';
+    modal.appendChild(content);
+
+    // Top row: Poster + Info
+    const topRow = document.createElement('div');
+    topRow.className = 'modal-top';
+    content.appendChild(topRow);
+
+    const poster = document.createElement('img');
+    poster.className = 'modal-poster';
+    poster.src = movie.cover_img || '';
+    topRow.appendChild(poster);
+
+    const info = document.createElement('div');
+    info.className = 'modal-info';
+    topRow.appendChild(info);
+
+    // ---- Read-only display ----
+    function createField(label, value) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'field';
+        const lbl = document.createElement('strong');
+        lbl.textContent = label + ': ';
+        const valSpan = document.createElement('span');
+        valSpan.textContent = value || 'N/A';
+
+        // Add a special class for description
+        if (label === 'Description') valSpan.className = 'description-text';
+
+        wrapper.appendChild(lbl);
+        wrapper.appendChild(valSpan);
+        return wrapper;
+    }
+
+    function createTagField(label, values) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'field';
+        const lbl = document.createElement('strong');
+        lbl.textContent = label + ': ';
+        wrapper.appendChild(lbl);
+
+        (values?.split(',').map(v => v.trim()) || []).forEach(v => {
+            if (!v) return;
+            const span = document.createElement('span');
+            span.className = 'tag';
+            span.textContent = v;
+            wrapper.appendChild(span);
+        });
+
+        return wrapper;
+    }
+
+    info.append(
+        createField('Title', movie.title),
+        createField('Release Date', movie.release_date),
+        createField('Rating', movie.rating),
+        createField('Description', movie.desc),
+        createTagField('Genre', movie.genre),
+        createTagField('Tags', movie.tags)
+    );
+
+    // Cast section
+    if (movie.cast) {
+        const castSection = document.createElement('div');
+        castSection.className = 'modal-section';
+        const castHeader = document.createElement('h3');
+        castHeader.textContent = 'Cast';
+        const castList = document.createElement('p');
+        castList.textContent = movie.cast;
+        castSection.append(castHeader, castList);
+        content.appendChild(castSection);
+    }
+
+    // ---- Action buttons ----
+    const actionRow = document.createElement('div');
+    actionRow.className = 'modal-actions';
+    content.appendChild(actionRow);
+
+    const editBtn = document.createElement('button');
+    editBtn.className = 'edit-save';
+    editBtn.textContent = 'Edit';
+    actionRow.appendChild(editBtn);
+
+    const cancelBtn = document.createElement('button');
+    cancelBtn.className = 'cancel';
+    cancelBtn.textContent = 'Cancel';
+    cancelBtn.style.display = 'none'; // minimal inline only to hide initially; will be toggled via class below
+    actionRow.appendChild(cancelBtn);
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'delete';
+    deleteBtn.textContent = 'Delete';
+    actionRow.appendChild(deleteBtn);
+
+    // Show buttons row is appended already
+    modal.addEventListener('click', e => {
+        if (e.target === modal) {
+            close();
+        }
+    });
+
+    function close() {
+        modal.remove();
+        document.body.classList.remove('modal-open');
+    }
+
+    // ---- Edit mode ----
+    editBtn.addEventListener('click', () => {
+        const originalMovie = { ...movie };
+
+        // Toggle UI: change Edit -> Save, show cancel
+        editBtn.textContent = 'Save';
+        cancelBtn.style.display = ''; // show (kept minimal inline for toggle)
+        info.innerHTML = ''; // clear current info to render editable fields
+
+        function makeEditableField(label, valKey) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'editable-field';
+            const lbl = document.createElement('span');
+            lbl.textContent = label + ': ';
+            lbl.style.fontWeight = 'bold';
+            wrapper.appendChild(lbl);
+
+            const span = document.createElement('span');
+            span.className = 'readonly';
+            span.textContent = movie[valKey] || '';
+            wrapper.appendChild(span);
+
+            span.addEventListener('click', () => {
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'modal-input';
+                input.value = span.textContent;
+                wrapper.replaceChild(input, span);
+                input.focus();
+
+                const commit = () => {
+                    span.textContent = input.value;
+                    wrapper.replaceChild(span, input);
+                    movie[valKey] = input.value;
+                };
+
+                input.addEventListener('blur', commit);
+                input.addEventListener('keydown', e => { if (e.key === 'Enter') commit(); });
+            });
+
+            return wrapper;
+        }
+
+        const allGenres = Array.from(new Set(moviesData.flatMap(m => m.genre?.split(',').map(g => g.trim()) || [])));
+        const allTags = Array.from(new Set(moviesData.flatMap(m => m.tags?.split(',').map(t => t.trim()) || [])));
+
+        function makeMultiSelect(label, options, selectedValues, key) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'multi-select';
+            const lbl = document.createElement('span');
+            lbl.textContent = label + ': ';
+            lbl.style.fontWeight = 'bold';
+            wrapper.appendChild(lbl);
+
+            const optionsDiv = document.createElement('div');
+            optionsDiv.className = 'multi-select-options';
+            wrapper.appendChild(optionsDiv);
+
+            function renderOptions() {
+                optionsDiv.innerHTML = '';
+                options.forEach(opt => {
+                    if (!opt) return;
+                    const btn = document.createElement('button');
+                    btn.className = 'multi-option';
+                    btn.textContent = opt;
+                    if (selectedValues.includes(opt)) btn.classList.add('selected');
+
+                    btn.addEventListener('click', () => {
+                        if (selectedValues.includes(opt)) {
+                            selectedValues = selectedValues.filter(v => v !== opt);
+                            btn.classList.remove('selected');
+                        } else {
+                            selectedValues.push(opt);
+                            btn.classList.add('selected');
+                        }
+                        movie[key] = selectedValues.join(', ');
+                    });
+
+                    optionsDiv.appendChild(btn);
+                });
+
+                const addBtn = document.createElement('button');
+                addBtn.className = 'multi-option add-new';
+                addBtn.textContent = '+ Add New';
+                addBtn.addEventListener('click', () => {
+                    const newVal = prompt(`Enter new ${label.toLowerCase()}:`);
+                    if (newVal && !options.includes(newVal)) {
+                        options.push(newVal);
+                        selectedValues.push(newVal);
+                        renderOptions();
+                        movie[key] = selectedValues.join(', ');
+                    }
+                });
+
+                optionsDiv.appendChild(addBtn);
+            }
+
+            renderOptions();
+            return wrapper;
+        }
+
+        info.append(
+            makeEditableField('Title', 'title'),
+            makeEditableField('Release Date', 'release_date'),
+            makeEditableField('Rating', 'rating'),
+            makeEditableField('Description', 'desc'),
+            makeMultiSelect('Genre', allGenres, movie.genre?.split(',').map(g => g.trim()) || [], 'genre'),
+            makeMultiSelect('Tags', allTags, movie.tags?.split(',').map(t => t.trim()) || [], 'tags')
+        );
+
+        // Save handler
+        editBtn.onclick = async () => {
+            try {
+                const payload = {
+                    title: movie.title,
+                    desc: movie.desc,
+                    release_date: movie.release_date,
+                    genre: movie.genre,
+                    rating: movie.rating,
+                    tags: movie.tags,
+                    cover_img: movie.cover_img,
+                };
+                const { error } = await supabase.from('Movies').update(payload).eq('id', movie.id);
+                if (error) throw error;
+                fetchMovies();
+                close();
+            } catch (err) {
+                alert('Error saving movie: ' + (err.message || err));
+            }
+        };
+
+        // Cancel edits
+        cancelBtn.onclick = () => {
+            Object.assign(movie, originalMovie);
+            close();
+            showMovieDetails(movie);
+        };
+    });
+
+    // Delete
+    deleteBtn.addEventListener('click', async () => {
+        if (!confirm('Are you sure you want to delete this movie?')) return;
+        try {
+            const { error } = await supabase.from('Movies').delete().eq('id', movie.id);
+            if (error) throw error;
+            fetchMovies();
+            close();
+        } catch (err) {
+            alert('Error deleting movie: ' + (err.message || err));
+        }
+    });
+}
+
+// -------------------------
+// Add Movie Modal with multiple TMDB results
+// -------------------------
+async function showAddMovieModal() {
+
+    if (!userSession) {
+        showLoginModal();
+        return; // ← stop execution here if not logged in
+    }
+
+    const sidebar = document.getElementById('sidebar-nav');
+    const hamburger = document.querySelector('.hamburger');
+
+    // Hide sidebar if it’s open
+    if (sidebar.classList.contains('active')) {
+        sidebar.classList.remove('active');
+        hamburger.classList.remove('active');
+    }
+
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    document.body.appendChild(modal);
+    document.body.classList.add('modal-open');
+
+    const content = document.createElement('div');
+    content.className = 'modal-content add-modal';
+    modal.appendChild(content);
+
+    const header = document.createElement('h2');
+    header.textContent = 'Add Movie';
+    content.appendChild(header);
+
+    // Input controls
+    const controls = document.createElement('div');
+    controls.className = 'add-controls';
+    content.appendChild(controls);
+
+    const searchType = document.createElement('select');
+    searchType.className = 'modal-select';
+    const optionTitle = document.createElement('option');
+    optionTitle.value = 'title';
+    optionTitle.textContent = 'Search by Title';
+    const optionId = document.createElement('option');
+    optionId.value = 'id';
+    optionId.textContent = 'Search by TMDB ID';
+    searchType.appendChild(optionTitle);
+    searchType.appendChild(optionId);
+    controls.appendChild(searchType);
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.placeholder = 'Enter title or TMDB ID';
+    input.className = 'modal-input';
+    controls.appendChild(input);
+
+    // Buttons
+    const btnContainer = document.createElement('div');
+    btnContainer.className = 'modal-btn-container';
+    content.appendChild(btnContainer);
+
+    const cancelBtn = document.createElement('button');
+    cancelBtn.className = 'btn-cancel';
+    cancelBtn.textContent = 'Cancel';
+    btnContainer.appendChild(cancelBtn);
+
+    const searchBtn = document.createElement('button');
+    searchBtn.className = 'btn-search';
+    searchBtn.textContent = 'Search';
+    btnContainer.appendChild(searchBtn);
+
+    addScanBarcodeButton(btnContainer); // add to the button container
+
+
+    cancelBtn.addEventListener('click', () => {
+        modal.remove();
+        document.body.classList.remove('modal-open');
+    });
+
+    searchBtn.addEventListener('click', async () => {
+        try {
+            let tmdbResults = [];
+            if (searchType.value === 'title') {
+                tmdbResults = await searchTmdbByTitle(input.value);
+            } else {
+                const detail = await getTmdbDetails(parseInt(input.value));
+                tmdbResults = [detail];
+            }
+
+            if (!tmdbResults.length) throw new Error('No movies found.');
+
+            // Clear previous results
+            const prev = content.querySelector('.results-container');
+            if (prev) prev.remove();
+
+            const resultsContainer = document.createElement('div');
+            resultsContainer.className = 'results-container';
+            content.appendChild(resultsContainer);
+
+            tmdbResults.forEach(result => {
+                const card = document.createElement('div');
+                card.className = 'result-card';
+
+                if (result.poster_path) {
+                    const img = document.createElement('img');
+                    img.className = 'result-poster';
+                    img.src = `https://image.tmdb.org/t/p/w92${result.poster_path}`;
+                    card.appendChild(img);
+                }
+
+                const info = document.createElement('div');
+                info.className = 'result-info';
+                info.innerHTML = `<strong>${result.title}</strong><br>${result.release_date || 'Unknown'}`;
+                card.appendChild(info);
+
+                card.addEventListener('click', async () => {
+                    const detail = await getTmdbDetails(result.id);
+                    const movieData = {
+                        title: detail.title || 'Unknown',
+                        desc: detail.overview || 'No description available.',
+                        rating: extractMpaa(detail) || 'NR',
+                        release_date: detail.release_date || '',
+                        genre: detail.genres ? detail.genres.map(g => g.name).join(', ') : 'Unknown',
+                        cast: detail.credits ? detail.credits.cast.slice(0, 5).map(c => c.name).join(', ') : 'Unknown',
+                        cover_img: detail.poster_path ? `https://image.tmdb.org/t/p/w500${detail.poster_path}` : '',
+                        tags: '',
+                        tmdb_id: detail.id
+                    };
+                    showPreviewModal(movieData, modal);
+                });
+
+                resultsContainer.appendChild(card);
+            });
+
+        } catch (err) {
+            console.error('TMDB Search Error:', err);
+            alert('Failed to fetch movies. Check console.');
+        }
+    });
+
+    modal.addEventListener('click', e => { if (e.target === modal) { modal.remove(); document.body.classList.remove('modal-open'); } });
+}
+
+// -------------------------
+// Preview Modal (mimics movie detail modal)
+// -------------------------
+function showPreviewModal(movieData, parentModal) {
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    document.body.appendChild(modal);
+    document.body.classList.add('modal-open');
+
+    const content = document.createElement('div');
+    content.className = 'modal-content preview-modal';
+    modal.appendChild(content);
+
+    const header = document.createElement('h2');
+    header.textContent = movieData.title;
+    content.appendChild(header);
+
+    const topRow = document.createElement('div');
+    topRow.className = 'modal-top';
+    content.appendChild(topRow);
+
+    if (movieData.cover_img) {
+        const img = document.createElement('img');
+        img.className = 'modal-poster';
+        img.src = movieData.cover_img;
+        topRow.appendChild(img);
+    }
+
+    const info = document.createElement('div');
+    info.className = 'modal-info';
+    info.innerHTML = `
+        <p><strong>Release Date:</strong> ${movieData.release_date}</p>
+        <p><strong>Genre:</strong> ${movieData.genre}</p>
+        <p><strong>Rating:</strong> ${movieData.rating}</p>
+        <p><strong>Cast:</strong> ${movieData.cast}</p>
+        <p><strong>Description:</strong> ${movieData.desc}</p>
+    `;
+    topRow.appendChild(info);
+
+    const btnContainer = document.createElement('div');
+    btnContainer.className = 'modal-actions';
+    content.appendChild(btnContainer);
+
+    const cancelBtn = document.createElement('button');
+    cancelBtn.className = 'btn-cancel';
+    cancelBtn.textContent = 'Cancel';
+    btnContainer.appendChild(cancelBtn);
+
+    const addBtn = document.createElement('button');
+    addBtn.className = 'btn-add';
+    addBtn.textContent = 'Add';
+    btnContainer.appendChild(addBtn);
+
+    cancelBtn.addEventListener('click', () => {
+        modal.remove();
+        document.body.classList.remove('modal-open');
+    });
+
+    addBtn.addEventListener('click', async () => {
+        try {
+            const { error } = await supabase.from('Movies').insert([movieData]);
+            if (error) throw error;
+
+            modal.remove();
+            if (parentModal) parentModal.remove();
+            document.body.classList.remove('modal-open');
+            alert('Movie added successfully!');
+            fetchMovies();
+        } catch (err) {
+            console.error('Error adding movie:', err);
+            alert('Failed to add movie. Check console.');
+        }
+    });
+
+    modal.addEventListener('click', e => { if (e.target === modal) { modal.remove(); document.body.classList.remove('modal-open'); } });
+}
+
+function showLoginModal() {
+
+    const sidebar = document.getElementById('sidebar-nav');
+    const hamburger = document.querySelector('.hamburger');
+
+    // Hide sidebar if it’s open
+    if (sidebar.classList.contains('active')) {
+        sidebar.classList.remove('active');
+        hamburger.classList.remove('active');
+    }
+
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    document.body.appendChild(modal);
+    document.body.classList.add('modal-open');
+
+    const content = document.createElement('div');
+    content.className = 'modal-content login-modal';
+    modal.appendChild(content);
+
+    const header = document.createElement('h2');
+    header.textContent = 'Login';
+    content.appendChild(header);
+
+    const emailInput = document.createElement('input');
+    emailInput.type = 'email';
+    emailInput.placeholder = 'Email';
+    emailInput.className = 'modal-input';
+    content.appendChild(emailInput);
+
+    const pwInput = document.createElement('input');
+    pwInput.type = 'password';
+    pwInput.placeholder = 'Password';
+    pwInput.className = 'modal-input';
+    content.appendChild(pwInput);
+
+    const btnContainer = document.createElement('div');
+    btnContainer.className = 'modal-btn-container';
+    content.appendChild(btnContainer);
+
+    const cancelBtn = document.createElement('button');
+    cancelBtn.className = 'btn-cancel';
+    cancelBtn.textContent = 'Cancel';
+    btnContainer.appendChild(cancelBtn);
+
+    const loginBtn = document.createElement('button');
+    loginBtn.className = 'btn-search';
+    loginBtn.textContent = 'Login';
+    btnContainer.appendChild(loginBtn);
+
+    cancelBtn.addEventListener('click', () => closeModal(modal));
+
+    loginBtn.addEventListener('click', async () => {
+        const email = emailInput.value.trim();
+        const password = pwInput.value.trim();
+
+        if (!email || !password) {
+            alert("Fill out all fields.");
+            return;
+        }
+
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email,
+            password
+        });
+
+        if (error) {
+            alert("Login failed: " + error.message);
+            return;
+        }
+
+        userSession = data.session;
+        localStorage.setItem('supabaseSession', JSON.stringify(userSession)); // cache
+        updateLoginButton();
+        closeModal(modal);
+        fetchMovies();
+    });
+
+    modal.addEventListener('click', e => {
+        if (e.target === modal) closeModal(modal);
+    });
+}
+
+async function handleLogout() {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+        console.error("Logout failed:", error.message);
+        return;
+    }
+
+    userSession = null;
+    updateLoginButton();
+    renderMovieCards([]); // clear movies
+
+    const sidebar = document.getElementById('sidebar-nav');
+    const hamburger = document.querySelector('.hamburger');
+
+    // Hide sidebar if it’s open
+    if (sidebar.classList.contains('active')) {
+        sidebar.classList.remove('active');
+        hamburger.classList.remove('active');
+    }
+}
+
+function updateLoginButton() {
+    const btn = document.querySelector('#login-btn');
+    if (!btn) return;
+
+    btn.textContent = userSession ? 'Logout' : 'Login';
+}
+
+// -------------------------
+// Initialize App
+// -------------------------
+document.addEventListener('DOMContentLoaded', async () => {
+    // Get current session from Supabase
+    const { data: { session } } = await supabase.auth.getSession();
+    userSession = session; // null if not logged in
+
+    updateLoginButton();
+    if (userSession) {
+        fetchMovies();
+    }
+
+    supabase.auth.onAuthStateChange((_event, session) => {
+        userSession = session;
+        updateLoginButton();
+        if (!userSession) {
+            renderMovieCards([]);
+        } else {
+            fetchMovies();
+        }
+    });
+
+    const hamburger = document.querySelector('.hamburger');
+    const sidebar = document.getElementById('sidebar-nav');
+
+    if (hamburger && sidebar) {
+        // --- Toggle sidebar on hamburger click ---
+        hamburger.addEventListener('click', () => {
+            const isActive = sidebar.classList.toggle('active');
+            hamburger.classList.toggle('active');
+
+            if (isActive) {
+                // --- Close sidebar on outside click ---
+                const handleOutsideClick = (e) => {
+                    if (!sidebar.contains(e.target) && !hamburger.contains(e.target)) {
+                        sidebar.classList.remove('active');
+                        hamburger.classList.remove('active');
+                        document.removeEventListener('click', handleOutsideClick);
+                    }
+                };
+                document.addEventListener('click', handleOutsideClick);
+            }
+        });
+    }
+
+    
+});
+
+
+
+
 
 
 
