@@ -401,9 +401,10 @@ body {
 /* Cards inside a group use grid */
 .movies-wrapper {
     display: flex;
+    width: fit-content;
     flex-wrap: wrap;
     gap: 20px;
-    justify-content: flex-start; /* align cards to left */
+    justify-content: center; /* align cards to left */
 }
 
 .az-bar {
