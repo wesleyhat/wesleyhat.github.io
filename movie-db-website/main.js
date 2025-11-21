@@ -490,7 +490,7 @@ function renderMovieCards(movies, sortedByTitle, groupedByGenre) {
 
         letters.forEach(letter => {
             const item = document.createElement('span');
-            item.textContent = letter === '#' ? 'Other' : letter;
+            item.textContent = letter;
             item.className = 'az-item';
             item.addEventListener('click', () => {
                 // Scroll to the letter section
@@ -1527,6 +1527,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     
 });
+
 
 
 
