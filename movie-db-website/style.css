@@ -40,7 +40,45 @@ html[data-theme="light"] {
     --btn-secondary-text: #212121;
     --btn-delete-bg: #d32f2f;
     --btn-delete-text: #ffffff;
-    --shadow: rgba(0, 0, 0, 0.1);
+    --shadow: rgba(0, 0, 0, 0.3);
+}
+
+/* Sidebar theme toggle */
+#theme-toggle {
+    position: absolute;
+    bottom: 45px;
+    right: 30px;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#theme-toggle .icon {
+    position: absolute;
+    font-size: 22px;
+    transition: opacity 0.25s ease;
+    opacity: 0;
+}
+
+#theme-toggle .sun {
+    transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
+}
+
+#theme-toggle .moon {
+    transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
+}
+
+/* Light mode = show sun */
+[data-theme='light'] #theme-toggle .sun {
+    opacity: 1;
+}
+
+/* Dark mode = show moon */
+[data-theme='dark'] #theme-toggle .moon {
+    opacity: 1;
 }
 
 /* -------------------------
@@ -663,22 +701,31 @@ button {
 
 @media (max-width: 768px) {
 
-    .top-bar{
-        position: sticky;
-        height: 40px;
-        width: 100%;
-        display: flex;
-        width: 100%;
-        align-items: flex-end;
-        font-size: 23px;
-        top: 0; /* distance from top when it sticks */
-        background-color: var(--bg-body);
+    body {
+        margin-left: 0 !important;
+        padding: 0;          /* remove padding */
+        overflow: visible;
     }
 
-    body {
-        overflow-x: hidden;   /* prevent horizontal scrolling */
-        margin-left: 0;
-        padding: 0;
+    .top-bar {
+        position: sticky;
+        top: 0;
+        left: 0;             /* ensure full width */
+        right: 0;            /* ensure full width */
+        width: 100%;         /* full width */
+        height: 65px;
+        display: flex;
+        align-items: center; /* use center instead of flex-end to remove gap */
+        font-size: 23px;
+        background-color: var(--bg-body);
+        z-index: 1000;       /* above everything else */
+        box-shadow: 0 2px 5px var(--shadow);
+
+    }
+
+    .top-bar h2 {
+        margin-left: 25px;
+        font-size: 20px;
     }
 
     .hero-cont{
@@ -724,14 +771,14 @@ button {
     .hamburger {
         display: flex;
         flex-direction: column;
-        gap: 4px;
-        width: 25px;
-        height: 20px;
+        gap: 3px;
+        width: 30px;
+        height: 16px;
         cursor: pointer;
         position: fixed;
-        top: 17px;
+        top: 21px;
         right: 22px;
-        z-index: 3000;
+        z-index: 5000;
         cursor: pointer;
     }
 
@@ -742,26 +789,19 @@ button {
         transition: 0.3s;
     }
 
+    .hamburger span.middle {
+        background-color: var(--bg-nav);
+    }
+
     .hamburger.active span:nth-child(1) {
-        transform: rotate(45deg) translate(6px, 5px);
+        transform: rotate(45deg) translate(5px, 4px);
     }
     .hamburger.active span:nth-child(2) {
         opacity: 0;
     }
     .hamburger.active span:nth-child(3) {
-        transform: rotate(-45deg) translate(6px, -5px);
+        transform: rotate(-45deg) translate(5px, -4px);
     }
-
-    
-
-    /* Shift body margin to zero */
-    body {
-        margin-left: 0 !important;
-        padding: 0 1rem;
-        overflow: visible;
-    }
-
-    
 
     /* -----------------------------
        Hero & Landing adjustments
@@ -801,22 +841,22 @@ button {
        Movie container adjustments
        ----------------------------- */
     #movie-container {
-        padding: 0;
-        margin: 20px auto;
+        padding: 0 10px;
+        padding-bottom: 60px;
+        margin: 0 auto;
         width: 100%;
         overflow-x: hidden;
         overflow-y: auto;
-        height: calc(100vh - 100px);
         display: block; /* keep headers/hr full width */
+        margin-bottom: 40px;
     }
 
     /* Cards */
     .movies-wrapper {
         display: flex;
         flex-wrap: wrap;
-        gap: 17px;
-        justify-content: flex-start;
-        margin-top: 10px;
+        gap: 10px;
+        justify-content: center;
     }
 
     .card {
@@ -898,7 +938,15 @@ button {
 
     .modal-top { flex-direction: column; align-items: center; gap: 15px; }
     .modal-top img.modal-poster { width: 70%; max-width: 250px; height: auto; }
-    .modal-info { width: 100%; text-align: center; }
+    .modal-info { width: 100%; text-align: center;}
+    .description-text {
+        display: block;       /* ensure it behaves like a block element */
+        text-align: left;     /* left-align text */
+    }
+
+    .modal-info .field span {
+        padding: 5px;
+    }
     .modal-section { text-align: center; margin-top: 15px; }
     .modal-actions { flex-direction: column; gap: 10px; align-items: center; }
     .modal-actions button { width: 80%; font-size: 1rem; padding: 10px 0; }
