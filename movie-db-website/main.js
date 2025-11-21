@@ -474,6 +474,38 @@ function renderMovieCards(movies, sortedByTitle, groupedByGenre) {
         if (!currentSort.ascending) letters.reverse();
         if (grouped['#']) currentSort.ascending ? letters.unshift('#') : letters.push('#');
 
+        // --- Top A-Z bar ---
+        const bar = document.createElement('div');
+        bar.className = 'az-bar';
+        const allOption = document.createElement('span');
+        allOption.textContent = 'ALL';
+        allOption.className = 'az-item active';
+        allOption.addEventListener('click', () => {
+            // Show all sections
+            document.querySelectorAll('.movie-group').forEach(g => g.style.display = '');
+            document.querySelectorAll('.az-item').forEach(el => el.classList.remove('active'));
+            allOption.classList.add('active');
+        });
+        bar.appendChild(allOption);
+
+    letters.forEach(letter => {
+        const item = document.createElement('span');
+        item.textContent = letter === '#' ? 'Other' : letter;
+        item.className = 'az-item';
+        item.addEventListener('click', () => {
+            // Scroll to the letter section
+            document.querySelectorAll('.movie-group').forEach(g => {
+                g.style.display = g.dataset.letter === letter ? '' : 'none';
+            });
+            document.querySelectorAll('.az-item').forEach(el => el.classList.remove('active'));
+            item.classList.add('active');
+        });
+        bar.appendChild(item);
+    });
+
+    container.appendChild(bar);
+
+
         letters.forEach(letter => {
             const groupWrapper = document.createElement('div');
             groupWrapper.className = 'movie-group';
@@ -1495,6 +1527,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     
 });
+
 
 
 
