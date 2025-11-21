@@ -13,8 +13,32 @@ let moviesData = [];
 let activeSearch = '';
 let activeFilters = { genre: '', tag: '', cast: '' };
 let currentSort = { key: 'title', ascending: true };
-let userSession = null;
 let sorted_by_title = true; // updated automatically when sort key changes
+
+// Restore saved session (if any) on page load
+let userSession = null;
+
+const savedSession = localStorage.getItem('supabaseSession');
+if (savedSession) {
+    const parsed = JSON.parse(savedSession);
+    userSession = parsed;
+
+    // Properly restore session in Supabase
+    supabase.auth.setSession({
+        access_token: parsed.access_token,
+        refresh_token: parsed.refresh_token
+    }).then(({ data, error }) => {
+        if (error) {
+            console.warn('Failed to restore Supabase session:', error.message);
+            localStorage.removeItem('supabaseSession');
+            userSession = null;
+        } else {
+            userSession = data.session;
+            updateLoginButton();
+            fetchMovies();
+        }
+    });
+}
 
 // -------------------------
 // Initialize App
@@ -1562,7 +1586,7 @@ function showLoginModal() {
     cancelBtn.addEventListener('click', () => closeModal(modal));
 
     // -----------------------------
-    // Auto-login control flag
+    // Auto-login control
     // -----------------------------
     let autoLoginTriggered = false;
 
@@ -1590,7 +1614,11 @@ function showLoginModal() {
         }
 
         userSession = data.session;
+
+        // Save session for reload
         localStorage.setItem('supabaseSession', JSON.stringify(userSession));
+        await supabase.auth.setSession(userSession.access_token);
+
         updateLoginButton();
         closeModal(modal);
         fetchMovies();
@@ -1610,6 +1638,7 @@ function showLoginModal() {
     // -----------------------------
     // Detect iOS / saved password autofill
     // -----------------------------
+    // Use rAF to detect autofill after inputs render
     requestAnimationFrame(() => {
         if (emailInput.value && pwInput.value) {
             autoLoginTriggered = true;
@@ -1624,7 +1653,6 @@ function showLoginModal() {
         if (e.target === modal) closeModal(modal);
     });
 }
-
 
 
 
@@ -1714,20 +1742,4 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
     }
-
-
-
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
