@@ -18,28 +18,6 @@ let sorted_by_title = true; // updated automatically when sort key changes
 // Restore saved session (if any) on page load
 let userSession = null;
 
-const savedSession = localStorage.getItem('supabaseSession');
-if (savedSession) {
-    const parsed = JSON.parse(savedSession);
-    userSession = parsed;
-
-    // Properly restore session in Supabase
-    supabase.auth.setSession({
-        access_token: parsed.access_token,
-        refresh_token: parsed.refresh_token
-    }).then(({ data, error }) => {
-        if (error) {
-            console.warn('Failed to restore Supabase session:', error.message);
-            localStorage.removeItem('supabaseSession');
-            userSession = null;
-        } else {
-            userSession = data.session;
-            updateLoginButton();
-            fetchMovies();
-        }
-    });
-}
-
 // -------------------------
 // Initialize App
 // -------------------------
@@ -1588,13 +1566,6 @@ function showLoginModal() {
 
         if (!email || !password) return;
 
-        // Prevent double auto-login
-        if (autoLoginTriggered) autoLoginTriggered = false;
-
-        // Blur inputs to hide keyboard & reset zoom
-        emailInput.blur();
-        pwInput.blur();
-
         const { data, error } = await supabase.auth.signInWithPassword({
             email,
             password
@@ -1606,10 +1577,6 @@ function showLoginModal() {
         }
 
         userSession = data.session;
-
-        // Save session for reload
-        localStorage.setItem('supabaseSession', JSON.stringify(userSession));
-        await supabase.auth.setSession(userSession.access_token);
 
         updateLoginButton();
         closeModal(modal);
