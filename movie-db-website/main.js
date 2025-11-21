@@ -1505,11 +1505,9 @@ function showPreviewModal(movieData, parentModal) {
 }
 
 function showLoginModal() {
-
     const sidebar = document.getElementById('sidebar-nav');
     const hamburger = document.querySelector('.hamburger');
 
-    // Hide sidebar if it’s open
     if (sidebar.classList.contains('active')) {
         sidebar.classList.remove('active');
         hamburger.classList.remove('active');
@@ -1534,12 +1532,14 @@ function showLoginModal() {
     emailInput.type = 'email';
     emailInput.placeholder = 'Email';
     emailInput.className = 'modal-input';
+    emailInput.autocomplete = 'email';
     content.appendChild(emailInput);
 
     const pwInput = document.createElement('input');
     pwInput.type = 'password';
     pwInput.placeholder = 'Password';
     pwInput.className = 'modal-input';
+    pwInput.autocomplete = 'current-password';
     content.appendChild(pwInput);
 
     const btnContainer = document.createElement('div');
@@ -1558,44 +1558,54 @@ function showLoginModal() {
 
     cancelBtn.addEventListener('click', () => closeModal(modal));
 
-    const close = () => closeModal(modal);
-
-    loginBtn.addEventListener('click', async () => {
+    const attemptLogin = async () => {
         const email = emailInput.value.trim();
         const password = pwInput.value.trim();
-    
-        if (!email || !password) {
-            alert("Fill out all fields.");
-            return;
-        }
-    
+
+        if (!email || !password) return;
+
+        // Blur inputs to hide keyboard & reset zoom
+        emailInput.blur();
+        pwInput.blur();
+
         const { data, error } = await supabase.auth.signInWithPassword({
             email,
             password
         });
-    
+
         if (error) {
             alert("Login failed: " + error.message);
             return;
         }
-    
-        // Blur inputs to hide iOS keyboard and reset zoom
-        emailInput.blur();
-        pwInput.blur();
-    
+
         userSession = data.session;
-        localStorage.setItem('supabaseSession', JSON.stringify(userSession)); // cache
+        localStorage.setItem('supabaseSession', JSON.stringify(userSession));
         updateLoginButton();
         closeModal(modal);
         fetchMovies();
-    });
-    
+    };
 
-    // Close modal if clicking outside content
-    modal.addEventListener('click', e => {
-        if (e.target === modal) close();
+    // Trigger login when clicking the button
+    loginBtn.addEventListener('click', attemptLogin);
+
+    // Trigger login when pressing Enter on either field
+    [emailInput, pwInput].forEach(input => {
+        input.addEventListener('keydown', e => {
+            if (e.key === 'Enter') attemptLogin();
+        });
+
+        // Detect autofill (iOS Face ID / saved credentials)
+        input.addEventListener('input', () => {
+            if (emailInput.value && pwInput.value) {
+                // Give a tiny delay to let iOS autofill finish
+                setTimeout(attemptLogin, 50);
+            }
+        });
     });
+
+    modal.addEventListener('click', e => { if (e.target === modal) closeModal(modal); });
 }
+
 
 async function handleLogout() {
     const { error } = await supabase.auth.signOut();
