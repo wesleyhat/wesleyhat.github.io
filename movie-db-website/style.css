@@ -46,7 +46,8 @@ html[data-theme="light"] {
 /* Sidebar theme toggle */
 #theme-toggle {
     position: absolute;
-    bottom: calc(90px + env(safe-area-inset-bottom)); /* 20px spacing + safe area */
+    /* bottom: calc(90px + env(safe-area-inset-bottom));  20px spacing + safe area */
+    top: 45px;
     right: 30px;
     width: 30px;
     height: 30px;
@@ -953,6 +954,7 @@ button {
     .close-modal { top: 10px; right: 10px; font-size: 24px; }
     .modal-input { width: 90%; margin: 0 auto 10px; }
 }
+
 
 
 
