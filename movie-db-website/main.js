@@ -1105,17 +1105,7 @@ async function showMovieDetails(movie) {
     deleteBtn.textContent = 'Delete';
     actionRow.appendChild(deleteBtn);
 
-    // Show buttons row is appended already
-    modal.addEventListener('click', e => {
-        if (e.target === modal) {
-            close();
-        }
-    });
-
-    function close() {
-        modal.remove();
-        document.body.classList.remove('modal-open');
-    }
+    const close = () => closeModal(modal);
 
     // ---- Edit mode ----
     editBtn.addEventListener('click', () => {
@@ -1248,19 +1238,12 @@ async function showMovieDetails(movie) {
             }
         };
 
-        const close = () => closeModal(modal);
-
         // Cancel edits
         cancelBtn.onclick = () => {
             Object.assign(movie, originalMovie);
             close();
             showMovieDetails(movie);
         };
-
-        // Close modal if clicking outside content
-        modal.addEventListener('click', e => {
-            if (e.target === modal) close();
-        });
     });
 
     // Delete
@@ -1275,6 +1258,12 @@ async function showMovieDetails(movie) {
             alert('Error deleting movie: ' + (err.message || err));
         }
     });
+
+    // Close modal if clicking outside content
+    modal.addEventListener('click', e => {
+        if (e.target === modal) close();
+    });
+
 }
 
 // -------------------------
@@ -1295,6 +1284,8 @@ async function showAddMovieModal() {
         sidebar.classList.remove('active');
         hamburger.classList.remove('active');
     }
+
+    lockBackground();
 
     const modal = document.createElement('div');
     modal.className = 'modal';
@@ -1354,6 +1345,8 @@ async function showAddMovieModal() {
         modal.remove();
         document.body.classList.remove('modal-open');
     });
+
+    const close = () => closeModal(modal);
 
     searchBtn.addEventListener('click', async () => {
         try {
@@ -1416,7 +1409,10 @@ async function showAddMovieModal() {
         }
     });
 
-    modal.addEventListener('click', e => { if (e.target === modal) { modal.remove(); document.body.classList.remove('modal-open'); } });
+    // Close modal if clicking outside content
+    modal.addEventListener('click', e => {
+        if (e.target === modal) close();
+    });
 }
 
 // -------------------------
@@ -1605,6 +1601,7 @@ function showLoginModal() {
 
     modal.addEventListener('click', e => { if (e.target === modal) closeModal(modal); });
 }
+
 
 
 async function handleLogout() {
