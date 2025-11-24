@@ -566,24 +566,34 @@ function renderMovieCards(movies, sortedByTitle, groupedByGenre) {
             grouped[firstChar].push(movie);
         });
     
-        // --- TOP BAR ORDER (always A → Z → #) ---
-        const barLetters = Object.keys(grouped).filter(l => l !== '#').sort();
+        // --- TOP BAR ORDER (# → A → Z) ---
+        const barLetters = [];
+        
         if (grouped['#']) barLetters.push('#');
+        
+        barLetters.push(
+            ...Object.keys(grouped).filter(l => l !== '#').sort()
+        );
+
     
         // --- PAGE GROUP ORDER (changes with sort) ---
         const azLetters = Object.keys(grouped).filter(l => l !== '#').sort();
         let groupOrder;
     
         if (currentSort.ascending) {
-            // A → Z → #
-            groupOrder = [...azLetters];
-            if (grouped['#']) groupOrder.push('#');
-        } else {
-            // # → Z → A
+            // # → A → Z
             groupOrder = [];
+        
             if (grouped['#']) groupOrder.push('#');
-            groupOrder = groupOrder.concat([...azLetters].reverse());
+        
+            groupOrder.push(...azLetters);
+        } else {
+            // Z → A → #
+            groupOrder = [...azLetters].reverse();
+        
+            if (grouped['#']) groupOrder.push('#');
         }
+
     
         // --- Top A–Z Bar ---
         const bar = document.createElement('div');
@@ -1713,5 +1723,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 });
+
 
 
