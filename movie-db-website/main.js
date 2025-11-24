@@ -182,6 +182,13 @@ function addScanBarcodeButton(btnContainer) {
     btnContainer.appendChild(scanBtn);
 }
 
+function normalizeTitleForSort(title) {
+    return title
+        .trim()
+        .replace(/^(A |An |The )/i, '')  // remove English articles
+        .trim();
+}
+
 function cleanTitle(title) {
     if (!title) return "";
     // Remove everything after '(' or '['
@@ -552,7 +559,8 @@ function renderMovieCards(movies, sortedByTitle, groupedByGenre) {
     
         // --- Build grouped object ---
         movies.forEach(movie => {
-            let firstChar = movie.title.charAt(0).toUpperCase();
+            let normalized = normalizeTitleForSort(movie.title);
+            let firstChar = normalized.charAt(0).toUpperCase();
             if (!/[A-Z]/.test(firstChar)) firstChar = '#';
             if (!grouped[firstChar]) grouped[firstChar] = [];
             grouped[firstChar].push(movie);
@@ -625,10 +633,15 @@ function renderMovieCards(movies, sortedByTitle, groupedByGenre) {
             cardsWrapper.className = 'movies-wrapper';
     
             // Reverse movies *inside* each group depending on sort
-            const moviesInGroup = currentSort.ascending
-                ? grouped[letter]
-                : [...grouped[letter]].reverse();
-    
+            const moviesInGroup = [...grouped[letter]].sort((a, b) => {
+                const A = normalizeTitleForSort(a.title).toUpperCase();
+                const B = normalizeTitleForSort(b.title).toUpperCase();
+            
+                if (A < B) return currentSort.ascending ? -1 : 1;
+                if (A > B) return currentSort.ascending ? 1 : -1;
+                return 0;
+            });
+
             moviesInGroup.forEach(movie => {
                 const card = createMovieCard(movie);
                 cardsWrapper.appendChild(card);
@@ -1700,4 +1713,5 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 });
+
 
