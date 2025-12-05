@@ -1,6 +1,5 @@
 // main.js
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/esm/supabase.js';
 
 const SUPABASE_URL = 'https://acasxnbktmwcckfrvulm.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_8Bv_VRnpMGlBWaXA3UhNPA_ck3akiaF';
@@ -1723,6 +1722,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 });
+
 
 
 
