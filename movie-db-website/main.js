@@ -1,7 +1,7 @@
 // main.js
 const SUPABASE_URL = 'https://acasxnbktmwcckfrvulm.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_8Bv_VRnpMGlBWaXA3UhNPA_ck3akiaF';
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const TMDB_API_KEY = "a60b5cafc7b6b2fbc0626df055ae2d62";
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
@@ -210,7 +210,7 @@ function cleanTitle(title) {
 async function lookupBarcode(barcode) {
     try {
         // Get current session and token
-        const { data: { session } } = await supabase.auth.getSession();
+        const { data: { session } } = await client.auth.getSession();
         if (!session?.access_token) {
             throw new Error("User not logged in or token not available.");
         }
@@ -426,7 +426,7 @@ async function fetchMovies() {
         return;
     }
 
-    const { data, error } = await supabase.from('Movies').select('*');
+    const { data, error } = await client.from('Movies').select('*');
     if (error) return console.error('Error fetching movies:', error);
 
     moviesData = data;
@@ -1250,7 +1250,7 @@ async function showMovieDetails(movie) {
                     tags: movie.tags,
                     cover_img: movie.cover_img,
                 };
-                const { error } = await supabase.from('Movies').update(payload).eq('id', movie.id);
+                const { error } = await client.from('Movies').update(payload).eq('id', movie.id);
                 if (error) throw error;
                 fetchMovies();
                 close();
@@ -1271,7 +1271,7 @@ async function showMovieDetails(movie) {
     deleteBtn.addEventListener('click', async () => {
         if (!confirm('Are you sure you want to delete this movie?')) return;
         try {
-            const { error } = await supabase.from('Movies').delete().eq('id', movie.id);
+            const { error } = await client.from('Movies').delete().eq('id', movie.id);
             if (error) throw error;
             fetchMovies();
             close();
@@ -1501,7 +1501,7 @@ function showPreviewModal(movieData, parentModal) {
 
     addBtn.addEventListener('click', async () => {
         try {
-            const { error } = await supabase.from('Movies').insert([movieData]);
+            const { error } = await client.from('Movies').insert([movieData]);
             if (error) throw error;
 
             modal.remove();
@@ -1586,7 +1586,7 @@ function showLoginModal() {
 
         if (!email || !password) return;
 
-        const { data, error } = await supabase.auth.signInWithPassword({
+        const { data, error } = await client.auth.signInWithPassword({
             email,
             password
         });
@@ -1634,7 +1634,7 @@ function showLoginModal() {
 }
 
 async function handleLogout() {
-    const { error } = await supabase.auth.signOut();
+    const { error } = await client.auth.signOut();
     if (error) {
         console.error("Logout failed:", error.message);
         return;
@@ -1666,7 +1666,7 @@ function updateLoginButton() {
 // -------------------------
 document.addEventListener('DOMContentLoaded', async () => {
     // Get current session from Supabase
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { session } } = await client.auth.getSession();
     userSession = session; // null if not logged in
 
     updateLoginButton();
@@ -1674,7 +1674,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         fetchMovies();
     }
 
-    supabase.auth.onAuthStateChange((_event, session) => {
+    client.auth.onAuthStateChange((_event, session) => {
         userSession = session;
         updateLoginButton();
         if (!userSession) {
@@ -1720,6 +1720,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 });
+
 
 
 
