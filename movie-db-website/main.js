@@ -210,7 +210,7 @@ function cleanTitle(title) {
 async function lookupBarcode(barcode) {
     try {
         // Get current session and token
-        const { data: { session } } = await supabase.auth.getSession();
+        const { data: { session } } = await client.auth.getSession();
         if (!session?.access_token) {
             throw new Error("User not logged in or token not available.");
         }
@@ -1586,7 +1586,7 @@ function showLoginModal() {
 
         if (!email || !password) return;
 
-        const { data, error } = await supabase.auth.signInWithPassword({
+        const { data, error } = await client.auth.signInWithPassword({
             email,
             password
         });
@@ -1634,7 +1634,7 @@ function showLoginModal() {
 }
 
 async function handleLogout() {
-    const { error } = await supabase.auth.signOut();
+    const { error } = await client.auth.signOut();
     if (error) {
         console.error("Logout failed:", error.message);
         return;
@@ -1666,7 +1666,7 @@ function updateLoginButton() {
 // -------------------------
 document.addEventListener('DOMContentLoaded', async () => {
     // Get current session from Supabase
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { session } } = await client.auth.getSession();
     userSession = session; // null if not logged in
 
     updateLoginButton();
@@ -1674,7 +1674,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         fetchMovies();
     }
 
-    supabase.auth.onAuthStateChange((_event, session) => {
+    client.auth.onAuthStateChange((_event, session) => {
         userSession = session;
         updateLoginButton();
         if (!userSession) {
@@ -1720,6 +1720,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 });
+
 
 
 
