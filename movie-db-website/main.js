@@ -1,7 +1,7 @@
 // main.js
 const SUPABASE_URL = 'https://acasxnbktmwcckfrvulm.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_8Bv_VRnpMGlBWaXA3UhNPA_ck3akiaF';
-const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const TMDB_API_KEY = "a60b5cafc7b6b2fbc0626df055ae2d62";
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
@@ -210,7 +210,7 @@ function cleanTitle(title) {
 async function lookupBarcode(barcode) {
     try {
         // Get current session and token
-        const { data: { session } } = await client.auth.getSession();
+        const { data: { session } } = await supabase.auth.getSession();
         if (!session?.access_token) {
             throw new Error("User not logged in or token not available.");
         }
@@ -1586,7 +1586,7 @@ function showLoginModal() {
 
         if (!email || !password) return;
 
-        const { data, error } = await client.auth.signInWithPassword({
+        const { data, error } = await supabase.auth.signInWithPassword({
             email,
             password
         });
@@ -1634,7 +1634,7 @@ function showLoginModal() {
 }
 
 async function handleLogout() {
-    const { error } = await client.auth.signOut();
+    const { error } = await supabase.auth.signOut();
     if (error) {
         console.error("Logout failed:", error.message);
         return;
@@ -1666,7 +1666,7 @@ function updateLoginButton() {
 // -------------------------
 document.addEventListener('DOMContentLoaded', async () => {
     // Get current session from Supabase
-    const { data: { session } } = await client.auth.getSession();
+    const { data: { session } } = await supabase.auth.getSession();
     userSession = session; // null if not logged in
 
     updateLoginButton();
@@ -1674,7 +1674,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         fetchMovies();
     }
 
-    client.auth.onAuthStateChange((_event, session) => {
+    supabase.auth.onAuthStateChange((_event, session) => {
         userSession = session;
         updateLoginButton();
         if (!userSession) {
@@ -1720,6 +1720,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 });
+
 
 
 
