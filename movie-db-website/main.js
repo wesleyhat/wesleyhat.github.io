@@ -1,7 +1,7 @@
 // main.js
 const SUPABASE_URL = 'https://acasxnbktmwcckfrvulm.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_8Bv_VRnpMGlBWaXA3UhNPA_ck3akiaF';
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const TMDB_API_KEY = "a60b5cafc7b6b2fbc0626df055ae2d62";
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
@@ -1720,6 +1720,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 });
+
 
 
 
