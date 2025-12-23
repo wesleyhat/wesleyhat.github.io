@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="actors.js"></script>
+    <script src="actorList.js"></script>
   </head>
   <body>
     <div class="watchDiv">
@@ -130,7 +131,9 @@
             }
           };
           
-          const celebs = actorDatabase;
+          const celebs = actorList
+
+          const celebDB = actorDatabase;
 
           var urlParams = new URLSearchParams(window.location.search);
           var formActorOne = urlParams.get('actor1');
@@ -594,3 +597,4 @@
     </script>
   </body>
 </html>
+
